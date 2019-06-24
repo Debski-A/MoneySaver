@@ -2,13 +2,13 @@ version: '3.1'
 services:
   
   config-server:
-    build: config-server
+    build: java-services/config-server
     ports:
       - 8888:8888
     restart: always
 
   eureka-server:
-    build: eureka-server
+    build: java-services/eureka-server
     depends_on:
       - config-server
     ports:
@@ -18,7 +18,7 @@ services:
   account-service:
     environment:
       MYSQLDB_ROOT_PASSWORD: $MYSQLDB_ROOT_PASSWORD
-    build: account-service
+    build: java-services/account-service
     depends_on:
       - config-server
     ports:
@@ -29,9 +29,13 @@ services:
     image: mysql:5.7
     volumes:
       - ./mysqldb:/docker-entrypoint-initdb.d
+      - account-mysqldb-volume:/var/lib/mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: $MYSQLDB_ROOT_PASSWORD
       MYSQL_DATABASE: accountDB
     ports:
       - 3600:3306
+      
+volumes:
+  account-mysqldb-volume:

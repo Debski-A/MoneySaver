@@ -1,0 +1,17 @@
+version: '3.1'
+services:
+  
+  account-mysqldb:
+    image: mysql:5.7
+    volumes:
+      - ./mysqldb:/docker-entrypoint-initdb.d
+      - account-mysqldb-volume:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: $MYSQLDB_ROOT_PASSWORD
+      MYSQL_DATABASE: accountDB
+    ports:
+      - 3600:3306
+      
+volumes:
+  account-mysqldb-volume:

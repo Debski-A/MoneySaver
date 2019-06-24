@@ -26,7 +26,7 @@ DROP TABLE IF EXISTS `accounts`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `accounts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(45) NOT NULL,
+  `username` varchar(45) NOT NULL UNIQUE,
   `password` varchar(80) NOT NULL,
   `uuid` binary(16) NOT NULL,
   PRIMARY KEY (`id`)
