@@ -37,5 +37,16 @@ services:
     ports:
       - 3600:3306
       
+  auth-service:
+    environment:
+      MYSQLDB_ROOT_PASSWORD: $MYSQLDB_ROOT_PASSWORD
+      ACCOUNT_SERVICE_PASSWORD: $ACCOUNT_SERVICE_PASSWORD
+    build: java-services/auth-service
+    depends_on:
+      - config-server
+    ports:
+      - 6666:6666
+    restart: always
+      
 volumes:
   account-mysqldb-volume:

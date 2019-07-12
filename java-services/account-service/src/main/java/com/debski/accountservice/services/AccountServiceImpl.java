@@ -1,53 +1,84 @@
 package com.debski.accountservice.services;
 
 import com.debski.accountservice.entities.Account;
-import com.debski.accountservice.entities.Role;
+import com.debski.accountservice.exceptions.AccountException;
 import com.debski.accountservice.models.AccountDTO;
 import com.debski.accountservice.repositories.AccountRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
+import javax.validation.ConstraintViolationException;
+import java.util.stream.Stream;
 
 @Service
 @Slf4j
 @Transactional
-public class AccountServiceImpl implements AccountService{
+public class AccountServiceImpl implements AccountService {
 
     private AccountRepository repository;
 
-    private PasswordEncoder encoder;
+    private AccountUtils accountUtils;
 
-    public AccountServiceImpl(AccountRepository repository, PasswordEncoder encoder) {
+    private ResourceBundleMessageSource messageSource;
+
+    public AccountServiceImpl(AccountRepository repository, AccountUtils accountUtils, ResourceBundleMessageSource messageSource) {
         this.repository = repository;
-        this.encoder = encoder;
+        this.accountUtils = accountUtils;
+        this.messageSource = messageSource;
     }
 
-    public void save(AccountDTO accountDto) {
-        Account accountEntity = Account.builder()
-                .username(accountDto.getUsername())
-                .password(encoder.encode(accountDto.getRawPassword()))
-                .email(accountDto.getEmail())
-                .roles(Collections.singleton(Role.USER))
-                .build();
+    public AccountDTO save(AccountDTO accountDto) {
+        //TODO Spring Security https://stackoverflow.com/questions/6068113/do-sessions-really-violate-restfulness
+        validateMandatoryParams(accountDto);
+        validatePasswordStrength(accountDto);
+        Account accountEntity = accountUtils.dtoToEntity(accountDto);
+        validateIsUsernameAlreadyTaken(accountEntity.getUsername());
+        Account savedAccountEntity = validateEmailAndSave(accountEntity);
+        AccountDTO accountDtoResult = accountUtils.entityToDto(savedAccountEntity);
 
-        repository.save(accountEntity);
-        log.debug("Account for {} was saved", accountEntity.getUsername());
+        log.debug("Account with username: {} was saved", accountDtoResult.getUsername());
+        return accountDtoResult;
+    }
+
+    private void validateMandatoryParams(AccountDTO accountDTO) throws AccountException {
+        // Mandatory Params: username, password. email
+        Stream.of(accountDTO.getUsername(), accountDTO.getRawPassword(), accountDTO.getEmail()).forEach(field ->  {
+            if (StringUtils.isBlank(field)) {
+                throw new AccountException(messageSource.getMessage("mandatory.parameters", null, LocaleContextHolder.getLocale()));
+            }
+        });
+    }
+
+    private void validatePasswordStrength(AccountDTO accountDto) {
+        if (accountUtils.isToWeak(accountDto.getRawPassword()))
+            throw new AccountException(messageSource.getMessage("weak.password", null, LocaleContextHolder.getLocale()));
+    }
+
+    private void validateIsUsernameAlreadyTaken(String username) throws AccountException {
+        if (repository.existsByUsername(username))
+            throw new AccountException(messageSource.getMessage("taken.username", null, LocaleContextHolder.getLocale()));
+
+    }
+
+    private Account validateEmailAndSave(Account accountEntity) throws AccountException {
+        Account savedAccountEntity;
+        try {
+            savedAccountEntity = repository.save(accountEntity);
+        }catch (ConstraintViolationException ex) {
+            throw new AccountException(messageSource.getMessage("invalid.email", null, LocaleContextHolder.getLocale()));
+        }
+        return savedAccountEntity;
     }
 
     public AccountDTO findByUsername(String username) {
         Account accountEntity = repository.findByUsername(username);
-        AccountDTO accountDto = accountEntity != null ? AccountDTO.builder()
-                .username(accountEntity.getUsername())
-                .email(accountEntity.getEmail())
-                .build() : null;
+        AccountDTO accountDto = accountUtils.entityToDto(accountEntity);
         log.debug("Account retrieved from DB by username = {}: {}", username, accountDto);
         return accountDto;
     }
 
-    public boolean existsByUsername(String username) {
-        return repository.existsByUsername(username);
-    }
 }

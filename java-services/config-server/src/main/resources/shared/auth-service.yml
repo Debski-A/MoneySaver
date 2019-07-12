@@ -1,0 +1,13 @@
+server:
+  servlet:
+    context-path: /auth
+  port: 6666
+
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://account-mysqldb:3306/accountDB?serverTimezone=UTC
+    username: root
+    password: ${MYSQLDB_ROOT_PASSWORD}
+    jpa:
+      database-platform: org.hibernate.dialect.MySQLInnoDBDialect

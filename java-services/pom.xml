@@ -18,7 +18,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
+        <spring-cloud.version>Greenwich.RELEASE</spring-cloud.version>
         <java.version>11</java.version>
     </properties>
 
@@ -38,6 +38,7 @@
         <module>account-service</module>
         <module>config-server</module>
         <module>eureka-server</module>
+        <module>auth-service</module>
     </modules>
 
 

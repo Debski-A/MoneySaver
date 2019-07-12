@@ -1,7 +1,18 @@
 server:
   servlet:
-    context-path: /
+    context-path: /accounts
   port: 6000
+
+security:
+  oauth2:
+    client:
+      clientId: account-service
+      clientSecret: ${ACCOUNT_SERVICE_PASSWORD}
+      accessTokenUri: http://auth-service:6666/auth/oauth/token
+      grant-type: client_credentials
+      scope: server
+    resource:
+      userInfoUri: http://auth-service:6666/auth/oauth/token
 
 spring:
   datasource:

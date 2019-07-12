@@ -1,0 +1,56 @@
+version: '3.1'
+services:
+  
+  config-server:
+    build: java-services/config-server
+    ports:
+      - 8888:8888
+    restart: always
+
+  eureka-server:
+    build: java-services/eureka-server
+    depends_on:
+      - config-server
+    ports:
+      - 9999:9999
+    restart: always
+
+  account-service:
+    environment:
+      MYSQLDB_ROOT_PASSWORD: $MYSQLDB_ROOT_PASSWORD
+    build: java-services/account-service
+    depends_on:
+      - config-server
+    ports:
+      - 6000:6000
+      - 8001:8001
+    restart: always
+    command: java -agentlib:jdwp=transport=dt_socket,address=0.0.0.0:8001,server=y,suspend=n -jar /app/account-service.jar
+    
+  account-mysqldb:
+    image: mysql:5.7
+    volumes:
+      - ./mysqldb:/docker-entrypoint-initdb.d
+      - account-mysqldb-volume:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: $MYSQLDB_ROOT_PASSWORD
+      MYSQL_DATABASE: accountDB
+    ports:
+      - 3600:3306
+      
+  auth-service:
+    environment:
+      MYSQLDB_ROOT_PASSWORD: $MYSQLDB_ROOT_PASSWORD
+      ACCOUNT_SERVICE_PASSWORD: $ACCOUNT_SERVICE_PASSWORD
+    build: java-services/auth-service
+    depends_on:
+      - config-server
+    ports:
+      - 6666:6666
+      - 8002:8002
+    restart: always
+    command: java -agentlib:jdwp=transport=dt_socket,address=0.0.0.0:8002,server=y,suspend=n -jar /app/auth-service.jar
+      
+volumes:
+  account-mysqldb-volume:

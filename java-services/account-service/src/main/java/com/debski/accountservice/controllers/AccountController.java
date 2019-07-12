@@ -2,11 +2,12 @@ package com.debski.accountservice.controllers;
 
 import com.debski.accountservice.models.AccountDTO;
 import com.debski.accountservice.services.AccountService;
-import com.debski.accountservice.services.AccountServiceImpl;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
-@RestController("/account")
+@RestController
+@Slf4j
 public class AccountController {
 
     private AccountService accountService;
@@ -16,8 +17,14 @@ public class AccountController {
     }
 
     @PostMapping("/create")
-    public AccountDTO createAccount(AccountDTO accountDto) {
-        accountService.save(accountDto);
-        return null;
+    public AccountDTO createAccount(@RequestBody AccountDTO accountDto) {
+        return accountService.save(accountDto);
     }
+
+    @PreAuthorize("#oauth2.hasScope('server') or #name.equals('demo')")
+    @GetMapping("/get/{username}")
+    public AccountDTO getAccountByName(@PathVariable String username) {
+        return accountService.findByUsername(username);
+    }
+
 }

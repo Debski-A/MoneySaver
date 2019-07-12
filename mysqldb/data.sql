@@ -28,7 +28,8 @@ CREATE TABLE `accounts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(45) NOT NULL UNIQUE,
   `password` varchar(80) NOT NULL,
-  `uuid` binary(16) NOT NULL,
+  `email` varchar(60) NOT NULL,
+  `uuid` binary(16) NOT NULL UNIQUE,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;

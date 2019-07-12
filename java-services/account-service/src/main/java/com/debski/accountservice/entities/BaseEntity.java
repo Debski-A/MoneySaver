@@ -17,7 +17,7 @@ public class BaseEntity implements Serializable {
 
     @Getter
     @Column(columnDefinition = "BINARY(16)", length = 16)
-    protected String uuid = UUID.randomUUID().toString().replace("-", "");
+    protected UUID uuid = UUID.randomUUID();
 
     @Override
     public boolean equals(Object o) {
