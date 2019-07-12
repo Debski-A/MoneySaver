@@ -1,9 +1,0 @@
-/home/adam.debski/workspace/MoneySaver/java-services/auth-service/src/main/java/com/debski/authservice/entities/Role.java
-/home/adam.debski/workspace/MoneySaver/java-services/auth-service/src/main/java/com/debski/authservice/configurations/OAuth2AuthorizationConfig.java
-/home/adam.debski/workspace/MoneySaver/java-services/auth-service/src/main/java/com/debski/authservice/services/CustomUserDetailsService.java
-/home/adam.debski/workspace/MoneySaver/java-services/auth-service/src/main/java/com/debski/authservice/entities/BaseEntity.java
-/home/adam.debski/workspace/MoneySaver/java-services/auth-service/src/main/java/com/debski/authservice/AuthServiceApplication.java
-/home/adam.debski/workspace/MoneySaver/java-services/auth-service/src/main/java/com/debski/authservice/repositories/AccountRepository.java
-/home/adam.debski/workspace/MoneySaver/java-services/auth-service/src/main/java/com/debski/authservice/entities/CustomUserDetails.java
-/home/adam.debski/workspace/MoneySaver/java-services/auth-service/src/main/java/com/debski/authservice/entities/Account.java
-/home/adam.debski/workspace/MoneySaver/java-services/auth-service/src/main/java/com/debski/authservice/configurations/WebSecurityConfig.java
