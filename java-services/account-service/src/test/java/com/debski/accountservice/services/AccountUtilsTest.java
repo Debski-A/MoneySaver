@@ -2,6 +2,7 @@ package com.debski.accountservice.services;
 
 import com.debski.accountservice.entities.Account;
 import com.debski.accountservice.entities.Role;
+import com.debski.accountservice.entities.RoleTypes;
 import com.debski.accountservice.models.AccountDTO;
 import org.junit.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -45,7 +46,7 @@ public class AccountUtilsTest {
         assertThat(entity.getUsername(), is(dto.getUsername()));
         assertThat(entity.getPassword(), is(not(dto.getRawPassword())));
         assertThat(entity.getEmail(), is(dto.getEmail()));
-        assertThat(entity.getRoles(), contains(Role.USER));
+        assertThat(entity.getRoles(), contains(Role.getSpecificRole(RoleTypes.USER)));
     }
 
     @Test

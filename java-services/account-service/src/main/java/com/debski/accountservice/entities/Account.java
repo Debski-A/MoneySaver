@@ -25,9 +25,12 @@ public class Account extends BaseEntity {
     @Email
     private String email;
 
-    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "accounts_roles", joinColumns = @JoinColumn(name = "id_account"))
-    @Enumerated(EnumType.STRING)
+    @ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST })
+    @JoinTable(
+            name = "accounts_roles",
+            joinColumns = { @JoinColumn(name = "id_account") },
+            inverseJoinColumns = { @JoinColumn(name = "id_role") }
+    )
     private Set<Role> roles;
 
 }

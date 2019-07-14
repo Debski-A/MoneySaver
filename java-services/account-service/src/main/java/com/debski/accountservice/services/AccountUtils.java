@@ -2,6 +2,7 @@ package com.debski.accountservice.services;
 
 import com.debski.accountservice.entities.Account;
 import com.debski.accountservice.entities.Role;
+import com.debski.accountservice.entities.RoleTypes;
 import com.debski.accountservice.models.AccountDTO;
 import org.apache.commons.lang.CharUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,7 +30,7 @@ class AccountUtils {
 
     Account dtoToEntity(AccountDTO dto) {
 
-        Account entity = Account.builder().username(dto.getUsername()).password(encoder.encode(dto.getRawPassword())).email(dto.getEmail()).roles(Collections.singleton(Role.USER)).build();
+        Account entity = Account.builder().username(dto.getUsername()).password(encoder.encode(dto.getRawPassword())).email(dto.getEmail()).roles(Collections.singleton(Role.getSpecificRole(RoleTypes.USER))).build();
         return entity;
     }
 
