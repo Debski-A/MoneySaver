@@ -1,11 +1,11 @@
 spring:
   datasource:
+    initialization-mode: never
     driverClassName: org.h2.Driver
-    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1
-
-  jpa:
-    hibernate:
-      ddl-auto: create
+    jdbc-url: jdbc:h2:mem:accountDB;DB_CLOSE_DELAY=-1
+  token-datasource:
+    driverClassName: org.h2.Driver
+    jdbc-url: jdbc:h2:mem:tokenDB;DB_CLOSE_DELAY=-1
 
 logging:
   level:

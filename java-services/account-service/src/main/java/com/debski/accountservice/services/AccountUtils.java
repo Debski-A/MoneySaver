@@ -1,9 +1,9 @@
 package com.debski.accountservice.services;
 
 import com.debski.accountservice.entities.Account;
-import com.debski.accountservice.entities.Role;
-import com.debski.accountservice.entities.RoleTypes;
 import com.debski.accountservice.models.AccountDTO;
+import com.debski.accountservice.repositories.RoleRepositoryImpl;
+import com.debski.accountservice.entities.RoleTypes;
 import org.apache.commons.lang.CharUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -14,9 +14,11 @@ import java.util.function.IntPredicate;
 @Component
 class AccountUtils {
 
+    private RoleRepositoryImpl roleRepository;
     private PasswordEncoder encoder;
 
-    AccountUtils(PasswordEncoder encoder) {
+    AccountUtils(RoleRepositoryImpl roleRepository, PasswordEncoder encoder) {
+        this.roleRepository = roleRepository;
         this.encoder = encoder;
     }
 
@@ -30,7 +32,7 @@ class AccountUtils {
 
     Account dtoToEntity(AccountDTO dto) {
 
-        Account entity = Account.builder().username(dto.getUsername()).password(encoder.encode(dto.getRawPassword())).email(dto.getEmail()).roles(Collections.singleton(Role.getSpecificRole(RoleTypes.USER))).build();
+        Account entity = Account.builder().username(dto.getUsername()).password(encoder.encode(dto.getRawPassword())).email(dto.getEmail()).roles(Collections.singleton(roleRepository.getRole(RoleTypes.USER))).enabled(true).build();
         return entity;
     }
 

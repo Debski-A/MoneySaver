@@ -32,11 +32,10 @@ public class AccountServiceImpl implements AccountService {
     }
 
     public AccountDTO save(AccountDTO accountDto) {
-        //TODO Spring Security https://stackoverflow.com/questions/6068113/do-sessions-really-violate-restfulness
         validateMandatoryParams(accountDto);
         validatePasswordStrength(accountDto);
+        validateIsUsernameAlreadyTaken(accountDto.getUsername());
         Account accountEntity = accountUtils.dtoToEntity(accountDto);
-        validateIsUsernameAlreadyTaken(accountEntity.getUsername());
         Account savedAccountEntity = validateEmailAndSave(accountEntity);
         AccountDTO accountDtoResult = accountUtils.entityToDto(savedAccountEntity);
 

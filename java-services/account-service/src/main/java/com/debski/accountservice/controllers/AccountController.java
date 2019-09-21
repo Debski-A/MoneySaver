@@ -2,12 +2,10 @@ package com.debski.accountservice.controllers;
 
 import com.debski.accountservice.models.AccountDTO;
 import com.debski.accountservice.services.AccountService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@Slf4j
+@RestControllers
 public class AccountController {
 
     private AccountService accountService;

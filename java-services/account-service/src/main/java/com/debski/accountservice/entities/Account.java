@@ -22,6 +22,8 @@ public class Account extends BaseEntity {
     @NotBlank
     private String password;
 
+    private Boolean enabled;
+
     @Email
     private String email;
 

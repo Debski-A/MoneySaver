@@ -3,6 +3,7 @@ package com.debski.accountservice.services;
 import com.debski.accountservice.entities.Account;
 import com.debski.accountservice.models.AccountDTO;
 import com.debski.accountservice.repositories.AccountRepository;
+import com.debski.accountservice.repositories.RoleRepositoryImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +25,7 @@ public class AccountServiceUnitTest {
     private AccountRepository accountRepository;
 
     @Spy
-    private AccountUtils accountUtils = new AccountUtils(new BCryptPasswordEncoder());
+    private AccountUtils accountUtils = new AccountUtils(Mockito.mock(RoleRepositoryImpl.class), new BCryptPasswordEncoder());
 
     @Mock
     private ResourceBundleMessageSource messageSource ;

@@ -1,0 +1,5 @@
+/home/adam.debski/workspace/MoneySaver/java-services/auth-service/src/main/java/com/debski/authservice/controllers/AuthorizationController.java
+/home/adam.debski/workspace/MoneySaver/java-services/auth-service/src/main/java/com/debski/authservice/configurations/OAuth2AuthorizationConfig.java
+/home/adam.debski/workspace/MoneySaver/java-services/auth-service/src/main/java/com/debski/authservice/AuthServiceApplication.java
+/home/adam.debski/workspace/MoneySaver/java-services/auth-service/src/main/java/com/debski/authservice/configurations/DataSourcesConfig.java
+/home/adam.debski/workspace/MoneySaver/java-services/auth-service/src/main/java/com/debski/authservice/configurations/WebSecurityConfig.java

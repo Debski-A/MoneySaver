@@ -1,0 +1,5 @@
+com/debski/authservice/configurations/DataSourcesConfig.class
+com/debski/authservice/controllers/AuthorizationController.class
+com/debski/authservice/configurations/OAuth2AuthorizationConfig.class
+com/debski/authservice/AuthServiceApplication.class
+com/debski/authservice/configurations/WebSecurityConfig.class

@@ -11,13 +11,11 @@ security:
       accessTokenUri: http://auth-service:6666/auth/oauth/token
       grant-type: client_credentials
       scope: server
-    resource:
-      userInfoUri: http://auth-service:6666/auth/oauth/token
 
 spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://account-mysqldb:3306/accountDB?serverTimezone=UTC
+    url: jdbc:mysql://account-and-token-mysqldb:3306/accountDB?serverTimezone=UTC
     username: root
     password: ${MYSQLDB_ROOT_PASSWORD}
     jpa:

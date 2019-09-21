@@ -27,11 +27,11 @@ services:
     restart: always
     command: java -agentlib:jdwp=transport=dt_socket,address=0.0.0.0:8001,server=y,suspend=n -jar /app/account-service.jar
     
-  account-mysqldb:
+  account-and-token-mysqldb:
     image: mysql:5.7
     volumes:
       - ./mysqldb:/docker-entrypoint-initdb.d
-      - account-mysqldb-volume:/var/lib/mysql
+      - account-and-token-mysqldb-volume:/var/lib/mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: $MYSQLDB_ROOT_PASSWORD
@@ -53,4 +53,4 @@ services:
     command: java -agentlib:jdwp=transport=dt_socket,address=0.0.0.0:8002,server=y,suspend=n -jar /app/auth-service.jar
       
 volumes:
-  account-mysqldb-volume:
+  account-and-token-mysqldb-volume:
