@@ -6,6 +6,7 @@ server:
 security:
   oauth2:
     client:
+      checkTokenEndpointUrl: http://auth-service:6666/auth/oauth/check_token
       clientId: account-service
       clientSecret: ${ACCOUNT_SERVICE_PASSWORD}
       accessTokenUri: http://auth-service:6666/auth/oauth/token

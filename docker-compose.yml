@@ -14,10 +14,19 @@ services:
     ports:
       - 9999:9999
     restart: always
+    
+  gateway:
+    build: java-services/gateway
+    restart: always
+    depends_on:
+      - config-server
+    ports:
+      - 80:4000
 
   account-service:
     environment:
       MYSQLDB_ROOT_PASSWORD: $MYSQLDB_ROOT_PASSWORD
+      ACCOUNT_SERVICE_PASSWORD: $ACCOUNT_SERVICE_PASSWORD
     build: java-services/account-service
     depends_on:
       - config-server
@@ -33,6 +42,7 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: $MYSQLDB_ROOT_PASSWORD
+      MYSQL_DATABASE: accountDB
     ports:
       - 3600:3306
       

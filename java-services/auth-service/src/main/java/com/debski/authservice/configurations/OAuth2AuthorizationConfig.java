@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -25,6 +26,9 @@ public class OAuth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
     private AuthenticationManager authenticationManager;
 
     @Autowired
+    private UserDetailsService defaultUserDetailsService;
+
+    @Autowired
     private PasswordEncoder encoder;
 
     @Autowired
@@ -40,6 +44,7 @@ public class OAuth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
 
         clients.inMemory()
                 .withClient("browser")
+                // password grant is not supported by default, see configure(...) method below
                 .authorizedGrantTypes("refresh_token", "password")
                 .scopes("ui")
                 .and()
@@ -58,7 +63,11 @@ public class OAuth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints
                 .tokenStore(tokenStore())
-                .authenticationManager(authenticationManager);
+                // By default all grant types are supported except password
+                // password grants are switched on by injecting an AuthenticationManager
+                .authenticationManager(authenticationManager)
+                // userDetailsService is needed for refreshToken, otherwise it wont work
+                .userDetailsService(defaultUserDetailsService);
     }
 
     @Override

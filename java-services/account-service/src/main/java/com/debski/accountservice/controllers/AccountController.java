@@ -5,7 +5,8 @@ import com.debski.accountservice.services.AccountService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-@RestControllers
+@RestController
+@CrossOrigin
 public class AccountController {
 
     private AccountService accountService;
@@ -19,7 +20,7 @@ public class AccountController {
         return accountService.save(accountDto);
     }
 
-    @PreAuthorize("#oauth2.hasScope('server') or #name.equals('demo')")
+    @PreAuthorize("#oauth2.hasScope('server')")
     @GetMapping("/get/{username}")
     public AccountDTO getAccountByName(@PathVariable String username) {
         return accountService.findByUsername(username);
