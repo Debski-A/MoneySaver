@@ -10,11 +10,11 @@ CREATE TABLE `oauth_access_token` (
   `client_id` VARCHAR(255),
   `authentication` LONG VARBINARY,
   `refresh_token` VARCHAR(255)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 DROP TABLE IF EXISTS `oauth_refresh_token`;
 CREATE TABLE `oauth_refresh_token` (
   `token_id` VARCHAR(255),
   `token` LONG VARBINARY,
   `authentication` LONG VARBINARY
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

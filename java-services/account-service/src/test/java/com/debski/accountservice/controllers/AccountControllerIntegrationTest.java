@@ -52,7 +52,6 @@ public class AccountControllerIntegrationTest {
         mockMvc.perform(post("/create").contentType(MediaType.APPLICATION_JSON).content(ACCOUNT_JSON.replace("Password1", "weakpassword")))
                 //then
                 .andExpect(status().is5xxServerError())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.errorMessage").isNotEmpty());
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
     }
 }

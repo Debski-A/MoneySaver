@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import TextField from '../components/TextField'
 import SubmitButton from '../components/SubmitButton'
+import Cookies from 'js-cookie'
 
 class LoginPage extends Component {
     state = {
@@ -10,7 +11,7 @@ class LoginPage extends Component {
     }
 
     handleOnClick = () => {
-        let apiBaseUrl = "http://localhost/api/auth/oauth/token";
+        let apiBaseUrl = "http://localhost:80/api/auth/oauth/token";
         let accessTokenCredentials = new FormData();
         accessTokenCredentials.append('grant_type', 'password')
         accessTokenCredentials.append('username', this.state.username)
@@ -18,23 +19,25 @@ class LoginPage extends Component {
         accessTokenCredentials.append('scope', 'ui')
         let basicAuthResult = btoa("browser:")
         fetch(apiBaseUrl, {
-            method: "POST",
+            method: 'POST',
             body: accessTokenCredentials,
             headers: {
                 'Authorization': 'Basic ' + basicAuthResult
             }
         })
-            .then(response => response.json())
             .then(response => {
-                if (!!response.errorMessage) {
-                    this.setState({
-                        message: response.errorMessage
-                    }
-                    )
-                } else {
+                let responseJson = response.json()
+                if (response.status === 200) {
+                    let { access_token, refresh_token } = responseJson
+                    Cookies.set("access_token", access_token)
+                    Cookies.set("refresh_token", refresh_token)
+                    this.props.handleIsLoggedIn()
                     this.props.history.push("/")
+                } else {
+                    this.setState({
+                        message: responseJson.error_description
+                    })
                 }
-
             })
             .catch((err) => this.setState({
                 message: err
@@ -42,7 +45,6 @@ class LoginPage extends Component {
     }
 
     handleOnChange = (e) => {
-        console.log(e.target.id)
         switch (e.target.id) {
             case "username_input": {
                 this.setState({
@@ -60,7 +62,6 @@ class LoginPage extends Component {
         }
     }
     render() {
-        console.log(this.state.message)
         return (
             <div>
                 <span>username</span>

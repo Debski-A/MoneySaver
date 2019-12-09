@@ -1,20 +1,27 @@
-import { Component} from 'react';
-import { authenticate } from '../helpers/auth'
+import { Component } from 'react';
+import { authenticate } from '../helpers/authenticationUtils'
 
 class AuthenticateBeforeRender extends Component {
-    state = {
-      isAuthenticated: false,
-    }
-  
-    componentDidMount() {
-      authenticate().then(isAuthenticated => {
-        this.setState({ isAuthenticated })
-      })
-    }
-  
-    render() {
-      return this.state.isAuthenticated ? this.props.render() : null
-    }
+  _isMounted = false
+
+  state = {
+    isAuthenticated: false,
   }
+
+  componentDidMount() {
+    this._isMounted = true
+    authenticate().then(isAuthenticated => {
+      this._isMounted && this.setState({ isAuthenticated })
+    })
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false
+ }
+
+  render() {
+    return this.state.isAuthenticated ? this.props.render() : null
+  }
+}
 
 export default AuthenticateBeforeRender

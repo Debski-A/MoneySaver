@@ -8,7 +8,7 @@ const list = [
   { name: "aplikacja", path: "/main" }
 ]
 
-const Navigation = () => {
+const Navigation = (props) => {
 
   const menu = list.map(item => (
     <li key={item.name}>
@@ -16,10 +16,33 @@ const Navigation = () => {
     </li>
   ))
 
+  const menu2 = (
+    <>
+      <li>
+        <NavLink to='/' exact>start</NavLink>
+      </li>
+      <li>
+        <NavLink to='/register'>rejestracja</NavLink>
+      </li>
+      {props.isLoggedIn ? (
+        <li>
+        <NavLink to='/logout' >wyloguj</NavLink>
+      </li>
+      ) : (
+        <li>
+        <NavLink to='/login' >logowanie</NavLink>
+      </li>
+      )}
+      <li>
+        <NavLink to='/main' exact>aplikacja</NavLink>
+      </li>
+    </>
+  )
+
   return (
     <nav className="main">
       <ul>
-        {menu}
+        {menu2}
       </ul>
     </nav>
   );

@@ -9,11 +9,10 @@ import java.util.Set;
 
 @Entity
 @Table(name = "accounts")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Getter
-@Setter
 public class Account extends BaseEntity {
 
     @NotBlank
@@ -26,6 +25,9 @@ public class Account extends BaseEntity {
 
     @Email
     private String email;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "account", orphanRemoval = true)
+    private Set<Income> incomes;
 
     @ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST })
     @JoinTable(

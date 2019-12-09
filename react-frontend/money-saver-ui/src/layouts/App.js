@@ -1,21 +1,38 @@
-import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import React, { Component } from 'react';
+import { Router } from 'react-router-dom';
 import Navigation from './Navigation';
 import Page from './Page';
+import { createBrowserHistory } from "history";
+import { isAuthenticated } from '../helpers/authenticationUtils'
 
-function App() {
+export const history = createBrowserHistory()
+
+class App extends Component {
+
+  state = {
+    isLoggedIn: isAuthenticated()
+  }
+
+  handleIsLoggedIn = () => {
+    console.log('handleIsLoggedIn invoked after successful login...')
+    this.setState ({
+      isLoggedIn: isAuthenticated()
+    })
+  }
+
+  render() {
   return (
-    <Router>
+    <Router history={history}>
       <div className="app">
         <header>
           <h1>Some Header</h1>
         </header>
         <main>
           <aside>
-            <Navigation />
+            <Navigation isLoggedIn={this.state.isLoggedIn}/>
           </aside>
           <section>
-            <Page />
+            <Page handleIsLoggedIn={this.handleIsLoggedIn.bind(this)} isLoggedIn={this.state.isLoggedIn} />
           </section>
         </main>
         <footer>
@@ -23,7 +40,8 @@ function App() {
         </footer>
       </div>
     </Router>
-  );
+  )
+}
 }
 
 export default App;

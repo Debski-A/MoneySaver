@@ -1,5 +1,8 @@
 zuul:
   prefix: /api
+  host:
+    socket-timeout-millis: 50000
+    connect-timeout-millis: 50000
   ignored-services: '*'
   routes:
     auth-service:
@@ -13,6 +16,17 @@ zuul:
       serviceId: account-service
       stripPrefix: false
       sensitiveHeaders:
+
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: false
+
+ribbon:
+  ConnectTimeout: 50000
+  ReadTimeout: 50000
 
 server:
   port: 4000

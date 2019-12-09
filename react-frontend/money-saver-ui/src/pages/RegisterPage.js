@@ -12,7 +12,6 @@ class RegisterPage extends Component {
   }
 
   handleOnChange = (e) => {
-    console.log(e.target.id)
     switch (e.target.id) {
       case "username_input": {
         this.setState({
@@ -37,32 +36,28 @@ class RegisterPage extends Component {
   }
 
   handleOnClick = () => {
-    let apiBaseUrl = "http://localhost/api/accounts/";
+    let apiBaseUrl = "http://localhost:80/api/accounts/create";
     let registerCredentials = {
       "password": this.state.password,
       "username": this.state.username,
       "email": this.state.email
     }
-    console.log(registerCredentials)
-    fetch(apiBaseUrl + 'create', {
-      method: "POST",
+    fetch(apiBaseUrl, {
+      method: 'POST',
       body: JSON.stringify(registerCredentials),
       headers: {
-        'Accept': 'application/json',
         'Content-Type': 'application/json'
       }
     })
-      .then(response => response.json())
       .then(response => {
-        if (!!response.errorMessage) {
-          this.setState({
-            message: response.errorMessage
-          }
-          )
-        } else {
+        if (response.status === 200) {
           this.props.history.push("/login")
+        } else {
+          let responseJson = response.json()
+          this.setState({
+            message: responseJson.errorMessage
+          })
         }
-
       })
       .catch((err) => this.setState({
         message: err
@@ -70,7 +65,6 @@ class RegisterPage extends Component {
   }
 
   render() {
-    console.log(this.state.message)
     return (
       <div>
         <span>username</span>

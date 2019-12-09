@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route} from 'react-router-dom';
-import { isAuthenticated } from '../helpers/auth'
+import { isAuthenticated } from '../helpers/authenticationUtils'
 import AuthenticateBeforeRender from './AuthenticateBeforeRender'
 
 const AuthenticatedRoute = ({
