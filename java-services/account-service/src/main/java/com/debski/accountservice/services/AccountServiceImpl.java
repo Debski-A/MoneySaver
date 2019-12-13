@@ -4,6 +4,7 @@ import com.debski.accountservice.entities.Account;
 import com.debski.accountservice.exceptions.AccountException;
 import com.debski.accountservice.models.AccountDTO;
 import com.debski.accountservice.repositories.AccountRepository;
+import com.debski.accountservice.utils.AccountUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -67,8 +68,10 @@ public class AccountServiceImpl implements AccountService {
         Account savedAccountEntity;
         try {
             savedAccountEntity = repository.save(accountEntity);
-        }catch (ConstraintViolationException ex) {
-            throw new AccountException(messageSource.getMessage("invalid.email", null, LocaleContextHolder.getLocale()));
+        } catch (ConstraintViolationException ex) {
+            final String[] propertyWhichCauseException = {null};
+            ex.getConstraintViolations().forEach(e -> propertyWhichCauseException[0] = e.getPropertyPath().toString());
+            throw new AccountException(messageSource.getMessage("invalid." + propertyWhichCauseException[0], null, LocaleContextHolder.getLocale()));
         }
         return savedAccountEntity;
     }

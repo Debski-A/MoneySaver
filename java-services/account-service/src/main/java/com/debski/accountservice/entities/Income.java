@@ -2,8 +2,12 @@ package com.debski.accountservice.entities;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 @Entity
@@ -12,20 +16,34 @@ import java.time.LocalDate;
 @Builder
 public class Income extends BaseEntity{
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
     private Period frequency;
 
+    @NotNull
     private BigDecimal amount;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private Currency currency;
+
+    @NotNull
+    @Column(name = "date_of_income")
+    @PastOrPresent
     private LocalDate dateOfIncome;
 
+    @NotNull
     @OneToOne(fetch = FetchType.EAGER, cascade = { CascadeType.MERGE, CascadeType.PERSIST })
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "id_category")
     private IncomeCategory incomeCategory;
 
     private String note;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "id_account")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Account account;
 
 }

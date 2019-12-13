@@ -4,6 +4,7 @@ import com.debski.accountservice.entities.Account;
 import com.debski.accountservice.models.AccountDTO;
 import com.debski.accountservice.repositories.AccountRepository;
 import com.debski.accountservice.repositories.RoleRepositoryImpl;
+import com.debski.accountservice.utils.AccountUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
