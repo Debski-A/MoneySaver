@@ -1,5 +1,8 @@
 package com.debski.accountservice.entities;
 
+import com.debski.accountservice.entities.enums.Currency;
+import com.debski.accountservice.entities.enums.Frequency;
+import com.debski.accountservice.entities.enums.OutcomeCategory;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -34,8 +37,8 @@ public class Outcome extends BaseEntity {
     private LocalDate dateOfOutcome;
 
     @NotNull
-    @OneToOne(fetch = FetchType.EAGER, cascade = { CascadeType.MERGE, CascadeType.PERSIST })
-    @JoinColumn(name = "id")
+    @Column(name = "outcome_category")
+    @Enumerated
     private OutcomeCategory outcomeCategory;
 
     private String note;

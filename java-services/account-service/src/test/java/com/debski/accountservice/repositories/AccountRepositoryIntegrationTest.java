@@ -1,6 +1,11 @@
 package com.debski.accountservice.repositories;
 
-import com.debski.accountservice.entities.*;
+import com.debski.accountservice.entities.Account;
+import com.debski.accountservice.entities.Income;
+import com.debski.accountservice.entities.enums.Currency;
+import com.debski.accountservice.entities.enums.Frequency;
+import com.debski.accountservice.entities.enums.IncomeCategory;
+import com.debski.accountservice.entities.enums.Role;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -25,15 +29,15 @@ public class AccountRepositoryIntegrationTest {
     private AccountRepository accountRepository;
 
     @Autowired
-    private RoleRepositoryImpl roleRepository;
+    private IncomeRepository incomeRepository;
 
     @Autowired
-    private BudgetRepositoryImpl budgetRepository;
+    private OutcomeRepository outcomeRepository;
 
     @Test
     public void checkIsEqualAndHashcodeWorkingCorrectly_AndCheckRolesRelation() {
         //given
-        Account accountEntity = Account.builder().username("user").password("Password1").email("xyz@gmail.com").roles(Collections.singleton(roleRepository.getRole(RoleTypes.PREMIUM))).build();
+        Account accountEntity = Account.builder().username("user").password("Password1").email("xyz@gmail.com").role(Role.PREMIUM).build();
         assertThat(accountEntity.getId(), is(nullValue()));
         //when
         Account accountEntityFromDb = accountRepository.save(accountEntity);
@@ -43,17 +47,16 @@ public class AccountRepositoryIntegrationTest {
 
         accountEntity.setUsername("differentName");
         assertThat(accountEntity, equalTo(accountEntityFromDb));
-        assertThat(accountEntityFromDb.getRoles(), contains(equalTo(new Role(RoleTypes.PREMIUM))));
+        assertThat(accountEntityFromDb.getRole(), equalTo(Role.PREMIUM));
     }
 
     @Test
     public void shouldSaveAccountWithIncomesAndDeleteAccountWithIncomes() {
         // SAVE PART
         //given
-        IncomeCategory other = budgetRepository.getIncomeCategory(IncomeCategoryTypes.OTHER);
         Income income = Income.builder()
                 .frequency(Frequency.ONCE)
-                .incomeCategory(other)
+                .incomeCategory(IncomeCategory.OTHER)
                 .dateOfIncome(LocalDate.of(2012,12,12))
                 .amount(BigDecimal.valueOf(2000))
                 .currency(Currency.PLN)
@@ -62,7 +65,7 @@ public class AccountRepositoryIntegrationTest {
                 .username("user")
                 .password("Password1")
                 .email("xyz@gmail.com")
-                .roles(Collections.singleton(roleRepository.getRole(RoleTypes.PREMIUM)))
+                .role(Role.PREMIUM)
                 .incomes(Set.of(income))
                 .build();
         income.setAccount(accountEntity);
@@ -74,7 +77,7 @@ public class AccountRepositoryIntegrationTest {
         Long accountId = accountEntityFromDb.getId();
         Long incomeId = accountEntityFromDb.getIncomes().iterator().next().getId();
         Account accountById = accountRepository.findById(accountId).orElse(null);
-        Income incomeById = budgetRepository.findIncomeById(incomeId);
+        Income incomeById = incomeRepository.findById(incomeId).get();
         assertThat(accountById, notNullValue());
         assertThat(incomeById, notNullValue());
 
@@ -83,7 +86,7 @@ public class AccountRepositoryIntegrationTest {
         accountRepository.delete(accountEntity);
         //then
         Account accountByIdAfterDelete = accountRepository.findById(accountId).orElse(null);
-        Income incomeByIdAfterDelete = budgetRepository.findIncomeById(incomeId);
+        Income incomeByIdAfterDelete = incomeRepository.findById(incomeId).orElse(null);
         assertThat(accountByIdAfterDelete, nullValue());
         assertThat(incomeByIdAfterDelete, nullValue());
 

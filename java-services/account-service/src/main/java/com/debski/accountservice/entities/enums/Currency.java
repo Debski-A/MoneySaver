@@ -1,4 +1,4 @@
-package com.debski.accountservice.entities;
+package com.debski.accountservice.entities.enums;
 
 import lombok.Getter;
 import lombok.ToString;

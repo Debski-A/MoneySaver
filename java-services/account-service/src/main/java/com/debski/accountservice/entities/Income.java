@@ -1,5 +1,8 @@
 package com.debski.accountservice.entities;
 
+import com.debski.accountservice.entities.enums.Currency;
+import com.debski.accountservice.entities.enums.Frequency;
+import com.debski.accountservice.entities.enums.IncomeCategory;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -33,8 +36,8 @@ public class Income extends BaseEntity{
     private LocalDate dateOfIncome;
 
     @NotNull
-    @OneToOne(fetch = FetchType.EAGER, cascade = { CascadeType.MERGE, CascadeType.PERSIST })
-    @JoinColumn(name = "id_category")
+    @Column(name = "income_category")
+    @Enumerated
     private IncomeCategory incomeCategory;
 
     private String note;

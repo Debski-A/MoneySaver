@@ -3,6 +3,7 @@ package com.debski.accountservice.services;
 import com.debski.accountservice.entities.Account;
 import com.debski.accountservice.exceptions.AccountException;
 import com.debski.accountservice.models.AccountDTO;
+import com.debski.accountservice.models.DropdownValuesDTO;
 import com.debski.accountservice.repositories.AccountRepository;
 import com.debski.accountservice.utils.AccountUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,20 @@ public class AccountServiceImpl implements AccountService {
         this.messageSource = messageSource;
     }
 
+    @Override
+    public AccountDTO findByUsername(String username) {
+        Account accountEntity = repository.findByUsername(username);
+        AccountDTO accountDto = accountUtils.entityToDto(accountEntity);
+        log.debug("Account retrieved from DB by username = {}: {}", username, accountDto);
+        return accountDto;
+    }
+
+    @Override
+    public DropdownValuesDTO provideValuesForDropdowns() {
+        return null;
+    }
+
+    @Override
     public AccountDTO save(AccountDTO accountDto) {
         validateMandatoryParams(accountDto);
         validatePasswordStrength(accountDto);
@@ -74,13 +89,6 @@ public class AccountServiceImpl implements AccountService {
             throw new AccountException(messageSource.getMessage("invalid." + propertyWhichCauseException[0], null, LocaleContextHolder.getLocale()));
         }
         return savedAccountEntity;
-    }
-
-    public AccountDTO findByUsername(String username) {
-        Account accountEntity = repository.findByUsername(username);
-        AccountDTO accountDto = accountUtils.entityToDto(accountEntity);
-        log.debug("Account retrieved from DB by username = {}: {}", username, accountDto);
-        return accountDto;
     }
 
 }

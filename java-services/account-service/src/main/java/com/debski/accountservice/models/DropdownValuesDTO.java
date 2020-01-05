@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class BudgetDropdownValuesDTO {
+public class DropdownValuesDTO {
 
     private List<String> incomeCategories;
     private List<String> outcomeCategories;

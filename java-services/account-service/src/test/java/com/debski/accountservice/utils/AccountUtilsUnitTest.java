@@ -1,13 +1,9 @@
 package com.debski.accountservice.utils;
 
 import com.debski.accountservice.entities.Account;
-import com.debski.accountservice.entities.Role;
-import com.debski.accountservice.entities.RoleTypes;
+import com.debski.accountservice.entities.enums.Role;
 import com.debski.accountservice.models.AccountDTO;
-import com.debski.accountservice.repositories.RoleRepositoryImpl;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -17,13 +13,8 @@ import static org.junit.Assert.assertTrue;
 
 public class AccountUtilsUnitTest {
 
-    private RoleRepositoryImpl roleRepository = Mockito.mock(RoleRepositoryImpl.class);
-    private AccountUtils accountUtils = new AccountUtils(roleRepository, new BCryptPasswordEncoder());
+    private AccountUtils accountUtils = new AccountUtils(new BCryptPasswordEncoder());
 
-    @Before
-    public void setUp() {
-        Mockito.when(roleRepository.getRole(RoleTypes.USER)).thenReturn(new Role(RoleTypes.USER));
-    }
 
     @Test
     public void shouldMapEntityToDto() {
@@ -55,7 +46,7 @@ public class AccountUtilsUnitTest {
         assertThat(entity.getUsername(), is(dto.getUsername()));
         assertThat(entity.getPassword(), is(not(dto.getRawPassword())));
         assertThat(entity.getEmail(), is(dto.getEmail()));
-        assertThat(entity.getRoles(), contains(new Role(RoleTypes.USER)));
+        assertThat(entity.getRole(), is(Role.USER));
     }
 
     @Test

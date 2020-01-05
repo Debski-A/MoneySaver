@@ -1,10 +1,12 @@
 package com.debski.accountservice.entities;
 
+import com.debski.accountservice.entities.enums.Role;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
@@ -32,12 +34,8 @@ public class Account extends BaseEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "account", orphanRemoval = true)
     private Set<Outcome> outcomes;
 
-    @ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST })
-    @JoinTable(
-            name = "accounts_roles",
-            joinColumns = { @JoinColumn(name = "id_account") },
-            inverseJoinColumns = { @JoinColumn(name = "id_role") }
-    )
-    private Set<Role> roles;
+    @NotNull
+    @Enumerated
+    private Role role;
 
 }
