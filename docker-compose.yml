@@ -30,6 +30,7 @@ services:
     build: java-services/account-service
     depends_on:
       - config-server
+      - gateway
     ports:
       - 6000:6000
     restart: always
@@ -53,6 +54,7 @@ services:
     build: java-services/auth-service
     depends_on:
       - config-server
+      - gateway
     ports:
       - 6666:6666
     restart: always

@@ -1,5 +1,6 @@
 package com.debski.authservice.configurations;
 
+import com.debski.authservice.services.CustomWebResponseExceptionTranslator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +14,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler;
+import org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 
@@ -33,6 +36,9 @@ public class OAuth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
 
     @Autowired
     private Environment env;
+
+    @Autowired
+    private CustomWebResponseExceptionTranslator oauth2ResponseExceptionTranslator;
 
     @Autowired
     @Qualifier("tokenDataSource")
@@ -62,6 +68,7 @@ public class OAuth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints
+                .exceptionTranslator(oauth2ResponseExceptionTranslator)
                 .tokenStore(tokenStore())
                 // By default all grant types are supported except password
                 // password grants are switched on by injecting an AuthenticationManager
@@ -72,9 +79,16 @@ public class OAuth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
+        OAuth2AccessDeniedHandler auth2AccessDeniedHandler = new OAuth2AccessDeniedHandler();
+        auth2AccessDeniedHandler.setExceptionTranslator(oauth2ResponseExceptionTranslator);
+        OAuth2AuthenticationEntryPoint authenticationEntryPoint = new OAuth2AuthenticationEntryPoint();
+        authenticationEntryPoint.setExceptionTranslator(oauth2ResponseExceptionTranslator);
+
         oauthServer
                 .tokenKeyAccess("permitAll()")
                 .checkTokenAccess("isAuthenticated()")
+                .accessDeniedHandler(auth2AccessDeniedHandler)
+                .authenticationEntryPoint(authenticationEntryPoint)
                 .passwordEncoder(encoder);
     }
 

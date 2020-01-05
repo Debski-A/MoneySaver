@@ -1,37 +1,38 @@
-import React from 'react';
-import Article from '../components/Article';
+import React, { Component } from 'react';
+import Typical from 'react-typical'
+import Col from "react-bootstrap/Col"
+import Row from "react-bootstrap/Row"
+import Container from "react-bootstrap/Container"
+import { withTranslation } from "react-i18next";
 
-const articles = [
-    {
-        id: 1,
-        title: "Czym jest teoria strun",
-        author: "Jan Nowak",
-        text: "1111Lorem ipsum dolor sit amet consectetur, adipisicing elit. Atque amet, vitae consequatur exercitationem ratione voluptatibus repudiandae alias deleniti culpa illo suscipit quia sint temporibus illum commodi itaque ea ab ipsum?"
-    },
-    {
-        id: 2,
-        title: "Czym jest paradoks fermiego?",
-        author: "Ania Kwiatkowska",
-        text: "2222Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi cumque accusantium sapiente perspiciatis id ipsam necessitatibus recusandae unde dolores error sunt officiis ad, voluptatum veniam, blanditiis nam in totam esse."
-    },
-    {
-        id: 3,
-        title: "Ciemna materia i ciemna energia?",
-        author: "Jan Kowalski",
-        text: "4444Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi cumque accusantium sapiente perspiciatis id ipsam necessitatibus recusandae unde dolores error sunt officiis ad, voluptatum veniam, blanditiis nam in totam esse."
+class HomePage extends Component {
+
+    _timeOfUpdate = Date.now();
+
+    shouldComponentUpdate(nextProps) {
+        if ((Date.now() - this._timeOfUpdate) < 14000) {
+            // console.log('Wynik: ' + (Date.now() - this._timeOfUpdate))
+            return false;
+        }
+        this._timeOfUpdate = Date.now()
+        return true;
     }
-]
 
-const HomePage = () => {
-
-    const artList = articles.map(article => (
-        <Article key={article.id} {...article} />
-    ))
-    return (
-        <div className="home">
-            {artList}
-        </div>
-    );
+    render() {
+        return (
+            <Container fluid className="d-flex flex-column fill-height">
+                <Row className="fill-height">
+                    <Col className="text-center my-auto">
+                        <Typical
+                            steps={[1000, this.props.t('text1'), 1500, this.props.t('text2'), 3000, this.props.t('text3')]}
+                            loop={1}
+                            wrapper="h1"
+                        />
+                    </Col>
+                </Row>
+            </Container>
+        );
+    }
 }
 
-export default HomePage;
+export default withTranslation('homepage')(HomePage);

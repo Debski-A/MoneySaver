@@ -1,0 +1,6 @@
+{
+    "username_prompt":"Podaj nazwę użytkownika",
+    "password_prompt":"Podaj hasło",
+    "email_prompt":"Podaj email",
+    "submit_button":"Zarejestruj"
+}

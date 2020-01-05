@@ -3,8 +3,7 @@ package com.debski.accountservice.services;
 import com.debski.accountservice.entities.*;
 import com.debski.accountservice.exceptions.AccountException;
 import com.debski.accountservice.models.AccountDTO;
-import com.debski.accountservice.repositories.IncomeRepositoryImpl;
-import com.debski.accountservice.repositories.OutcomeRepositoryImpl;
+import com.debski.accountservice.repositories.BudgetRepositoryImpl;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -33,10 +32,7 @@ public class AccountServiceIntegrationTest {
     private AccountService accountService;
 
     @Autowired
-    private IncomeRepositoryImpl incomeRepository;
-
-    @Autowired
-    private OutcomeRepositoryImpl outcomeRepository;
+    private BudgetRepositoryImpl budgetRepository;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -143,8 +139,8 @@ public class AccountServiceIntegrationTest {
         //given
         exception.expect(AccountException.class);
         exception.expectMessage("Date cannot be from future");
-        IncomeCategory payment = incomeRepository.getIncomeCategory(IncomeCategoryTypes.PAYMENT);
-        Income income = Income.builder().amount(BigDecimal.valueOf(3000)).currency(Currency.EUR).dateOfIncome(LocalDate.of(2219, 3, 4)).incomeCategory(payment).frequency(Period.MONTHLY).build();
+        IncomeCategory payment = budgetRepository.getIncomeCategory(IncomeCategoryTypes.PAYMENT);
+        Income income = Income.builder().amount(BigDecimal.valueOf(3000)).currency(Currency.EUR).dateOfIncome(LocalDate.of(2219, 3, 4)).incomeCategory(payment).frequency(Frequency.MONTHLY).build();
         AccountDTO accountBeforeSave = AccountDTO.builder().username("user").rawPassword("Password1").email("xyz@gmail.com").incomes(Set.of(income)).build();
         //when
         AccountDTO accountAfterSave = accountService.save(accountBeforeSave);
@@ -164,10 +160,10 @@ public class AccountServiceIntegrationTest {
     @Test
     public void shouldPersistAccountWithIncomes() {
         //given
-        IncomeCategory payment = incomeRepository.getIncomeCategory(IncomeCategoryTypes.PAYMENT);
-        IncomeCategory gift = incomeRepository.getIncomeCategory(IncomeCategoryTypes.GIFT);
-        Income income1 = Income.builder().amount(BigDecimal.valueOf(3000)).currency(Currency.GBP).dateOfIncome(LocalDate.of(2019, 3, 4)).incomeCategory(payment).frequency(Period.MONTHLY).build();
-        Income income2 = Income.builder().amount(BigDecimal.valueOf(100)).currency(Currency.GBP).dateOfIncome(LocalDate.of(2019, 11, 11)).incomeCategory(gift).frequency(Period.ONCE).build();
+        IncomeCategory payment = budgetRepository.getIncomeCategory(IncomeCategoryTypes.PAYMENT);
+        IncomeCategory gift = budgetRepository.getIncomeCategory(IncomeCategoryTypes.GIFT);
+        Income income1 = Income.builder().amount(BigDecimal.valueOf(3000)).currency(Currency.GBP).dateOfIncome(LocalDate.of(2019, 3, 4)).incomeCategory(payment).frequency(Frequency.MONTHLY).build();
+        Income income2 = Income.builder().amount(BigDecimal.valueOf(100)).currency(Currency.GBP).dateOfIncome(LocalDate.of(2019, 11, 11)).incomeCategory(gift).frequency(Frequency.ONCE).build();
         AccountDTO accountBeforeSave1 = AccountDTO.builder().username("user").rawPassword("Password1").email("xyz@gmail.com").incomes(Set.of(income1, income2)).build();
         //when
         AccountDTO accountAfterSave1 = accountService.save(accountBeforeSave1);
@@ -178,12 +174,12 @@ public class AccountServiceIntegrationTest {
     @Test
     public void shouldPersistAccountWithOutcome() {
         //given
-        OutcomeCategory alcohol = outcomeRepository.getOutcomeCategory(OutcomeCategoryTypes.ALCOHOL);
+        OutcomeCategory alcohol = budgetRepository.getOutcomeCategory(OutcomeCategoryTypes.ALCOHOL);
         Outcome outcome = Outcome.builder()
                 .amount(BigDecimal.valueOf(20))
                 .currency(Currency.PLN)
                 .dateOfOutcome(LocalDate.of(2018, 12, 12))
-                .frequency(Period.ONCE)
+                .frequency(Frequency.ONCE)
                 .outcomeCategory(alcohol)
                 .build();
         AccountDTO accountBeforeSave = AccountDTO.builder().username("user").rawPassword("Password1").email("xyz@gmail.com").outcomes(Set.of(outcome)).build();

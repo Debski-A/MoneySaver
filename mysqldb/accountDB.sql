@@ -39,9 +39,9 @@ CREATE TABLE `income_categories` (
 DROP TABLE IF EXISTS `incomes`;
 CREATE TABLE `incomes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `frequency` varchar(10) NOT NULL,
-  `currency` varchar(3) NOT NULL,
   `amount` decimal(11,2) NOT NULL,
+  `currency` smallint NOT NULL,
+  `frequency` smallint NOT NULL,
   `date_of_income` date NOT NULL,
   `note` varchar(250),
   `uuid` binary(16) NOT NULL UNIQUE,
@@ -64,9 +64,9 @@ CREATE TABLE `outcome_categories` (
 DROP TABLE IF EXISTS `outcomes`;
 CREATE TABLE `outcomes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `frequency` varchar(10) NOT NULL,
-  `currency` varchar(3) NOT NULL,
   `amount` decimal(11,2) NOT NULL,
+  `currency` smallint NOT NULL,
+  `frequency` smallint NOT NULL,
   `date_of_outcome` date NOT NULL,
   `note` varchar(250),
   `uuid` binary(16) NOT NULL UNIQUE,

@@ -18,14 +18,14 @@ import java.time.LocalDate;
 public class Outcome extends BaseEntity {
 
     @NotNull
-    @Enumerated(EnumType.STRING)
-    private Period frequency;
+    @Enumerated
+    private Frequency frequency;
 
     @NotNull
     private BigDecimal amount;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
+    @Enumerated
     private Currency currency;
 
     @NotNull

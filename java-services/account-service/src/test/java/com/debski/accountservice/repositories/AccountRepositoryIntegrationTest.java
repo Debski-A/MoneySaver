@@ -28,7 +28,7 @@ public class AccountRepositoryIntegrationTest {
     private RoleRepositoryImpl roleRepository;
 
     @Autowired
-    private IncomeRepositoryImpl incomeRepositoryImpl;
+    private BudgetRepositoryImpl budgetRepository;
 
     @Test
     public void checkIsEqualAndHashcodeWorkingCorrectly_AndCheckRolesRelation() {
@@ -50,9 +50,9 @@ public class AccountRepositoryIntegrationTest {
     public void shouldSaveAccountWithIncomesAndDeleteAccountWithIncomes() {
         // SAVE PART
         //given
-        IncomeCategory other = incomeRepositoryImpl.getIncomeCategory(IncomeCategoryTypes.OTHER);
+        IncomeCategory other = budgetRepository.getIncomeCategory(IncomeCategoryTypes.OTHER);
         Income income = Income.builder()
-                .frequency(Period.ONCE)
+                .frequency(Frequency.ONCE)
                 .incomeCategory(other)
                 .dateOfIncome(LocalDate.of(2012,12,12))
                 .amount(BigDecimal.valueOf(2000))
@@ -74,7 +74,7 @@ public class AccountRepositoryIntegrationTest {
         Long accountId = accountEntityFromDb.getId();
         Long incomeId = accountEntityFromDb.getIncomes().iterator().next().getId();
         Account accountById = accountRepository.findById(accountId).orElse(null);
-        Income incomeById = incomeRepositoryImpl.findById(incomeId);
+        Income incomeById = budgetRepository.findIncomeById(incomeId);
         assertThat(accountById, notNullValue());
         assertThat(incomeById, notNullValue());
 
@@ -83,7 +83,7 @@ public class AccountRepositoryIntegrationTest {
         accountRepository.delete(accountEntity);
         //then
         Account accountByIdAfterDelete = accountRepository.findById(accountId).orElse(null);
-        Income incomeByIdAfterDelete = incomeRepositoryImpl.findById(incomeId);
+        Income incomeByIdAfterDelete = budgetRepository.findIncomeById(incomeId);
         assertThat(accountByIdAfterDelete, nullValue());
         assertThat(incomeByIdAfterDelete, nullValue());
 

@@ -1,17 +1,11 @@
 package com.debski.accountservice.entities;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 
-@AllArgsConstructor
 @Getter
+@ToString
 public enum Currency {
+    PLN, EUR, USD, GBP;
 
-    PLN("PLN", "zł"),
-    EUR("EUR", "€"),
-    USD("USD", "$"),
-    GBP("GBP", "£");
-
-    private String name;
-    private String symbol;
 }

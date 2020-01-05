@@ -1,0 +1,8 @@
+{
+    "application":"Application",
+    "start":"Start",
+    "registration":"Registration",
+    "login":"Log In",
+    "logout":"Log Out",
+    "lang":"Choose language"   
+}
