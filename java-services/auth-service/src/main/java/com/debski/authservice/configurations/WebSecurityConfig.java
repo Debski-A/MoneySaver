@@ -34,7 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.jdbcAuthentication().dataSource(accountDataSource)
                 .usersByUsernameQuery("SELECT username, password, enabled FROM accounts WHERE BINARY username = ?")
-                .authoritiesByUsernameQuery("SELECT username, role FROM accounts a LEFT JOIN accounts_roles ar ON a.id = ar.id_account LEFT JOIN roles r ON r.id = ar.id_role WHERE BINARY username = ?")
+                .authoritiesByUsernameQuery("SELECT username, role FROM accounts WHERE BINARY username = ?")
                 .passwordEncoder(passwordEncoder());
     }
 
