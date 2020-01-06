@@ -1,5 +1,6 @@
 {
     "username_prompt":"Podaj nazwę użytkownika",
     "password_prompt":"Podaj hasło",
-    "submit_button":"Zaloguj"
+    "submit_button":"Zaloguj",
+    "login_error":"Logowanie nie powiodło się"
 }

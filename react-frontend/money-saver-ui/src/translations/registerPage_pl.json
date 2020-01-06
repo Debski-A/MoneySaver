@@ -2,5 +2,6 @@
     "username_prompt":"Podaj nazwę użytkownika",
     "password_prompt":"Podaj hasło",
     "email_prompt":"Podaj email",
-    "submit_button":"Zarejestruj"
+    "submit_button":"Zarejestruj",
+    "register_error":"Rejestracja nie powiodła się"
 }

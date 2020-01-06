@@ -5,7 +5,7 @@ import Alert from 'react-bootstrap/Alert'
 import Col from "react-bootstrap/Col"
 import Row from "react-bootstrap/Row"
 import i18n from '../helpers/i18n'
-import { withTranslation} from "react-i18next";
+import { withTranslation } from "react-i18next";
 
 class RegisterPage extends Component {
   state = {
@@ -66,9 +66,12 @@ class RegisterPage extends Component {
           this.props.history.push("/login")
         }
       })
-      .catch((err) => this.setState({
-        message: err
-      }));
+      .catch((err) => {
+        console.log(err)
+        this.setState({
+          message: this.props.t('register_error')
+        })
+      });
   }
 
   render() {

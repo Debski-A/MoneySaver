@@ -1,6 +1,8 @@
 package com.debski.accountservice.services;
 
 import com.debski.accountservice.entities.Account;
+import com.debski.accountservice.entities.Income;
+import com.debski.accountservice.entities.Outcome;
 import com.debski.accountservice.entities.enums.Currency;
 import com.debski.accountservice.entities.enums.Frequency;
 import com.debski.accountservice.entities.enums.IncomeCategory;
@@ -69,6 +71,33 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public AccountDTO update(AccountDTO accountDto) {
+        // TODO for now update only for incomes and outcomes
+        Account accountEntity = repository.findByUsername(accountDto.getUsername());
+        // TODO for now update supports single income/outcome update
+        updateIncome(accountEntity, accountDto);
+        updateOutcome(accountEntity, accountDto);
+        AccountDTO accountDtoResult = accountUtils.entityToDto(accountEntity);
+        return accountDtoResult;
+    }
+
+    private void updateIncome(Account accountEntity, AccountDTO accountDto) {
+        if (accountDto.getIncomes() != null && accountDto.getIncomes().iterator().hasNext()) {
+            Income income = accountDto.getIncomes().iterator().next();
+            income.setAccount(accountEntity);
+            accountEntity.getIncomes().add(income);
+        }
+    }
+
+    private void updateOutcome(Account accountEntity, AccountDTO accountDto) {
+        if (accountDto.getOutcomes() != null && accountDto.getOutcomes().iterator().hasNext()) {
+            Outcome outcome = accountDto.getOutcomes().iterator().next();
+            outcome.setAccount(accountEntity);
+            accountEntity.getOutcomes().add(outcome);
+        }
+    }
+
+    @Override
     public AccountDTO save(AccountDTO accountDto) {
         validateMandatoryParams(accountDto);
         validatePasswordStrength(accountDto);
@@ -81,9 +110,9 @@ public class AccountServiceImpl implements AccountService {
         return accountDtoResult;
     }
 
-    private void validateMandatoryParams(AccountDTO accountDTO) throws AccountException {
+    private void validateMandatoryParams(AccountDTO accountDto) throws AccountException {
         // Mandatory Params: username, password. email
-        Stream.of(accountDTO.getUsername(), accountDTO.getRawPassword(), accountDTO.getEmail()).forEach(field -> {
+        Stream.of(accountDto.getUsername(), accountDto.getRawPassword(), accountDto.getEmail()).forEach(field -> {
             if (StringUtils.isBlank(field)) {
                 throw new AccountException(messageSource.getMessage("mandatory.parameters", null, LocaleContextHolder.getLocale()));
             }

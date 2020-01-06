@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form'
 import Col from "react-bootstrap/Col"
 import Row from "react-bootstrap/Row"
 import i18n from '../helpers/i18n'
-import { withTranslation} from "react-i18next";
+import { withTranslation } from "react-i18next";
 
 class LoginPage extends Component {
     state = {
@@ -49,9 +49,12 @@ class LoginPage extends Component {
                     })
                 }
             })
-            .catch((err) => this.setState({
-                message: err
-            }));
+            .catch((err) => {
+                console.log(err)
+                this.setState({
+                    message: this.props.t('login_error')
+                })
+            });
     }
 
     handleOnChange = (e) => {
@@ -76,7 +79,7 @@ class LoginPage extends Component {
             <Form className="mt-2">
                 <Form.Group as={Row}>
                     <Col sm={5} >
-                        <Form.Control id="username_input" onChange={this.handleOnChange} placeholder={this.props.t('username_prompt')}/>
+                        <Form.Control id="username_input" onChange={this.handleOnChange} placeholder={this.props.t('username_prompt')} />
                     </Col>
                 </Form.Group>
                 <Form.Group as={Row}>

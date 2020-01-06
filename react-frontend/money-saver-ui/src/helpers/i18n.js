@@ -9,6 +9,10 @@ import loginPage_en from '../translations/loginPage_en'
 import loginPage_pl from '../translations/loginPage_pl'
 import homepage_pl from '../translations/homepage_pl'
 import homepage_en from '../translations/homepage_en'
+import addIncomePage_pl from '../translations/addIncomePage_pl'
+import addIncomePage_en from '../translations/addIncomePage_en'
+import addOutcomePage_pl from '../translations/addOutcomePage_pl'
+import addOutcomePage_en from '../translations/addOutcomePage_en'
 
 i18n
   .use(LanguageDetector)
@@ -21,6 +25,8 @@ i18n
         register_page: registerPage_en,
         login_page: loginPage_en,
         homepage: homepage_en,
+        add_income_page: addIncomePage_en,
+        add_outcome_page: addOutcomePage_en,
         translations: {
           //default translation will go here
         }
@@ -30,6 +36,8 @@ i18n
         register_page: registerPage_pl,
         login_page: loginPage_pl,
         homepage: homepage_pl,
+        add_income_page: addIncomePage_pl,
+        add_outcome_page: addOutcomePage_pl,
         translations: {
           //default translation will go here
         }

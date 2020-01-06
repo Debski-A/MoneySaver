@@ -29,15 +29,9 @@ public class AccountController {
     }
 
     @PreAuthorize("#oauth2.hasScope('ui')")
-    @PutMapping("/current/income/add")
-    public void saveAccountIncome(Principal principal, @RequestBody AccountDTO accountDto) {
-        System.out.println(principal.getName());
-        //TODO
-    }
-
-    @PreAuthorize("#oauth2.hasScope('ui')")
-    @PutMapping("/current/outcome/add")
-    public void saveAccountOutcome(Principal principal, @RequestBody AccountDTO accountDto) {
+    @PutMapping("/current/update")
+    public void updateAccount(Principal principal, @RequestBody AccountDTO accountDto) {
+        accountDto.setUsername(principal.getName());
         System.out.println(principal.getName());
         //TODO
     }
@@ -47,6 +41,4 @@ public class AccountController {
     public DropdownValuesDTO getValueForDropdowns() {
         return accountService.provideValuesForDropdowns();
     }
-
-    //TODO bedzie jeszcze allCurrencies i allPeriods - zrobic DTO dla wszystkich 4 list i wykonywac 1 call zamiast 4
 }

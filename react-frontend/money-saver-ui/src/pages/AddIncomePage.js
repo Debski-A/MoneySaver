@@ -4,24 +4,29 @@ import { authenticate, isAuthenticated, getAccessToken } from '../helpers/authen
 import Form from 'react-bootstrap/Form'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
-import DatePicker from 'react-datepicker'
+import DatePicker, {registerLocale} from 'react-datepicker'
+import { withTranslation } from "react-i18next";
 import "react-datepicker/dist/react-datepicker.css"
+import pl from "date-fns/locale/pl";
+registerLocale('pl', pl)
 
 class AddIncomePage extends Component {
 
     state = {
-        startDate: new Date()
+        startDate: new Date(),
+        currencies: [],
+        frequencies: [],
+        incomeCategories: []
     }
 
     componentDidMount() {
-        this.getIncomeCategories()
-        //i tutaj state dla categories
+        this.getDropdownValues()
     }
 
-    getIncomeCategories = () => {
+    getDropdownValues = () => {
         if (!isAuthenticated) authenticate()
 
-        let incomeCategoriesUrl = "http://localhost/api/accounts/income/all"
+        let incomeCategoriesUrl = "http://localhost/api/accounts/dropdown_values"
         let currentLanguage = i18n.language
         fetch(incomeCategoriesUrl, {
             method: 'GET',
@@ -31,7 +36,14 @@ class AddIncomePage extends Component {
             }
         })
             .then(response => response.json())
-            .then(response => console.log(response))
+            .then(response => {
+                let { currencies, frequencies, incomeCategories } = response
+                this.setState({
+                    currencies: currencies,
+                    frequencies: frequencies,
+                    incomeCategories: incomeCategories,
+                })
+            })
             .catch(err => {
                 console.log(err)
             })
@@ -50,47 +62,44 @@ class AddIncomePage extends Component {
                 <Form.Row className="sm-4 pt-4">
                     <Form.Group as={Col} sm={4}>
                         <Form.Group as={Col} sm={10}>
-                            <Form.Control placeholder="kwota" />
+                            <Form.Control placeholder={this.props.t('amount_prompt')} />
                         </Form.Group>
                         <Form.Group as={Col} sm={10}>
                             <Form.Control as="select" >
-                                <option>dolar</option>
-                                <option>ajsy</option>
+                                {this.state.currencies.map((value, index) => <option key={index}>{value}</option>)}
                             </Form.Control>
                         </Form.Group>
                         <Form.Group as={Col} sm={10}>
                             <Form.Control as="select" >
-                                <option>Jednorazowo</option>
-                                <option>Co miesiąc</option>
-                                <option>Co rok</option>
+                                {this.state.frequencies.map((value, index) => <option key={index}>{value}</option>)}
                             </Form.Control>
                         </Form.Group>
                         <Form.Group as={Col} sm={10}>
                             <Form.Control as="select" >
-                                <option>jedzenie</option>
-                                <option>prezent</option>
-                                <option>Co rok</option>
+                                {this.state.incomeCategories.map((value, index) => <option key={index}>{value}</option>)}
                             </Form.Control>
                         </Form.Group>
                         <Form.Group as={Col} sm={10}>
-                            <Form.Control as="textarea" rows="3" placeholder="notatka" />
+                            <Form.Control as="textarea" rows="3" placeholder={this.props.t('note_prompt')} />
                         </Form.Group>
                         <Form.Group as={Col} sm={10}>
-                        <Button className="ml-2" variant="secondary">Zapisz</Button>
+                            <Button className="ml-2" variant="secondary">{this.props.t('submit_button')}</Button>
                         </Form.Group>
                     </Form.Group>
                     <Form.Group as={Col} sm={6} className="d-flex flex-column">
-                        <Form.Label>Data przychodu</Form.Label>
-                        <DatePicker selected={this.state.startDate} onChange={this.handleOnChange} inline />
+                        <Form.Label>{this.props.t('date_label')}</Form.Label>
+                        <DatePicker locale={this.props.i18n.language} selected={this.state.startDate} onChange={this.handleOnChange} inline />
                     </Form.Group>
                 </Form.Row>
             </Form >
         )
     }
 
-    componentDidUpdate() {
-        this.getIncomeCategories()
+    componentDidUpdate(prevProps) {
+        if (this.props.t !== prevProps.t) {
+            this.getDropdownValues()
+        }
     }
 }
 
-export default AddIncomePage
+export default withTranslation('add_income_page')(AddIncomePage)

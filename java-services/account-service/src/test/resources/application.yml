@@ -9,4 +9,11 @@ spring:
 
 logging:
   level:
-    com.debski.accountservice: DEBUG
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+

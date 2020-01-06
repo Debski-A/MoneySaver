@@ -21,9 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -226,5 +224,64 @@ public class AccountServiceIntegrationTest {
         DropdownValuesDTO dropdownValuesDTO = accountService.provideValuesForDropdowns();
         //then
         assertThat(dropdownValuesDTO, equalTo(expectedResult));
+    }
+
+    @Test
+    public void shouldUpdateAccountWithNewProvidedValues() {
+        //given
+        AccountDTO dataInDatabase = prepareDataInDatabase();
+        AccountDTO dataForUpdate = singleIncomeInAccountDto();
+        Income incomeForUpdate = dataForUpdate.getIncomes().iterator().next();
+        //when
+        accountService.update(dataForUpdate);
+        //then
+        AccountDTO accountEntity = accountService.findByUsername("miecio");
+        //assert that contains data from update
+        assertThat(accountEntity.getIncomes(), hasSize(2));
+        assertThat(accountEntity.getIncomes(), hasItem(incomeForUpdate));
+    }
+
+    private AccountDTO prepareDataInDatabase() {
+        Outcome outcome1 = Outcome.builder()
+                .currency(Currency.PLN)
+                .outcomeCategory(OutcomeCategory.ALCOHOL)
+                .dateOfOutcome(LocalDate.of(2020, 01, 01))
+                .amount(BigDecimal.valueOf(35))
+                .frequency(Frequency.ONCE)
+                .note("Kacyk po sylwestrze")
+                .build();
+        Income income1 = Income.builder()
+                .currency(Currency.PLN)
+                .incomeCategory(IncomeCategory.BENEFIT)
+                .dateOfIncome(LocalDate.of(2020, 01, 02))
+                .amount(BigDecimal.valueOf(500))
+                .frequency(Frequency.MONTHLY)
+                .note("500+")
+                .build();
+        AccountDTO dto = AccountDTO.builder()
+                .username("miecio")
+                .rawPassword(("Password1"))
+                .email("miecio@wp.pl")
+                .outcomes(new HashSet<>() {{add(outcome1);}})
+                .incomes(new HashSet<>() {{add(income1);}})
+                .build();
+        accountService.save(dto);
+        return dto;
+    }
+
+    private AccountDTO singleIncomeInAccountDto() {
+        Income income2 = Income.builder()
+                .currency(Currency.GBP)
+                .incomeCategory(IncomeCategory.BENEFIT)
+                .dateOfIncome(LocalDate.of(2020, 01, 02))
+                .amount(BigDecimal.valueOf(300))
+                .frequency(Frequency.YEARLY)
+                .note("Coroczne pieniążki z okazju urodzinek od wujcia Andrzejka")
+                .build();
+        AccountDTO incomeFromFrontend = AccountDTO.builder()
+                .incomes(new HashSet<>() {{add(income2);}})
+                .username("miecio")
+                .build();
+        return incomeFromFrontend;
     }
 }

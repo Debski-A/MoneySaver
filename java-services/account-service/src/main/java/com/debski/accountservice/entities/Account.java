@@ -18,6 +18,7 @@ import java.util.Set;
 public class Account extends BaseEntity {
 
     @NotBlank
+    @Column(unique = true)
     private String username;
 
     @NotBlank
