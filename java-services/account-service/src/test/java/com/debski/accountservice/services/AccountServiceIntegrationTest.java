@@ -7,6 +7,7 @@ import com.debski.accountservice.entities.enums.IncomeCategory;
 import com.debski.accountservice.entities.enums.OutcomeCategory;
 import com.debski.accountservice.exceptions.AccountException;
 import com.debski.accountservice.models.AccountDTO;
+import com.debski.accountservice.models.DropdownValuesDTO;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,9 +21,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -185,4 +188,43 @@ public class AccountServiceIntegrationTest {
         assertThat(accountAfterSave.getOutcomes(), equalTo(Set.of(outcome)));
     }
 
+    @Test
+    public void shouldReturnDropdownValuesForPolishLang() {
+        //given
+        LocaleContextHolder.setLocale(Locale.forLanguageTag("pl"));
+        var currencies = List.of("PLN", "EUR", "USD", "GBP");
+        var frequencies = List.of("Jednorazowo", "Codziennie", "Raz w miesiącu", "Co kwartał", "Raz w roku");
+        var outcomeCategories = List.of("Opłata", "Jedzenie", "Alkohol", "Prezent", "Samochód", "Inne");
+        var incomeCategories = List.of("Wpłata", "Prezent", "Benefit", "Inne");
+        var expectedResult = DropdownValuesDTO.builder()
+                .currencies(currencies)
+                .frequencies(frequencies)
+                .outcomeCategories(outcomeCategories)
+                .incomeCategories(incomeCategories)
+                .build();
+        //when
+        DropdownValuesDTO dropdownValuesDTO = accountService.provideValuesForDropdowns();
+        //then
+        assertThat(dropdownValuesDTO, equalTo(expectedResult));
+    }
+
+    @Test
+    public void shouldReturnDropdownValuesForEnglishLang() {
+        //given
+        LocaleContextHolder.setLocale(Locale.forLanguageTag("en"));
+        var currencies = List.of("PLN", "EUR", "USD", "GBP");
+        var frequencies = List.of("Once", "Daily", "Monthly", "Quarterly", "Yearly");
+        var outcomeCategories = List.of("Fee", "Food", "Alcohol", "Gift", "Car", "Other");
+        var incomeCategories = List.of("Payment", "Gift", "Benefit", "Other");
+        var expectedResult = DropdownValuesDTO.builder()
+                .currencies(currencies)
+                .frequencies(frequencies)
+                .outcomeCategories(outcomeCategories)
+                .incomeCategories(incomeCategories)
+                .build();
+        //when
+        DropdownValuesDTO dropdownValuesDTO = accountService.provideValuesForDropdowns();
+        //then
+        assertThat(dropdownValuesDTO, equalTo(expectedResult));
+    }
 }

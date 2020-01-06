@@ -1,6 +1,7 @@
 package com.debski.accountservice.controllers;
 
 import com.debski.accountservice.models.AccountDTO;
+import com.debski.accountservice.models.DropdownValuesDTO;
 import com.debski.accountservice.services.AccountService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +40,12 @@ public class AccountController {
     public void saveAccountOutcome(Principal principal, @RequestBody AccountDTO accountDto) {
         System.out.println(principal.getName());
         //TODO
+    }
+
+    @PreAuthorize("#oauth2.hasScope('ui')")
+    @GetMapping("/dropdown_values")
+    public DropdownValuesDTO getValueForDropdowns() {
+        return accountService.provideValuesForDropdowns();
     }
 
     //TODO bedzie jeszcze allCurrencies i allPeriods - zrobic DTO dla wszystkich 4 list i wykonywac 1 call zamiast 4
