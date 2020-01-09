@@ -20,9 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolationException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 import java.util.stream.Stream;
 
 @Service
@@ -61,19 +59,23 @@ public class AccountServiceImpl implements AccountService {
         return result;
     }
 
-    private <E extends Enum> List<String> translateAllTypes(E enumSource) {
-        List<String> mappedAndTranslatedEnums = Arrays
-                .asList(enumSource.getDeclaringClass().getEnumConstants())
-                .stream()
-                .map(e -> messageSource.getMessage(e.toString().toLowerCase(), null, LocaleContextHolder.getLocale()))
-                .collect(Collectors.toList());
-        return mappedAndTranslatedEnums;
+    private <E extends Enum> Map<Integer, String> translateAllTypes(E enumSource) {
+        int oridinal = 0;
+        Map<Integer, String> translatedTypes = new HashMap<>();
+        List<Object> listOfTypes = Arrays.asList(enumSource.getDeclaringClass().getEnumConstants());
+        for (Object e : listOfTypes) {
+            translatedTypes.put(oridinal++, messageSource.getMessage(e.toString().toLowerCase(), null, LocaleContextHolder.getLocale()));
+        }
+        return translatedTypes;
     }
 
     @Override
     public AccountDTO update(AccountDTO accountDto) {
         // TODO for now update only for incomes and outcomes
         Account accountEntity = repository.findByUsername(accountDto.getUsername());
+        if (accountEntity == null) {
+            throw new AccountException(messageSource.getMessage("user.not.found", null, LocaleContextHolder.getLocale()));
+        }
         // TODO for now update supports single income/outcome update
         updateIncome(accountEntity, accountDto);
         updateOutcome(accountEntity, accountDto);
@@ -85,7 +87,11 @@ public class AccountServiceImpl implements AccountService {
         if (accountDto.getIncomes() != null && accountDto.getIncomes().iterator().hasNext()) {
             Income income = accountDto.getIncomes().iterator().next();
             income.setAccount(accountEntity);
-            accountEntity.getIncomes().add(income);
+            if (accountEntity.getIncomes() == null) {
+                accountEntity.setIncomes(new HashSet<>() {{ add(income); }});
+            } else {
+                accountEntity.getIncomes().add(income);
+            }
         }
     }
 
@@ -93,7 +99,11 @@ public class AccountServiceImpl implements AccountService {
         if (accountDto.getOutcomes() != null && accountDto.getOutcomes().iterator().hasNext()) {
             Outcome outcome = accountDto.getOutcomes().iterator().next();
             outcome.setAccount(accountEntity);
-            accountEntity.getOutcomes().add(outcome);
+            if (accountEntity.getOutcomes() == null) {
+                accountEntity.setOutcomes(new HashSet<>() {{ add(outcome); }});
+            } else {
+                accountEntity.getOutcomes().add(outcome);
+            }
         }
     }
 

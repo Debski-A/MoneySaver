@@ -1,10 +1,14 @@
 package com.debski.accountservice.utils;
 
 import com.debski.accountservice.entities.Account;
+import com.debski.accountservice.entities.enums.Currency;
 import com.debski.accountservice.entities.enums.Role;
 import com.debski.accountservice.models.AccountDTO;
 import org.junit.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -67,5 +71,11 @@ public class AccountUtilsUnitTest {
     @Test
     public void shouldReturnTrueIfPasswordDoesNotContainAtLeast1Digit() {
         assertTrue(accountUtils.isToWeak("Password"));
+    }
+
+    @Test
+    public void test() {
+        List<Object> objects = Arrays.asList(Currency.EUR.getDeclaringClass().getEnumConstants());
+        System.out.println(objects);
     }
 }

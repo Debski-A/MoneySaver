@@ -3,10 +3,7 @@ package com.debski.accountservice.entities;
 import com.debski.accountservice.entities.enums.Currency;
 import com.debski.accountservice.entities.enums.Frequency;
 import com.debski.accountservice.entities.enums.OutcomeCategory;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -17,6 +14,8 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "outcomes")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class Outcome extends BaseEntity {
 

@@ -190,10 +190,10 @@ public class AccountServiceIntegrationTest {
     public void shouldReturnDropdownValuesForPolishLang() {
         //given
         LocaleContextHolder.setLocale(Locale.forLanguageTag("pl"));
-        var currencies = List.of("PLN", "EUR", "USD", "GBP");
-        var frequencies = List.of("Jednorazowo", "Codziennie", "Raz w miesiącu", "Co kwartał", "Raz w roku");
-        var outcomeCategories = List.of("Opłata", "Jedzenie", "Alkohol", "Prezent", "Samochód", "Inne");
-        var incomeCategories = List.of("Wpłata", "Prezent", "Benefit", "Inne");
+        var currencies = Map.of(0, "PLN", 1, "EUR", 2, "USD", 3, "GBP");
+        var frequencies = Map.of(0, "Jednorazowo", 1, "Codziennie", 2, "Raz w miesiącu", 3,"Co kwartał", 4,"Raz w roku");
+        var outcomeCategories = Map.of(0, "Opłata", 1, "Jedzenie", 2, "Alkohol", 3, "Prezent",4,  "Samochód", 5, "Inne");
+        var incomeCategories = Map.of(0, "Wpłata", 1,  "Prezent", 2, "Benefit", 3, "Inne");
         var expectedResult = DropdownValuesDTO.builder()
                 .currencies(currencies)
                 .frequencies(frequencies)
@@ -210,10 +210,10 @@ public class AccountServiceIntegrationTest {
     public void shouldReturnDropdownValuesForEnglishLang() {
         //given
         LocaleContextHolder.setLocale(Locale.forLanguageTag("en"));
-        var currencies = List.of("PLN", "EUR", "USD", "GBP");
-        var frequencies = List.of("Once", "Daily", "Monthly", "Quarterly", "Yearly");
-        var outcomeCategories = List.of("Fee", "Food", "Alcohol", "Gift", "Car", "Other");
-        var incomeCategories = List.of("Payment", "Gift", "Benefit", "Other");
+        var currencies = Map.of(0, "PLN", 1, "EUR", 2, "USD", 3, "GBP");
+        var frequencies = Map.of(0,"Once", 1, "Daily", 2, "Monthly",  3,"Quarterly", 4, "Yearly");
+        var outcomeCategories = Map.of(0, "Fee", 1,  "Food", 2,  "Alcohol", 3, "Gift", 4, "Car", 5, "Other");
+        var incomeCategories = Map.of(0, "Payment", 1,  "Gift", 2, "Benefit", 3, "Other");
         var expectedResult = DropdownValuesDTO.builder()
                 .currencies(currencies)
                 .frequencies(frequencies)

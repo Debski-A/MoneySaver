@@ -23,6 +23,7 @@ public class AccountDTO {
 
     private String email;
 
+    Zrobic IncomeDTO i OutcomeDTO, kore zamiast pola account beda mialy polle String owner z username
     private Set<Income> incomes;
 
     private Set<Outcome> outcomes;

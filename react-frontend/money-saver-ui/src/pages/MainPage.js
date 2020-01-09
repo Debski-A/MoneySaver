@@ -18,15 +18,15 @@ class MainPage extends Component {
                 <Col sm={2} className="d-flex fill-height flex-column">
                     <Row className="fill-height align-items-center">
                         <FontAwesomeIcon size="4x" icon={faPiggyBank} color="#6c757d" />
-                        <Button as={NavLink} className="ml-2" variant="secondary" to="/main/income/add" >Dodaj przychód</Button>
+                        <Button as={NavLink} className="ml-2" variant="secondary" to="/main/income/add" >{this.props.t('income_button')}</Button>
                     </Row>
                     <Row className="fill-height align-items-center">
                         <FontAwesomeIcon size="4x" icon={faMoneyBillWave} color="#6c757d" />
-                        <Button as={NavLink} className="ml-2" variant="secondary" to="/main/outcome/add">Dodaj wydatek</Button>
+                        <Button as={NavLink} className="ml-2" variant="secondary" to="/main/outcome/add">{this.props.t('outcome_button')}</Button>
                     </Row>
                     <Row className="fill-height align-items-center">
                         <FontAwesomeIcon size="4x" icon={faChartLine} color="#6c757d" />
-                        <Button className="ml-2" variant="secondary" to="/main/visualization/1">Wizualizacje</Button>
+                        <Button className="ml-2" variant="secondary" to="/main/visualization/1">{this.props.t('visualisation_button')}</Button>
                     </Row>
                 </Col>
                 <Col sm={10}>
@@ -37,4 +37,4 @@ class MainPage extends Component {
     }
 }
 
-export default withTranslation('main_page')(MainPage)
+export default withTranslation('mainpage')(MainPage)

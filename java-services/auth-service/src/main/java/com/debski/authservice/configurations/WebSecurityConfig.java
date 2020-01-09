@@ -19,11 +19,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private DataSource accountDataSource;
 
-    @Bean
-    public UserDetailsService defaultUserDetailsServiceBean() throws Exception {
-        return super.userDetailsServiceBean();
-    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().anyRequest().denyAll().and().formLogin().disable().csrf().disable();
@@ -36,6 +31,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .usersByUsernameQuery("SELECT username, password, enabled FROM accounts WHERE BINARY username = ?")
                 .authoritiesByUsernameQuery("SELECT username, role FROM accounts WHERE BINARY username = ?")
                 .passwordEncoder(passwordEncoder());
+    }
+
+    // Tworzy bean UserDetailsService, ktory bazuje na AuthenticationManager zbudowanym w 'configure(AuthenticationManagerBuilder auth)'
+    @Bean
+    public UserDetailsService defaultUserDetailsServiceBean() throws Exception {
+        return super.userDetailsServiceBean();
     }
 
     @Override

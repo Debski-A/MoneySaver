@@ -83,7 +83,7 @@ class AddIncomePage extends Component {
                             <Form.Control as="textarea" rows="3" placeholder={this.props.t('note_prompt')} />
                         </Form.Group>
                         <Form.Group as={Col} sm={10}>
-                            <Button className="ml-2" variant="secondary">{this.props.t('submit_button')}</Button>
+                            <Button type="submit" className="ml-2" variant="secondary">{this.props.t('submit_button')}</Button>
                         </Form.Group>
                     </Form.Group>
                     <Form.Group as={Col} sm={6} className="d-flex flex-column">

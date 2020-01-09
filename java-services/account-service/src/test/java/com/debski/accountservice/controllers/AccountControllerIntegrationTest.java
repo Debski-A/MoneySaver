@@ -1,5 +1,9 @@
 package com.debski.accountservice.controllers;
 
+import com.debski.accountservice.configuration.WithMockOAuth2Scope;
+import com.debski.accountservice.entities.Account;
+import com.debski.accountservice.entities.enums.Role;
+import com.debski.accountservice.repositories.AccountRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +15,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
@@ -19,19 +26,30 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 public class AccountControllerIntegrationTest {
 
+    private static final String ACCOUNT_JSON = "{\"username\":\"user\",\"password\":\"Password1\",\"email\":\"xyz@gmail.com\"}";
+    private static final String INCOME_JSON = "{\"incomes\":[{\"frequency\":0,\"amount\":1500,\"currency\":0,\"dateOfIncome\":\"2020-01-01\",\"incomeCategory\":0,\"note\":\"elo elo dupa\"}]}";
+    private static final String INCOME_JSON_ENUMERATED_STRING = "{\"incomes\":[{\"frequency\":0,\"amount\":1500,\"currency\":0,\"dateOfIncome\":\"2020-01-01\",\"incomeCategory\":0,\"note\":\"elo elo dupa\"}]}";
+
     @Autowired
     private AccountController accountController;
-
     @Autowired
     private AccountExceptionHandler accountExceptionHandler;
+    @Autowired
+    private AccountRepository accountRepository;
 
     private MockMvc mockMvc;
-
-    private static final String ACCOUNT_JSON = "{\"username\":\"user\",\"password\":\"Password1\",\"email\":\"xyz@gmail.com\"}";
+    private Principal userPrincipal;
 
     @Before
     public void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(accountController).setControllerAdvice(accountExceptionHandler).build();
+        this.mockMvc = MockMvcBuilders.standaloneSetup(accountController).setControllerAdvice(accountExceptionHandler)
+                .build();
+        this.userPrincipal = new Principal() {
+            @Override
+            public String getName() {
+                return "user";
+            }
+        };
     }
 
     @Test
@@ -53,5 +71,45 @@ public class AccountControllerIntegrationTest {
                 //then
                 .andExpect(status().is5xxServerError())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
+    }
+
+    @WithMockOAuth2Scope(scope = "ui")
+    @Test
+    public void shouldReturnErrorWhenUpdatedUserIsNotFoundInDatabase() throws Exception {
+        //when
+        mockMvc.perform(put("/current/update")
+                .principal(userPrincipal)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(INCOME_JSON))
+                //then
+                .andExpect(status().is5xxServerError())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.errorMessage").value("Current user not found"))
+                .andExpect(jsonPath("$.source").value("account-service"));
+    }
+
+    @WithMockOAuth2Scope(scope = "ui")
+    @Test
+    public void shouldUpdateUserIncomes() throws Exception {
+        //given
+        Account user = Account.builder()
+                            .username("user")
+                            .enabled(true)
+                            .password("Password1")
+                            .role(Role.USER)
+                            .email("user@gmail.com")
+                            .build();
+        accountRepository.save(user);
+        //when
+        mockMvc.perform(put("/current/update")
+                .principal(userPrincipal)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(INCOME_JSON))
+                //then
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.incomes").isNotEmpty())
+                .andExpect(jsonPath("$.outcomes").isEmpty());
+
     }
 }

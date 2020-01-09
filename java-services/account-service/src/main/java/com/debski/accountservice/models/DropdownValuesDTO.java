@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.List;
+import java.util.Map;
 
 @Getter
 @Builder
@@ -13,8 +13,8 @@ import java.util.List;
 @EqualsAndHashCode
 public class DropdownValuesDTO {
 
-    private List<String> incomeCategories;
-    private List<String> outcomeCategories;
-    private List<String> currencies;
-    private List<String> frequencies;
+    private Map<Integer, String> incomeCategories;
+    private Map<Integer, String> outcomeCategories;
+    private Map<Integer, String> currencies;
+    private Map<Integer, String> frequencies;
 }

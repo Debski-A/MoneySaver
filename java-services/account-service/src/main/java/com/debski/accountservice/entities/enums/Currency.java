@@ -7,5 +7,4 @@ import lombok.ToString;
 @ToString
 public enum Currency {
     PLN, EUR, USD, GBP;
-
 }

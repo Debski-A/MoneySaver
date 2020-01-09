@@ -30,10 +30,9 @@ public class AccountController {
 
     @PreAuthorize("#oauth2.hasScope('ui')")
     @PutMapping("/current/update")
-    public void updateAccount(Principal principal, @RequestBody AccountDTO accountDto) {
+    public AccountDTO updateAccount(Principal principal, @RequestBody AccountDTO accountDto) {
         accountDto.setUsername(principal.getName());
-        System.out.println(principal.getName());
-        //TODO
+        return accountService.update(accountDto);
     }
 
     @PreAuthorize("#oauth2.hasScope('ui')")

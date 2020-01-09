@@ -1,12 +1,16 @@
 package com.debski.accountservice.entities;
 
 import com.debski.accountservice.entities.enums.Role;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -30,10 +34,10 @@ public class Account extends BaseEntity {
     private String email;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "account", orphanRemoval = true)
-    private Set<Income> incomes;
+    private Set<Income> incomes = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "account", orphanRemoval = true)
-    private Set<Outcome> outcomes;
+    private Set<Outcome> outcomes = new HashSet<>();
 
     @NotNull
     @Enumerated
