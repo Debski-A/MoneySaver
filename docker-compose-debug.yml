@@ -64,6 +64,16 @@ services:
       - 8002:8002
     restart: always
     command: java -agentlib:jdwp=transport=dt_socket,address=0.0.0.0:8002,server=y,suspend=n -jar /app/auth-service.jar
+    
+  calculation-service:
+    build: java-services/calculation-service
+    restart: always
+    depends_on:
+      - config-server
+    ports:
+      - 6001:6001
+      - 8004:8004
+    command: java -agentlib:jdwp=transport=dt_socket,address=0.0.0.0:8004,server=y,suspend=n -jar /app/calculation-service.jar
       
 volumes:
   account-and-token-mysqldb-volume:

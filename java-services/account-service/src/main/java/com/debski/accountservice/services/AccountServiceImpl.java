@@ -10,6 +10,8 @@ import com.debski.accountservice.entities.enums.OutcomeCategory;
 import com.debski.accountservice.exceptions.AccountException;
 import com.debski.accountservice.models.AccountDTO;
 import com.debski.accountservice.models.DropdownValuesDTO;
+import com.debski.accountservice.models.IncomeDTO;
+import com.debski.accountservice.models.OutcomeDTO;
 import com.debski.accountservice.repositories.AccountRepository;
 import com.debski.accountservice.utils.AccountUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +45,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public AccountDTO findByUsername(String username) {
         Account accountEntity = repository.findByUsername(username);
-        AccountDTO accountDto = accountUtils.entityToDto(accountEntity);
+        AccountDTO accountDto = accountUtils.accountEntityToDto(accountEntity);
         log.debug("Account retrieved from DB by username = {}: {}", username, accountDto);
         return accountDto;
     }
@@ -79,13 +81,15 @@ public class AccountServiceImpl implements AccountService {
         // TODO for now update supports single income/outcome update
         updateIncome(accountEntity, accountDto);
         updateOutcome(accountEntity, accountDto);
-        AccountDTO accountDtoResult = accountUtils.entityToDto(accountEntity);
+        validateConstraintsAndSave(accountEntity);
+        AccountDTO accountDtoResult = accountUtils.accountEntityToDto(accountEntity);
         return accountDtoResult;
     }
 
     private void updateIncome(Account accountEntity, AccountDTO accountDto) {
         if (accountDto.getIncomes() != null && accountDto.getIncomes().iterator().hasNext()) {
-            Income income = accountDto.getIncomes().iterator().next();
+            IncomeDTO incomeDTO = accountDto.getIncomes().iterator().next();
+            Income income =accountUtils.incomeDtoToEntity(incomeDTO);
             income.setAccount(accountEntity);
             if (accountEntity.getIncomes() == null) {
                 accountEntity.setIncomes(new HashSet<>() {{ add(income); }});
@@ -97,7 +101,8 @@ public class AccountServiceImpl implements AccountService {
 
     private void updateOutcome(Account accountEntity, AccountDTO accountDto) {
         if (accountDto.getOutcomes() != null && accountDto.getOutcomes().iterator().hasNext()) {
-            Outcome outcome = accountDto.getOutcomes().iterator().next();
+            OutcomeDTO outcomeDTO = accountDto.getOutcomes().iterator().next();
+            Outcome outcome = accountUtils.outcomeDtoToEntity(outcomeDTO);
             outcome.setAccount(accountEntity);
             if (accountEntity.getOutcomes() == null) {
                 accountEntity.setOutcomes(new HashSet<>() {{ add(outcome); }});
@@ -112,9 +117,9 @@ public class AccountServiceImpl implements AccountService {
         validateMandatoryParams(accountDto);
         validatePasswordStrength(accountDto);
         validateIsUsernameAlreadyTaken(accountDto.getUsername());
-        Account accountEntity = accountUtils.dtoToEntity(accountDto);
-        Account savedAccountEntity = validateEmailAndSave(accountEntity);
-        AccountDTO accountDtoResult = accountUtils.entityToDto(savedAccountEntity);
+        Account accountEntity = accountUtils.accountDtoToEntity(accountDto);
+        Account savedAccountEntity = validateConstraintsAndSave(accountEntity);
+        AccountDTO accountDtoResult = accountUtils.accountEntityToDto(savedAccountEntity);
 
         log.debug("Account with username: {} was saved", accountDtoResult.getUsername());
         return accountDtoResult;
@@ -140,7 +145,7 @@ public class AccountServiceImpl implements AccountService {
 
     }
 
-    private Account validateEmailAndSave(Account accountEntity) throws AccountException {
+    private Account validateConstraintsAndSave(Account accountEntity) throws AccountException {
         Account savedAccountEntity;
         try {
             savedAccountEntity = repository.save(accountEntity);

@@ -1,6 +1,5 @@
 package com.debski.accountservice.services;
 
-import com.debski.accountservice.entities.*;
 import com.debski.accountservice.entities.enums.Currency;
 import com.debski.accountservice.entities.enums.Frequency;
 import com.debski.accountservice.entities.enums.IncomeCategory;
@@ -8,6 +7,8 @@ import com.debski.accountservice.entities.enums.OutcomeCategory;
 import com.debski.accountservice.exceptions.AccountException;
 import com.debski.accountservice.models.AccountDTO;
 import com.debski.accountservice.models.DropdownValuesDTO;
+import com.debski.accountservice.models.IncomeDTO;
+import com.debski.accountservice.models.OutcomeDTO;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,7 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -135,16 +139,6 @@ public class AccountServiceIntegrationTest {
         accountService.save(AccountDTO.builder().username("user").rawPassword("Password1").email("xyz@.com").build());
     }
 
-    @Test
-    public void shouldThrowExceptionIfFutureDate() {
-        //given
-        exception.expect(AccountException.class);
-        exception.expectMessage("Date cannot be from future");
-        Income income = Income.builder().amount(BigDecimal.valueOf(3000)).currency(Currency.EUR).dateOfIncome(LocalDate.of(2219, 3, 4)).incomeCategory(IncomeCategory.PAYMENT).frequency(Frequency.MONTHLY).build();
-        AccountDTO accountBeforeSave = AccountDTO.builder().username("user").rawPassword("Password1").email("xyz@gmail.com").incomes(Set.of(income)).build();
-        //when
-        AccountDTO accountAfterSave = accountService.save(accountBeforeSave);
-    }
 
     @Test
     public void shouldThrowExceptionIfUsernameIsEmpty() {
@@ -160,30 +154,31 @@ public class AccountServiceIntegrationTest {
     @Test
     public void shouldPersistAccountWithIncomes() {
         //given
-        Income income1 = Income.builder().amount(BigDecimal.valueOf(3000)).currency(Currency.GBP).dateOfIncome(LocalDate.of(2019, 3, 4)).incomeCategory(IncomeCategory.PAYMENT).frequency(Frequency.MONTHLY).build();
-        Income income2 = Income.builder().amount(BigDecimal.valueOf(100)).currency(Currency.GBP).dateOfIncome(LocalDate.of(2019, 11, 11)).incomeCategory(IncomeCategory.GIFT).frequency(Frequency.ONCE).build();
-        AccountDTO accountBeforeSave1 = AccountDTO.builder().username("user").rawPassword("Password1").email("xyz@gmail.com").incomes(Set.of(income1, income2)).build();
+        IncomeDTO incomeDTO1 = IncomeDTO.builder().amount(BigDecimal.valueOf(3000)).currency(Currency.GBP).dateOfIncome(LocalDate.of(2019, 3, 4)).incomeCategory(IncomeCategory.PAYMENT).frequency(Frequency.MONTHLY).build();
+        IncomeDTO incomeDTO2 = IncomeDTO.builder().amount(BigDecimal.valueOf(100)).currency(Currency.GBP).dateOfIncome(LocalDate.of(2019, 11, 11)).incomeCategory(IncomeCategory.GIFT).frequency(Frequency.ONCE).build();
+        AccountDTO accountBeforeSave1 = AccountDTO.builder().username("user").rawPassword("Password1").email("xyz@gmail.com").incomes(Set.of(incomeDTO1, incomeDTO2)).build();
         //when
         AccountDTO accountAfterSave1 = accountService.save(accountBeforeSave1);
         //then
-        assertThat(accountAfterSave1.getIncomes(), equalTo(Set.of(income1, income2)));
+        assertThat(accountAfterSave1.getIncomes(), hasSize(2));
     }
 
     @Test
     public void shouldPersistAccountWithOutcome() {
         //given
-        Outcome outcome = Outcome.builder()
+        OutcomeDTO outcomeDTO = OutcomeDTO.builder()
                 .amount(BigDecimal.valueOf(20))
                 .currency(Currency.PLN)
                 .dateOfOutcome(LocalDate.of(2018, 12, 12))
                 .frequency(Frequency.ONCE)
                 .outcomeCategory(OutcomeCategory.ALCOHOL)
                 .build();
-        AccountDTO accountBeforeSave = AccountDTO.builder().username("user").rawPassword("Password1").email("xyz@gmail.com").outcomes(Set.of(outcome)).build();
+        AccountDTO accountBeforeSave = AccountDTO.builder().username("user").rawPassword("Password1").email("xyz@gmail.com").outcomes(Set.of(outcomeDTO)).build();
         //when
         AccountDTO accountAfterSave = accountService.save(accountBeforeSave);
         //then
-        assertThat(accountAfterSave.getOutcomes(), equalTo(Set.of(outcome)));
+        assertThat(accountAfterSave.getOutcomes(), hasSize(1));
+        assertThat(accountAfterSave.getOutcomes().iterator().next().getOutcomeCategory(), equalTo(OutcomeCategory.ALCOHOL));
     }
 
     @Test
@@ -227,11 +222,26 @@ public class AccountServiceIntegrationTest {
     }
 
     @Test
+    public void shouldReturnErrorIfAmountIsNotProvided() {
+        //given
+        LocaleContextHolder.setLocale(Locale.forLanguageTag("pl"));
+        AccountDTO dataInDatabase = prepareDataInDatabase();
+        AccountDTO dataForUpdate = singleIncomeInAccountDto();
+        IncomeDTO incomeForUpdate = dataForUpdate.getIncomes().iterator().next();
+        incomeForUpdate.setAmount(null);
+        exception.expect(AccountException.class);
+        exception.expectMessage("Podaj kwotę");
+        //when
+        accountService.update(dataForUpdate);
+        //then expect Exception
+    }
+
+    @Test
     public void shouldUpdateAccountWithNewProvidedValues() {
         //given
         AccountDTO dataInDatabase = prepareDataInDatabase();
         AccountDTO dataForUpdate = singleIncomeInAccountDto();
-        Income incomeForUpdate = dataForUpdate.getIncomes().iterator().next();
+        IncomeDTO incomeForUpdate = dataForUpdate.getIncomes().iterator().next();
         //when
         accountService.update(dataForUpdate);
         //then
@@ -242,7 +252,7 @@ public class AccountServiceIntegrationTest {
     }
 
     private AccountDTO prepareDataInDatabase() {
-        Outcome outcome1 = Outcome.builder()
+        OutcomeDTO outcome1 = OutcomeDTO.builder()
                 .currency(Currency.PLN)
                 .outcomeCategory(OutcomeCategory.ALCOHOL)
                 .dateOfOutcome(LocalDate.of(2020, 01, 01))
@@ -250,7 +260,7 @@ public class AccountServiceIntegrationTest {
                 .frequency(Frequency.ONCE)
                 .note("Kacyk po sylwestrze")
                 .build();
-        Income income1 = Income.builder()
+        IncomeDTO income1 = IncomeDTO.builder()
                 .currency(Currency.PLN)
                 .incomeCategory(IncomeCategory.BENEFIT)
                 .dateOfIncome(LocalDate.of(2020, 01, 02))
@@ -270,13 +280,14 @@ public class AccountServiceIntegrationTest {
     }
 
     private AccountDTO singleIncomeInAccountDto() {
-        Income income2 = Income.builder()
+        IncomeDTO income2 = IncomeDTO.builder()
                 .currency(Currency.GBP)
                 .incomeCategory(IncomeCategory.BENEFIT)
                 .dateOfIncome(LocalDate.of(2020, 01, 02))
                 .amount(BigDecimal.valueOf(300))
                 .frequency(Frequency.YEARLY)
                 .note("Coroczne pieniążki z okazju urodzinek od wujcia Andrzejka")
+                .owner("miecio")
                 .build();
         AccountDTO incomeFromFrontend = AccountDTO.builder()
                 .incomes(new HashSet<>() {{add(income2);}})

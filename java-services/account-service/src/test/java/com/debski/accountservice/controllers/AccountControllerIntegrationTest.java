@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AccountControllerIntegrationTest {
 
     private static final String ACCOUNT_JSON = "{\"username\":\"user\",\"password\":\"Password1\",\"email\":\"xyz@gmail.com\"}";
-    private static final String INCOME_JSON = "{\"incomes\":[{\"frequency\":0,\"amount\":1500,\"currency\":0,\"dateOfIncome\":\"2020-01-01\",\"incomeCategory\":0,\"note\":\"elo elo dupa\"}]}";
+    private static final String INCOME_JSON = "{\"frequency\":0,\"amount\":1500,\"currency\":0,\"dateOfIncome\":\"2020-01-01\",\"incomeCategory\":0,\"note\":\"elo elo dupa\"}";
     private static final String INCOME_JSON_ENUMERATED_STRING = "{\"incomes\":[{\"frequency\":0,\"amount\":1500,\"currency\":0,\"dateOfIncome\":\"2020-01-01\",\"incomeCategory\":0,\"note\":\"elo elo dupa\"}]}";
 
     @Autowired
@@ -77,7 +77,7 @@ public class AccountControllerIntegrationTest {
     @Test
     public void shouldReturnErrorWhenUpdatedUserIsNotFoundInDatabase() throws Exception {
         //when
-        mockMvc.perform(put("/current/update")
+        mockMvc.perform(put("/current/update/outcome")
                 .principal(userPrincipal)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(INCOME_JSON))
@@ -101,7 +101,7 @@ public class AccountControllerIntegrationTest {
                             .build();
         accountRepository.save(user);
         //when
-        mockMvc.perform(put("/current/update")
+        mockMvc.perform(put("/current/update/income")
                 .principal(userPrincipal)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(INCOME_JSON))

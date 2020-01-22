@@ -3,5 +3,5 @@
     "note_prompt":"Notatka",
     "date_label":"Data wydatku",
     "submit_button":"Zapisz",
-    "save_error":"Nie udało się zapisać danych wydatku"
+    "update_error":"Nie udało się zapisać danych wydatku"
 }

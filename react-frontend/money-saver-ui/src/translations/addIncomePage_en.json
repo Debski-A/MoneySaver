@@ -3,5 +3,5 @@
     "note_prompt":"Note",
     "date_label":"Date of income",
     "submit_button":"Save",
-    "save_error":"Could't save income details"
+    "update_error":"Could't save income details"
 }

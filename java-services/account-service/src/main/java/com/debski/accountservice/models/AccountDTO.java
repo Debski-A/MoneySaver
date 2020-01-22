@@ -1,7 +1,5 @@
 package com.debski.accountservice.models;
 
-import com.debski.accountservice.entities.Income;
-import com.debski.accountservice.entities.Outcome;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,8 +21,7 @@ public class AccountDTO {
 
     private String email;
 
-    Zrobic IncomeDTO i OutcomeDTO, kore zamiast pola account beda mialy polle String owner z username
-    private Set<Income> incomes;
+    private Set<IncomeDTO> incomes;
 
-    private Set<Outcome> outcomes;
+    private Set<OutcomeDTO> outcomes;
 }

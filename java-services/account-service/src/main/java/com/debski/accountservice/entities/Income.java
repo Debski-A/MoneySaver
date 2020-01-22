@@ -7,7 +7,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PastOrPresent;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 @Entity
@@ -31,7 +30,6 @@ public class Income extends BaseEntity{
 
     @NotNull
     @Column(name = "date_of_income")
-    @PastOrPresent
     private LocalDate dateOfIncome;
 
     @NotNull

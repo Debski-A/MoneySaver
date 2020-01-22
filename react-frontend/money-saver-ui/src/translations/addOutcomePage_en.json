@@ -3,5 +3,5 @@
     "note_prompt":"Note",
     "date_label":"Date of outcome",
     "submit_button":"Save",
-    "save_error":"Could't save outcome details"
+    "update_error":"Could't save outcome details"
  }

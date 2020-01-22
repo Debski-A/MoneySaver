@@ -25,7 +25,7 @@ public class AccountUtilsUnitTest {
         //given
         Account entity = Account.builder().username("user").password("Password1").email("xyz@gmail.com").build();
         //when
-        AccountDTO accountDTO = accountUtils.entityToDto(entity);
+        AccountDTO accountDTO = accountUtils.accountEntityToDto(entity);
         //then
         assertThat(accountDTO.getUsername(), is(entity.getUsername()));
         assertThat(accountDTO.getRawPassword(), is(nullValue()));
@@ -35,7 +35,7 @@ public class AccountUtilsUnitTest {
     @Test
     public void shouldReturnNull() {
         //when
-        AccountDTO accountDTO = accountUtils.entityToDto(null);
+        AccountDTO accountDTO = accountUtils.accountEntityToDto(null);
         //then
         assertThat(accountDTO, is(nullValue()));
     }
@@ -45,7 +45,7 @@ public class AccountUtilsUnitTest {
         //given
         AccountDTO dto = AccountDTO.builder().username("user").rawPassword("Password1").email("xyz@gmail.com").build();
         //when
-        Account entity = accountUtils.dtoToEntity(dto);
+        Account entity = accountUtils.accountDtoToEntity(dto);
         //then
         assertThat(entity.getUsername(), is(dto.getUsername()));
         assertThat(entity.getPassword(), is(not(dto.getRawPassword())));
