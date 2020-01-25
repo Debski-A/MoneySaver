@@ -1,0 +1,17 @@
+server:
+  servlet:
+    context-path: /calculations
+  port: 6001
+
+security:
+  oauth2:
+    client:
+      checkTokenEndpointUrl: http://auth-service:6666/auth/oauth/check_token
+      clientId: calculation-service
+      clientSecret: ${CALCULATION_SERVICE_PASSWORD}
+      accessTokenUri: http://auth-service:6666/auth/oauth/token
+      grant-type: client_credentials
+      scope: server
+
+rates:
+  url: https://api.exchangeratesapi.io

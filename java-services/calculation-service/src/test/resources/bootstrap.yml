@@ -1,0 +1,6 @@
+eureka:
+  client:
+    enabled: false
+
+rates:
+  url: https://api.exchangeratesapi.io

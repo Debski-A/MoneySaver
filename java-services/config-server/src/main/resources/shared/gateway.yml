@@ -17,6 +17,12 @@ zuul:
       stripPrefix: false
       sensitiveHeaders:
 
+    calculation-service:
+      path: /calculations/**
+      serviceId: calculation-service
+      stripPrefix: false
+      sensitiveHeaders:
+
 hystrix:
   command:
     default:
