@@ -1,6 +1,6 @@
 # Introduction
-Web app build on Spring Cloud technologies. Simple frontend written in React.js 
-STILL UNDER DEVELOPMENT
+Web app build on Spring Cloud technologies. Simple frontend written in React.js </br>
+<b>STILL UNDER DEVELOPMENT</b>
 # Prerequisites
 1. Java 11
 2. Maven
