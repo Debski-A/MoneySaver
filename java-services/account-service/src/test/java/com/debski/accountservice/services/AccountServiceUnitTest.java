@@ -12,8 +12,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
@@ -34,7 +34,7 @@ public class AccountServiceUnitTest {
     private AccountUtils accountUtils = new AccountUtils(new BCryptPasswordEncoder());
 
     @Mock
-    private ResourceBundleMessageSource messageSource ;
+    private MessageSource messageSource ;
 
     @InjectMocks
     private AccountServiceImpl accountServiceImpl;

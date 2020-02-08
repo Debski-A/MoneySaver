@@ -1,17 +1,23 @@
 package com.debski.calculationservice.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VisualisationPoint {
+@Getter
+@Setter
+@ToString
+public class VisualisationPoint implements Comparable<VisualisationPoint>{
 
-    private int value;
+    private BigDecimal value;
 
     private LocalDate date;
+
+    @Override
+    public int compareTo(VisualisationPoint o) {
+        return this.date.compareTo(o.getDate());
+    }
 }

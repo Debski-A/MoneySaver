@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "account-service", fallback = AccountServiceClientFallback.class)
 public interface AccountServiceClient {
 
-    @GetMapping(value = "/get/{username}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+//    Oauth2 blokuje feign: https://itnext.io/microservices-with-spring-boot-and-spring-cloud-441e3dabc67d
+    @GetMapping(value = "/accounts/get/{username}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public AccountDTO getAccountData(@PathVariable("username") String username);
 }

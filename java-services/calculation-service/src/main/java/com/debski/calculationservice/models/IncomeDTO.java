@@ -3,18 +3,17 @@ package com.debski.calculationservice.models;
 import com.debski.calculationservice.enums.Currency;
 import com.debski.calculationservice.enums.Frequency;
 import com.debski.calculationservice.enums.IncomeCategory;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
+@ToString
 public class IncomeDTO {
 
     private Frequency frequency;
@@ -29,8 +28,18 @@ public class IncomeDTO {
 
     private String note;
 
-//    @JsonIgnore
-//    private Account account;
-
     private String owner;
+
+    public static IncomeDTO clone(IncomeDTO original) {
+        return IncomeDTO.builder()
+               .amount(original.getAmount())
+               .incomeCategory(original.getIncomeCategory())
+                .frequency(original.getFrequency())
+                .dateOfIncome(original.getDateOfIncome())
+                .currency(original.getCurrency())
+                .owner(original.getOwner())
+                .note(original.getNote())
+                .build();
+    }
+
 }

@@ -1,6 +1,6 @@
 package com.debski.accountservice.controllers;
 
-import com.debski.accountservice.configuration.WithMockOAuth2Scope;
+import com.debski.accountservice.configurations.WithMockOAuth2Scope;
 import com.debski.accountservice.entities.Account;
 import com.debski.accountservice.entities.enums.Role;
 import com.debski.accountservice.repositories.AccountRepository;

@@ -3,19 +3,19 @@ package com.debski.calculationservice.models;
 import com.debski.calculationservice.enums.Currency;
 import com.debski.calculationservice.enums.Frequency;
 import com.debski.calculationservice.enums.OutcomeCategory;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
+@ToString
 public class OutcomeDTO {
+
     private Frequency frequency;
 
     private BigDecimal amount;
@@ -28,8 +28,17 @@ public class OutcomeDTO {
 
     private String note;
 
-//    @JsonIgnore
-//    private Account account;
-
     private String owner;
+
+    public static OutcomeDTO clone(OutcomeDTO original) {
+        return OutcomeDTO.builder()
+                .frequency(original.getFrequency())
+                .amount(original.getAmount())
+                .currency(original.getCurrency())
+                .dateOfOutcome(original.getDateOfOutcome())
+                .outcomeCategory(original.getOutcomeCategory())
+                .note(original.getNote())
+                .owner(original.getOwner())
+                .build();
+    }
 }

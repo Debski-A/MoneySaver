@@ -37,6 +37,7 @@ public class FakeAccountServiceClient implements AccountServiceClient {
                 .note("Wypłata")
                 .owner("miecio")
                 .build();
+        // + 36000 Bo Monthly: 3000 6000 9000 12000 15000 itd..
         IncomeDTO income2 = IncomeDTO.builder()
                 .amount(BigDecimal.valueOf(100))
                 .currency(Currency.GBP)
@@ -46,6 +47,7 @@ public class FakeAccountServiceClient implements AccountServiceClient {
                 .note("Na urodziny od cioci z Anglii")
                 .owner("miecio")
                 .build();
+        // + 36523,34 przeliczone z GBP
         IncomeDTO income3 = IncomeDTO.builder()
                 .amount(BigDecimal.valueOf(500))
                 .currency(Currency.PLN)
@@ -55,6 +57,7 @@ public class FakeAccountServiceClient implements AccountServiceClient {
                 .note("Procent składany")
                 .owner("miecio")
                 .build();
+        // + 36523,34 nic bo z 2018
         IncomeDTO income4 = IncomeDTO.builder()
                 .amount(BigDecimal.valueOf(200))
                 .currency(Currency.USD)
@@ -64,6 +67,7 @@ public class FakeAccountServiceClient implements AccountServiceClient {
                 .note("zlecenie z USA")
                 .owner("miecio")
                 .build();
+        // + 37370,02 bo przeliczone z USD
         return new HashSet<>() {{add(income1); add(income2); add(income3); add(income4);}};
     }
 
@@ -77,10 +81,20 @@ public class FakeAccountServiceClient implements AccountServiceClient {
                 .note("grubsze zakupy")
                 .owner("miecio")
                 .build();
+        // + 36100
+        OutcomeDTO outcome11 = OutcomeDTO.builder()
+                .amount(BigDecimal.valueOf(300))
+                .currency(Currency.PLN)
+                .dateOfOutcome(LocalDate.of(2019, 1, 24))
+                .frequency(Frequency.ONCE)
+                .outcomeCategory(OutcomeCategory.FOOD)
+                .note("grubsze zakupy")
+                .owner("miecio")
+                .build();
         OutcomeDTO outcome2 = OutcomeDTO.builder()
                 .amount(BigDecimal.valueOf(700))
                 .currency(Currency.PLN)
-                .dateOfOutcome(LocalDate.of(2019, 1, 31))
+                .dateOfOutcome(LocalDate.of(2019, 1, 27))
                 .frequency(Frequency.MONTHLY)
                 .outcomeCategory(OutcomeCategory.FEE)
                 .note("komorne")
@@ -98,12 +112,12 @@ public class FakeAccountServiceClient implements AccountServiceClient {
         OutcomeDTO outcome4 = OutcomeDTO.builder()
                 .amount(BigDecimal.valueOf(20))
                 .currency(Currency.PLN)
-                .dateOfOutcome(LocalDate.of(2019, 2, 2))
+                .dateOfOutcome(LocalDate.of(2020, 2, 2))
                 .frequency(Frequency.DAILY)
                 .outcomeCategory(OutcomeCategory.FOOD)
                 .note("codzienny obiad w pracy")
                 .owner("miecio")
                 .build();
-        return new HashSet<>() {{add(outcome1); add(outcome2); add(outcome3); add(outcome4);}};
+        return new HashSet<>() {{add(outcome1); add(outcome2); add(outcome3); add(outcome4); add(outcome11);}};
     }
 }

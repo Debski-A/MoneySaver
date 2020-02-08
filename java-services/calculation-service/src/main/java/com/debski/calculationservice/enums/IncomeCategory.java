@@ -7,5 +7,5 @@ import lombok.ToString;
 @ToString
 public enum IncomeCategory {
 
-    PAYMENT, GIFT, BENEFIT, OTHER, NONE
+    PAYMENT, GIFT, BENEFIT, OTHER
 }

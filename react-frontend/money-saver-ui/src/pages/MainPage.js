@@ -14,10 +14,12 @@ import { NavLink } from 'react-router-dom'
 import { withTranslation } from "react-i18next"
 import { registerLocale } from 'react-datepicker'
 import pl from "date-fns/locale/pl";
+import { authenticate, isAuthenticated } from '../helpers/authenticationUtils'
 registerLocale('pl', pl)
 
 class MainPage extends Component {
     render() {
+        if (!isAuthenticated) authenticate()
         return (
             <Container fluid className="d-flex fill-height">
                 <Col sm={2} className="d-flex fill-height flex-column">

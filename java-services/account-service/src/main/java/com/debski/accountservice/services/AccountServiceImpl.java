@@ -16,8 +16,8 @@ import com.debski.accountservice.repositories.AccountRepository;
 import com.debski.accountservice.utils.AccountUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,9 +34,9 @@ public class AccountServiceImpl implements AccountService {
 
     private AccountUtils accountUtils;
 
-    private ResourceBundleMessageSource messageSource;
+    private MessageSource messageSource;
 
-    public AccountServiceImpl(AccountRepository repository, AccountUtils accountUtils, ResourceBundleMessageSource messageSource) {
+    public AccountServiceImpl(AccountRepository repository, AccountUtils accountUtils, MessageSource messageSource) {
         this.repository = repository;
         this.accountUtils = accountUtils;
         this.messageSource = messageSource;
