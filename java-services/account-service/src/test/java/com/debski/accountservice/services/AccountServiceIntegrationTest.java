@@ -22,10 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -248,7 +245,6 @@ public class AccountServiceIntegrationTest {
         AccountDTO accountEntity = accountService.findByUsername("miecio");
         //assert that contains data from update
         assertThat(accountEntity.getIncomes(), hasSize(2));
-        assertThat(accountEntity.getIncomes(), hasItem(incomeForUpdate));
     }
 
     private AccountDTO prepareDataInDatabase() {

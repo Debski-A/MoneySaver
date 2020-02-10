@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Builder
 @AllArgsConstructor
@@ -30,6 +31,8 @@ public class OutcomeDTO {
 
     private String owner;
 
+    private UUID uuid;
+
     public static OutcomeDTO clone(OutcomeDTO original) {
         return OutcomeDTO.builder()
                 .frequency(original.getFrequency())
@@ -39,6 +42,7 @@ public class OutcomeDTO {
                 .outcomeCategory(original.getOutcomeCategory())
                 .note(original.getNote())
                 .owner(original.getOwner())
+                .uuid(UUID.randomUUID())
                 .build();
     }
 }

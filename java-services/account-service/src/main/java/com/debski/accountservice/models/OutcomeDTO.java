@@ -5,13 +5,11 @@ import com.debski.accountservice.entities.enums.Currency;
 import com.debski.accountservice.entities.enums.Frequency;
 import com.debski.accountservice.entities.enums.OutcomeCategory;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -34,4 +32,6 @@ public class OutcomeDTO {
     private Account account;
 
     private String owner;
+
+    private UUID uuid;
 }

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -24,4 +25,6 @@ public class AccountDTO {
     private Set<IncomeDTO> incomes;
 
     private Set<OutcomeDTO> outcomes;
+
+    private UUID uuid;
 }

@@ -30,6 +30,7 @@ public class AccountUtils {
         AccountDTO dto = entity != null ? AccountDTO.builder()
                 .username(entity.getUsername())
                 .email(entity.getEmail())
+                .uuid(entity.getUuid())
                 .build() : null;
         //TODO cos tego za duzo
         if (entity != null) {
@@ -95,6 +96,7 @@ public class AccountUtils {
                 .currency(entity.getCurrency())
                 .note(entity.getNote())
                 .owner(entity.getAccount() == null ? null : entity.getAccount().getUsername())
+                .uuid(entity.getUuid())
                 .build();
     }
 
@@ -118,6 +120,7 @@ public class AccountUtils {
                 .currency(entity.getCurrency())
                 .note(entity.getNote())
                 .owner(entity.getAccount() == null ? null : entity.getAccount().getUsername())
+                .uuid(entity.getUuid())
                 .build();
     }
 

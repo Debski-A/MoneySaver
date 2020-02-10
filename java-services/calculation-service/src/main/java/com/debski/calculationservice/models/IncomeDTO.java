@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Builder
 @AllArgsConstructor
@@ -30,6 +31,8 @@ public class IncomeDTO {
 
     private String owner;
 
+    private UUID uuid;
+
     public static IncomeDTO clone(IncomeDTO original) {
         return IncomeDTO.builder()
                .amount(original.getAmount())
@@ -39,6 +42,7 @@ public class IncomeDTO {
                 .currency(original.getCurrency())
                 .owner(original.getOwner())
                 .note(original.getNote())
+                .uuid(UUID.randomUUID())
                 .build();
     }
 
