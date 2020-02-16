@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@TestPropertySource(properties = {"ACCOUNT_SERVICE_PASSWORD = h1"})
+@TestPropertySource(properties = {"ACCOUNT_SERVICE_PASSWORD = h1", "CALCULATION_SERVICE_PASSWORD = h1"})
 @Transactional
 public class AccountServiceClientTest {
 

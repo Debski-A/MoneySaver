@@ -291,9 +291,8 @@ public class BudgetCalculator {
 //        return (gVPsIdx < growingVPs.size() && dVPsIdx < decreasingVPs.size());
 //    }
 
-    public CalculationOutput mergeIncomesAndOutcomes(Set<IncomeDTO> incomes, Set<OutcomeDTO> outcomes) {
+    public CalculationOutput mergeIncomesAndOutcomes(Set<IncomeDTO> incomes, Set<OutcomeDTO> outcomes, Currency currency) {
         // currency is same for every item after exchangeCurrencies method
-        Currency currency = incomes.iterator().next().getCurrency();
         Stream<VisualisationPoint> growingVPsStream = incomes.stream()
                 .map(i -> new VisualisationPoint(i.getAmount(), i.getDateOfIncome()));
         Stream<VisualisationPoint> decreasingVPsStream = outcomes.stream()

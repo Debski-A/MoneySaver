@@ -38,6 +38,21 @@ class LoginPage extends Component {
                     this.setState({
                         message: response.errorMessage
                     })
+                    setTimeout(() => {
+                        this.setState({
+                            message: ''
+                        });
+                      }, 2000);
+                }
+                else if (!!response.error) {
+                    this.setState({
+                        message: this.props.t('login_error')
+                    })
+                    setTimeout(() => {
+                        this.setState({
+                            message: ''
+                        });
+                      }, 2000);
                 }
                 else {
                     let { access_token, refresh_token } = response
@@ -50,10 +65,14 @@ class LoginPage extends Component {
                 }
             })
             .catch((err) => {
-                console.log(err)
                 this.setState({
                     message: this.props.t('login_error')
                 })
+                setTimeout(() => {
+                    this.setState({
+                        message: ''
+                    });
+                  }, 2000);
             });
     }
 

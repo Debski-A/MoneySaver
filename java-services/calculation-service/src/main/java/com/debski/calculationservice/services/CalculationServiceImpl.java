@@ -56,12 +56,19 @@ public class CalculationServiceImpl implements CalculationService {
 
         incomes = budgetCalculator.filterIncomesByDateTimePeriod(incomes, startDate, endDate);
         outcomes = budgetCalculator.filterOutcomesByDateTimePeriod(outcomes, startDate, endDate);
+        validateAfterFilteringThatBothSetsAreNotEmpty(incomes, outcomes);
 
         incomes = budgetCalculator.convertIncomesFrequencies(incomes, endDate);
         outcomes = budgetCalculator.convertOutcomesFrequencies(outcomes, endDate);
 
-        CalculationOutput result = budgetCalculator.mergeIncomesAndOutcomes(incomes, outcomes);
+        CalculationOutput result = budgetCalculator.mergeIncomesAndOutcomes(incomes, outcomes, input.getCurrency());
         return result;
+    }
+
+    private void validateAfterFilteringThatBothSetsAreNotEmpty(Set<IncomeDTO> incomes, Set<OutcomeDTO> outcomes) {
+        if (incomes.isEmpty() && outcomes.isEmpty()) {
+            throw new CalculationException(messageSource.getMessage("no.data.for.provided.period", null, LocaleContextHolder.getLocale()));
+        }
     }
 
     private void validateAccount(AccountDTO accountData, CalculationType calculationType) {

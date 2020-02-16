@@ -14,6 +14,9 @@ security:
       scope: server
 
 spring:
+  devtools:
+    remote:
+      secret: h1
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://account-and-token-mysqldb:3306/accountDB?serverTimezone=UTC

@@ -91,7 +91,7 @@ public class OAuth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
 
         oauthServer
                 .tokenKeyAccess("permitAll()")
-                .checkTokenAccess("isAuthenticated()")
+                .checkTokenAccess("permitAll()")
                 .accessDeniedHandler(auth2AccessDeniedHandler)
                 .authenticationEntryPoint(authenticationEntryPoint)
                 .passwordEncoder(encoder);

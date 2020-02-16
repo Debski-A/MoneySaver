@@ -17,13 +17,23 @@ export const history = createBrowserHistory()
 class App extends Component {
 
   state = {
-    isLoggedIn: isAuthenticated()
+    isLoggedIn: false
+  }
+
+  componentDidMount() {
+    isAuthenticated().then(resp => {
+      this.setState({
+        isLoggedIn: resp
+      })
+    })
   }
 
   handleIsLoggedIn = () => {
     console.log('handleIsLoggedIn invoked after successful login...')
-    this.setState({
-      isLoggedIn: isAuthenticated()
+    isAuthenticated().then(resp => {
+      this.setState({
+        isLoggedIn: resp
+      })
     })
   }
 

@@ -15,3 +15,7 @@ security:
 
 rates:
   url: https://api.exchangeratesapi.io
+
+feign:
+  hystrix:
+    enabled: true

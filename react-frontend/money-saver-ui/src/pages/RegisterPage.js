@@ -61,16 +61,34 @@ class RegisterPage extends Component {
           this.setState({
             message: response.errorMessage
           })
+          setTimeout(() => {
+            this.setState({
+              message: ''
+            });
+          }, 2000);
+        } else if (!!response.error) {
+          this.setState({
+            message: this.props.t('register_error')
+          })
+          setTimeout(() => {
+            this.setState({
+              message: ''
+            });
+          }, 2000);
         }
         else {
           this.props.history.push("/login")
         }
       })
       .catch((err) => {
-        console.log(err)
         this.setState({
           message: this.props.t('register_error')
         })
+        setTimeout(() => {
+          this.setState({
+            message: ''
+          });
+        }, 2000);
       });
   }
 

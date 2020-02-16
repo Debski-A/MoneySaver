@@ -277,7 +277,7 @@ public class BudgetCalculatorUnitTest {
                 .build();
         // This should give -150 for last item in CalculationOutput.visualisationPoints
         //when
-        CalculationOutput calculationOutput = budgetCalculator.mergeIncomesAndOutcomes(Set.of(i1, i2, i3), Set.of(o1, o2, o3));
+        CalculationOutput calculationOutput = budgetCalculator.mergeIncomesAndOutcomes(Set.of(i1, i2, i3), Set.of(o1, o2, o3), Currency.PLN);
         //then
         assertThat(calculationOutput.getCalculationType(), equalTo(CalculationType.BOTH));
         assertThat(calculationOutput.getOutcomeCategory(), nullValue());
@@ -358,7 +358,7 @@ public class BudgetCalculatorUnitTest {
                 .build();
         // This should give -150 for last item in CalculationOutput.visualisationPoints
         //when
-        CalculationOutput calculationOutput = budgetCalculator.mergeIncomesAndOutcomes(Set.of(i1, i2, i3, i4, i5), Set.of(o1, o2, o3, o4));
+        CalculationOutput calculationOutput = budgetCalculator.mergeIncomesAndOutcomes(Set.of(i1, i2, i3, i4, i5), Set.of(o1, o2, o3, o4), Currency.PLN);
         //then
         Iterator<VisualisationPoint> vpsIterator = calculationOutput.getVisualisationPoints().iterator();
         assertThat(calculationOutput.getCalculationType(), equalTo(CalculationType.BOTH));

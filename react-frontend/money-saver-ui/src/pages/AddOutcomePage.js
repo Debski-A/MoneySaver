@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import i18n from '../helpers/i18n'
-import { authenticate, isAuthenticated, getAccessToken } from '../helpers/authenticationUtils'
+import { getAccessToken } from '../helpers/authenticationUtils'
 import Form from 'react-bootstrap/Form'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
@@ -16,47 +16,15 @@ class AddOutcomePage extends Component {
         frequencies: [],
         outcomeCategories: [],
         amount: '',
-        currency: '',
-        frequency: '',
-        outcomeCategory: '',
+        currency: 0,
+        frequency: 0,
+        outcomeCategory: 0,
         note: '',
         dateOfOutcome: new Date(),
         message: '',
         errorMessage: ''
     }
 
-    componentDidMount() {
-        this.getDropdownValues()
-    }
-
-    getDropdownValues = () => {
-        if (!isAuthenticated) authenticate()
-
-        let dropDownValuesURL = "http://localhost/api/accounts/dropdown_values"
-        let currentLanguage = i18n.language
-        fetch(dropDownValuesURL, {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + getAccessToken(),
-                'Accept-Language': currentLanguage
-            }
-        })
-            .then(response => response.json())
-            .then(response => {
-                let { currencies, frequencies, outcomeCategories } = response
-                this.setState({
-                    currencies: currencies,
-                    frequencies: frequencies,
-                    outcomeCategories: outcomeCategories,
-                    currency: 0,
-                    frequency: 0,
-                    outcomeCategory: 0
-                })
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    }
 
     handleOnChange = (e) => {
         switch (e.target.id) {
@@ -111,7 +79,7 @@ class AddOutcomePage extends Component {
     }
 
     addOutcome = () => {
-        if (!isAuthenticated) authenticate()
+        // if (!isAuthenticated) authenticate()
 
         let outcomeUpdateURL = "http://localhost/api/accounts/current/update/outcome"
         let currentLanguage = i18n.language
@@ -139,6 +107,12 @@ class AddOutcomePage extends Component {
                         errorMessage: response.errorMessage,
                         message: ''
                     })
+                    setTimeout(() => {
+                        this.setState({
+                            message: '',
+                            errorMessage: ''
+                        });
+                    }, 2000);
                 }
                 else if (!!response.status && response.status !== 200) {
                     throw new Error('Ststus not OK')
@@ -148,6 +122,12 @@ class AddOutcomePage extends Component {
                         message: 'Zaktualizowano',
                         errorMessage: ''
                     })
+                    setTimeout(() => {
+                        this.setState({
+                            message: '',
+                            errorMessage: ''
+                        });
+                    }, 2000);
                 }
             })
             .catch((err) => {
@@ -156,6 +136,12 @@ class AddOutcomePage extends Component {
                     errorMessage: this.props.t('update_error'),
                     message: ''
                 })
+                setTimeout(() => {
+                    this.setState({
+                        message: '',
+                        errorMessage: ''
+                    });
+                }, 2000);
             });
     }
 
@@ -170,24 +156,24 @@ class AddOutcomePage extends Component {
                         </Form.Group>
                         <Form.Group as={Col} sm={10}>
                             <Form.Control as="select" id="currency" onChange={this.handleOnChange}>
-                                {Object.keys(this.state.currencies).map((key) => <option data-key={key} key={key}>{this.state.currencies[key]}</option>)}
+                                {Object.keys(this.props.currencies).map((key) => <option data-key={key} key={key}>{this.props.currencies[key]}</option>)}
                             </Form.Control>
                         </Form.Group>
                         <Form.Group as={Col} sm={10}>
                             <Form.Control as="select" id="frequency" onChange={this.handleOnChange}>
-                                {Object.keys(this.state.frequencies).map((key) => <option key={key}>{this.state.frequencies[key]}</option>)}
+                                {Object.keys(this.props.frequencies).map((key) => <option key={key}>{this.props.frequencies[key]}</option>)}
                             </Form.Control>
                         </Form.Group>
                         <Form.Group as={Col} sm={10}>
                             <Form.Control as="select" id="outcomeCategory" onChange={this.handleOnChange}>
-                                {Object.keys(this.state.outcomeCategories).map((key) => <option key={key}>{this.state.outcomeCategories[key]}</option>)}
+                                {Object.keys(this.props.outcomeCategories).map((key) => <option key={key}>{this.props.outcomeCategories[key]}</option>)}
                             </Form.Control>
                         </Form.Group>
                         <Form.Group as={Col} sm={10}>
                             <Form.Control as="textarea" rows="3" placeholder={this.props.t('note_prompt')} id="note" onChange={this.handleOnChange} />
                         </Form.Group>
                         <Form.Group as={Col} sm={10}>
-                            <Alert show={!!this.state.message}  variant="success">
+                            <Alert show={!!this.state.message} variant="success">
                                 {this.state.message}
                             </Alert>
                             <Alert show={!!this.state.errorMessage} variant="danger" >
@@ -205,12 +191,6 @@ class AddOutcomePage extends Component {
                 </Form.Row>
             </Form >
         )
-    }
-
-    componentDidUpdate(prevProps) {
-        if (this.props.t !== prevProps.t) {
-            this.getDropdownValues()
-        }
     }
 }
 

@@ -4,13 +4,13 @@ import AddOutcomePage from '../pages/AddOutcomePage'
 import AddIncomePage from '../pages/AddIncomePage'
 import AllIncomesAndOutcomes from '../pages/visualisations/AllIncomesAndOutcomes'
 
-const HomePageContent = (props) => {
+const HomePageContent = ({ currencies, frequencies, incomeCategories, outcomeCategories }) => {
   return (
     <>
       <Switch>
-        <Route  path="/main/income/add" component={AddIncomePage} />
-        <Route  path="/main/outcome/add" component={AddOutcomePage} />
-        <Route path="/main/visualization/1" component={AllIncomesAndOutcomes} />
+        <Route path="/main/income/add" render={(routeProps) => <AddIncomePage {...routeProps} currencies={currencies} frequencies={frequencies} incomeCategories={incomeCategories} />} />
+        <Route path="/main/outcome/add" render={(routeProps) => <AddOutcomePage {...routeProps} currencies={currencies} frequencies={frequencies} outcomeCategories={outcomeCategories} />} />
+        <Route path="/main/visualization/1" render={(routeProps) => <AllIncomesAndOutcomes {...routeProps} currencies={currencies} />} />
       </Switch>
     </>
   );

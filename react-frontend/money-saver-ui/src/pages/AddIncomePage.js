@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import i18n from '../helpers/i18n'
-import { authenticate, isAuthenticated, getAccessToken } from '../helpers/authenticationUtils'
+import { getAccessToken } from '../helpers/authenticationUtils'
 import Form from 'react-bootstrap/Form'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
@@ -16,46 +16,13 @@ class AddIncomePage extends Component {
         frequencies: [],
         incomeCategories: [],
         amount: '',
-        currency: '',
-        frequency: '',
-        incomeCategory: '',
+        currency: 0,
+        frequency: 0,
+        incomeCategory: 0,
         note: '',
         dateOfIncome: new Date(),
         message: '',
         errorMessage: ''
-    }
-
-    componentDidMount() {
-        this.getDropdownValues()
-    }
-
-    getDropdownValues = () => {
-        if (!isAuthenticated) authenticate()
-
-        let dropDownValuesURL = "http://localhost/api/accounts/dropdown_values"
-        let currentLanguage = i18n.language
-        fetch(dropDownValuesURL, {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + getAccessToken(),
-                'Accept-Language': currentLanguage
-            }
-        })
-            .then(response => response.json())
-            .then(response => {
-                let { currencies, frequencies, incomeCategories } = response
-                this.setState({
-                    currencies: currencies,
-                    frequencies: frequencies,
-                    incomeCategories: incomeCategories,
-                    currency: 0,
-                    frequency: 0,
-                    incomeCategory: 0
-                })
-            })
-            .catch(err => {
-                console.log(err)
-            })
     }
 
     handleOnChange = (e) => {
@@ -111,7 +78,7 @@ class AddIncomePage extends Component {
     }
 
     addIncome = () => {
-        if (!isAuthenticated) authenticate()
+        // if (!isAuthenticated) authenticate()
 
         let incomeUpdateURL = "http://localhost/api/accounts/current/update/income"
         let currentLanguage = i18n.language
@@ -139,6 +106,12 @@ class AddIncomePage extends Component {
                         errorMessage: response.errorMessage,
                         message: ''
                     })
+                    setTimeout(() => {
+                        this.setState({
+                            message: '',
+                            errorMessage: ''
+                        });
+                    }, 2000);
                 }
                 else if (!!response.status && response.status !== 200) {
                     throw new Error('Ststus not OK')
@@ -148,6 +121,12 @@ class AddIncomePage extends Component {
                         message: 'Zaktualizowano',
                         errorMessage: ''
                     })
+                    setTimeout(() => {
+                        this.setState({
+                            message: '',
+                            errorMessage: ''
+                        });
+                    }, 2000);
                 }
             })
             .catch((err) => {
@@ -156,9 +135,14 @@ class AddIncomePage extends Component {
                     errorMessage: this.props.t('update_error'),
                     message: ''
                 })
+                setTimeout(() => {
+                    this.setState({
+                        message: '',
+                        errorMessage: ''
+                    });
+                }, 2000);
             });
     }
-
 
     render() {
         return (
@@ -169,25 +153,25 @@ class AddIncomePage extends Component {
                             <Form.Control placeholder={this.props.t('amount_prompt')} id="amount" onChange={this.handleOnChange} />
                         </Form.Group>
                         <Form.Group as={Col} sm={10}>
-                            <Form.Control as="select" id="currency" onChange={this.handleOnChange}>
-                                {Object.keys(this.state.currencies).map((key) => <option data-key={key} key={key}>{this.state.currencies[key]}</option>)}
+                            <Form.Control as="select" id="currency" onChange={this.handleOnChange} >
+                                {Object.keys(this.props.currencies).map((key) => <option key={key}>{this.props.currencies[key]}</option>)}
                             </Form.Control>
                         </Form.Group>
                         <Form.Group as={Col} sm={10}>
                             <Form.Control as="select" id="frequency" onChange={this.handleOnChange}>
-                                {Object.keys(this.state.frequencies).map((key) => <option key={key}>{this.state.frequencies[key]}</option>)}
+                                {Object.keys(this.props.frequencies).map((key) => <option key={key}>{this.props.frequencies[key]}</option>)}
                             </Form.Control>
                         </Form.Group>
                         <Form.Group as={Col} sm={10}>
                             <Form.Control as="select" id="incomeCategory" onChange={this.handleOnChange}>
-                                {Object.keys(this.state.incomeCategories).map((key) => <option key={key}>{this.state.incomeCategories[key]}</option>)}
+                                {Object.keys(this.props.incomeCategories).map((key) => <option key={key}>{this.props.incomeCategories[key]}</option>)}
                             </Form.Control>
                         </Form.Group>
                         <Form.Group as={Col} sm={10}>
                             <Form.Control as="textarea" rows="3" placeholder={this.props.t('note_prompt')} id="note" onChange={this.handleOnChange} />
                         </Form.Group>
                         <Form.Group as={Col} sm={10}>
-                            <Alert show={!!this.state.message}  variant="success">
+                            <Alert show={!!this.state.message} variant="success">
                                 {this.state.message}
                             </Alert>
                             <Alert show={!!this.state.errorMessage} variant="danger" >
@@ -207,11 +191,6 @@ class AddIncomePage extends Component {
         )
     }
 
-    componentDidUpdate(prevProps) {
-        if (this.props.t !== prevProps.t) {
-            this.getDropdownValues()
-        }
-    }
 }
 
 export default withTranslation('add_income_page')(AddIncomePage)
