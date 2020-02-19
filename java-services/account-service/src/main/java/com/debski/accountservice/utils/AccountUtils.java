@@ -3,25 +3,36 @@ package com.debski.accountservice.utils;
 import com.debski.accountservice.entities.Account;
 import com.debski.accountservice.entities.Income;
 import com.debski.accountservice.entities.Outcome;
+import com.debski.accountservice.entities.enums.BudgetType;
 import com.debski.accountservice.entities.enums.Role;
 import com.debski.accountservice.models.AccountDTO;
+import com.debski.accountservice.models.BudgetDTO;
 import com.debski.accountservice.models.IncomeDTO;
 import com.debski.accountservice.models.OutcomeDTO;
 import org.apache.commons.lang.CharUtils;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.function.IntPredicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class AccountUtils {
 
     private PasswordEncoder encoder;
 
-    public AccountUtils(PasswordEncoder encoder) {
+    private MessageSource messageSource;
+
+    public AccountUtils(PasswordEncoder encoder, MessageSource messageSource) {
         this.encoder = encoder;
+        this.messageSource = messageSource;
     }
 
     public AccountDTO accountEntityToDto(Account entity) {
@@ -34,12 +45,12 @@ public class AccountUtils {
                 .build() : null;
         //TODO cos tego za duzo
         if (entity != null) {
-            if(entity.getIncomes() != null) {
+            if (entity.getIncomes() != null) {
                 incomesDTO = entity.getIncomes().stream().map(income -> incomeEntityToDto(income)).collect(Collectors.toSet());
             }
             dto.setIncomes(incomesDTO);
 
-            if(entity.getOutcomes() != null) {
+            if (entity.getOutcomes() != null) {
                 outcomesDTO = entity.getOutcomes().stream().map(outcome -> outcomeEntityToDto(outcome)).collect(Collectors.toSet());
             }
             dto.setOutcomes(outcomesDTO);
@@ -133,4 +144,52 @@ public class AccountUtils {
         return false;
     }
 
+    public List<BudgetDTO> mergeIncomesAndOutcomesToBudgetList(Set<Income> incomes, Set<Outcome> outcomes) {
+        Stream<BudgetDTO> incomeBudgets = incomes.stream().map(i -> {
+            return BudgetDTO.builder()
+                    .amount(i.getAmount())
+                    .currency(i.getCurrency().toString())
+                    .categoryDescription(messageSource.getMessage(i.getIncomeCategory().toString().toLowerCase(), null, LocaleContextHolder.getLocale()))
+                    .frequencyDescription(messageSource.getMessage(i.getFrequency().toString().toLowerCase(), null, LocaleContextHolder.getLocale()))
+                    .date(i.getDateOfIncome())
+                    .note(i.getNote())
+                    .uuid(i.getUuid())
+                    .budgetType(BudgetType.INCOME)
+                    .build();
+        });
+
+        Stream<BudgetDTO> outcomeBudgets = outcomes.stream().map(o -> {
+            return BudgetDTO.builder()
+                    .amount(o.getAmount())
+                    .currency(o.getCurrency().toString())
+                    .categoryDescription(messageSource.getMessage(o.getOutcomeCategory().toString().toLowerCase(), null, LocaleContextHolder.getLocale()))
+                    .frequencyDescription(messageSource.getMessage(o.getFrequency().toString().toLowerCase(), null, LocaleContextHolder.getLocale()))
+                    .date(o.getDateOfOutcome())
+                    .note(o.getNote())
+                    .uuid(o.getUuid())
+                    .budgetType(BudgetType.OUTCOME)
+                    .build();
+        });
+        List<BudgetDTO> result = Stream.concat(incomeBudgets, outcomeBudgets).sorted().collect(Collectors.toList());
+        return result;
+    }
+
+    /**
+     * @param startIndex included
+     * @param endIndex excluded
+     */
+    public List<BudgetDTO> filterAccordingToIndexes(List<BudgetDTO> budget, Integer startIndex, Integer endIndex) {
+        if (startIndex == null) startIndex = 0;
+        if (endIndex == null || endIndex > budget.size()) endIndex = budget.size();
+
+        if (startIndex < budget.size() && startIndex < endIndex) {
+            List<BudgetDTO> filteredBudget = new ArrayList<>();
+            for (int i = startIndex; i < endIndex; i++) {
+                filteredBudget.add(budget.get(i));
+            }
+            return filteredBudget;
+        } else {
+            return Collections.EMPTY_LIST;
+        }
+    }
 }

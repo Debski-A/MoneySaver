@@ -30,11 +30,12 @@ public class AccountServiceUnitTest {
     @Mock
     private AccountRepository accountRepository;
 
-    @Spy
-    private AccountUtils accountUtils = new AccountUtils(new BCryptPasswordEncoder());
 
     @Mock
     private MessageSource messageSource ;
+
+    @Spy
+    private AccountUtils accountUtils = new AccountUtils(new BCryptPasswordEncoder(), messageSource);
 
     @InjectMocks
     private AccountServiceImpl accountServiceImpl;

@@ -10,7 +10,6 @@ import coin from '../images/coin.jpg'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import Footer from './Footer'
 
 export const history = createBrowserHistory()
 
@@ -40,31 +39,28 @@ class App extends Component {
   render() {
     return (
       <Router history={history}>
-        <Container fluid className="d-flex flex-column " style={{height: '94vh'}}>
-          <Container>
+        <Container id="app-main" fluid className="d-flex flex-column">
+
             <Row className="align-items-center">
               <Col className="text-center">
-                <img alt="Hello friend" width="15%" height="15%" src={coin} />
+                <img alt="Hello friend" width="8%" height="8%" src={coin} />
                 <h1 className="header-app-name">MoneySaver</h1>
               </Col>
             </Row>
-          </Container>
-          <Container fluid className="d-flex flex-column fill-height">
+
             <Row>
               <Col>
                 <Navigation isLoggedIn={this.state.isLoggedIn} />
               </Col>
             </Row>
             <Row className="fill-height">
-              <Col className="d-flex flex-column fill-height">
+
                 <PageContent handleIsLoggedIn={this.handleIsLoggedIn.bind(this)} isLoggedIn={this.state.isLoggedIn} />
-              </Col>
+
             </Row>
-          </Container>
+
         </Container>
-        <Footer>
-          <span>Project by Adam Dębski</span>
-        </Footer>
+
       </Router>
     )
   }

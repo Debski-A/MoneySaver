@@ -247,6 +247,22 @@ public class AccountServiceIntegrationTest {
         assertThat(accountEntity.getIncomes(), hasSize(2));
     }
 
+//    @Test
+//    public void shouldGetIncomesAndOutcomesWithTranslatedEnums() {
+//        //given
+//        LocaleContextHolder.setLocale(Locale.forLanguageTag("pl"));
+//        prepareDataInDatabase();
+//        //when
+//        AccountDTO accountDto = accountService.findAllIncomesAndOutcomes("miecio");
+//        //then
+//        IncomeDTO incomeDto = accountDto.getIncomes().iterator().next();
+//        OutcomeDTO outcomeDto = accountDto.getOutcomes().iterator().next();
+//        assertThat(outcomeDto.getFrequencyDescription(), equalTo("Jednorazowo"));
+//        assertThat(outcomeDto.getOutcomeCategoryDescription(), equalTo("Alkohol"));
+//        assertThat(incomeDto.getFrequencyDescription(), equalTo("Raz w miesiącu"));
+//        assertThat(incomeDto.getIncomeCategoryDescription(), equalTo("Benefit"));
+//    }
+
     private AccountDTO prepareDataInDatabase() {
         OutcomeDTO outcome1 = OutcomeDTO.builder()
                 .currency(Currency.PLN)

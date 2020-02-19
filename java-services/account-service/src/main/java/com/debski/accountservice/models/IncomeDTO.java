@@ -19,6 +19,8 @@ public class IncomeDTO {
 
     private Frequency frequency;
 
+    private String frequencyDescription;
+
     private BigDecimal amount;
 
     private Currency currency;
@@ -26,6 +28,8 @@ public class IncomeDTO {
     private LocalDate dateOfIncome;
 
     private IncomeCategory incomeCategory;
+
+    private String incomeCategoryDescription;
 
     private String note;
 

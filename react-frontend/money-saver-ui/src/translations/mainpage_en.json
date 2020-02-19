@@ -1,5 +1,6 @@
 {
     "income_button":"Add income",
     "outcome_button":"Add outcome",
-    "visualisation_button":"Visualisations"
+    "visualisation_button":"Visualisations",
+    "periodic_summary":"Periodic summary"
 }

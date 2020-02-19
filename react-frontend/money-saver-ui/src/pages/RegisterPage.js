@@ -94,26 +94,30 @@ class RegisterPage extends Component {
 
   render() {
     return (
-      <Form className="mt-2">
+      <Form className="mt-2 ml-2 w-100">
         <Form.Group as={Row}>
-          <Col sm={5}>
+          <Col sm={4}>
             <Form.Control id="username_input" onChange={this.handleOnChange} placeholder={this.props.t('username_prompt')} />
           </Col>
         </Form.Group>
         <Form.Group as={Row}>
-          <Col sm={5} >
+          <Col sm={4} >
             <Form.Control id="password_input" onChange={this.handleOnChange} type="password" placeholder={this.props.t('password_prompt')} />
           </Col>
         </Form.Group>
         <Form.Group as={Row}>
-          <Col sm={5}>
+          <Col sm={4}>
             <Form.Control id="email_input" onChange={this.handleOnChange} type="email" placeholder={this.props.t('email_prompt')} />
           </Col>
         </Form.Group>
-        <Alert show={!!this.state.message} variant="danger">
-          {this.state.message}
-        </Alert>
         <SubmitButton onClick={this.handleOnClick} value={this.props.t('submit_button')} />
+        <Row className="pt-2">
+          <Col sm={4}>
+            <Alert show={!!this.state.message} variant="danger">
+              {this.state.message}
+            </Alert>
+          </Col>
+        </Row>
       </Form>
     );
   }

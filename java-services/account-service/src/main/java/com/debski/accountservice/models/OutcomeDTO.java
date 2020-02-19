@@ -18,6 +18,8 @@ import java.util.UUID;
 public class OutcomeDTO {
     private Frequency frequency;
 
+    private String frequencyDescription;
+
     private BigDecimal amount;
 
     private Currency currency;
@@ -25,6 +27,8 @@ public class OutcomeDTO {
     private LocalDate dateOfOutcome;
 
     private OutcomeCategory outcomeCategory;
+
+    private String outcomeCategoryDescription;
 
     private String note;
 

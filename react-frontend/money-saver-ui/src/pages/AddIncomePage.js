@@ -78,7 +78,6 @@ class AddIncomePage extends Component {
     }
 
     addIncome = () => {
-        // if (!isAuthenticated) authenticate()
 
         let incomeUpdateURL = "http://localhost/api/accounts/current/update/income"
         let currentLanguage = i18n.language
@@ -147,7 +146,7 @@ class AddIncomePage extends Component {
     render() {
         return (
             <Form>
-                <Form.Row className="sm-4 pt-4">
+                <Form.Row className="pt-2">
                     <Form.Group as={Col} sm={4}>
                         <Form.Group as={Col} sm={10}>
                             <Form.Control placeholder={this.props.t('amount_prompt')} id="amount" onChange={this.handleOnChange} />
@@ -171,15 +170,15 @@ class AddIncomePage extends Component {
                             <Form.Control as="textarea" rows="3" placeholder={this.props.t('note_prompt')} id="note" onChange={this.handleOnChange} />
                         </Form.Group>
                         <Form.Group as={Col} sm={10}>
+                            <Button onClick={this.handleOnClick} className="ml-2" variant="secondary">{this.props.t('submit_button')}</Button>
+                        </Form.Group>
+                        <Form.Group as={Col} sm={10}>
                             <Alert show={!!this.state.message} variant="success">
                                 {this.state.message}
                             </Alert>
                             <Alert show={!!this.state.errorMessage} variant="danger" >
                                 {this.state.errorMessage}
                             </Alert>
-                        </Form.Group>
-                        <Form.Group as={Col} sm={10}>
-                            <Button onClick={this.handleOnClick} className="ml-2" variant="secondary">{this.props.t('submit_button')}</Button>
                         </Form.Group>
                     </Form.Group>
                     <Form.Group as={Col} sm={6} className="d-flex flex-column">

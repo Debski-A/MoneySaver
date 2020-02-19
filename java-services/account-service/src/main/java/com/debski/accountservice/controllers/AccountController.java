@@ -1,15 +1,13 @@
 package com.debski.accountservice.controllers;
 
-import com.debski.accountservice.models.AccountDTO;
-import com.debski.accountservice.models.DropdownValuesDTO;
-import com.debski.accountservice.models.IncomeDTO;
-import com.debski.accountservice.models.OutcomeDTO;
+import com.debski.accountservice.models.*;
 import com.debski.accountservice.services.AccountService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.HashSet;
+import java.util.List;
 
 @RestController
 public class AccountController {
@@ -30,6 +28,13 @@ public class AccountController {
     public AccountDTO getAccountByName(@PathVariable String username) {
         return accountService.findByUsername(username);
     }
+
+    @PreAuthorize("#oauth2.hasScope('ui')")
+    @GetMapping("/current/budget")
+    public List<BudgetDTO> getIncomesAndOutcomes(Principal principal, @RequestParam(required = false) Integer startIndex, @RequestParam(required = false) Integer endIndex) {
+        return accountService.findByAscendingDateInRange(principal.getName(), startIndex, endIndex);
+    }
+
 
     @PreAuthorize("#oauth2.hasScope('ui')")
     @PutMapping("/current/update/income")

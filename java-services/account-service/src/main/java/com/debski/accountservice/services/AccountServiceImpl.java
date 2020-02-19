@@ -8,10 +8,7 @@ import com.debski.accountservice.entities.enums.Frequency;
 import com.debski.accountservice.entities.enums.IncomeCategory;
 import com.debski.accountservice.entities.enums.OutcomeCategory;
 import com.debski.accountservice.exceptions.AccountException;
-import com.debski.accountservice.models.AccountDTO;
-import com.debski.accountservice.models.DropdownValuesDTO;
-import com.debski.accountservice.models.IncomeDTO;
-import com.debski.accountservice.models.OutcomeDTO;
+import com.debski.accountservice.models.*;
 import com.debski.accountservice.repositories.AccountRepository;
 import com.debski.accountservice.utils.AccountUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -59,6 +56,28 @@ public class AccountServiceImpl implements AccountService {
                 .outcomeCategories(translateAllTypes(OutcomeCategory.ALCOHOL))
                 .build();
         return result;
+    }
+
+    @Override
+    public List<BudgetDTO> findByAscendingDateInRange(String username, Integer startIndex, Integer endIndex) {
+        Account accountEntity = repository.findByUsername(username);
+        List<BudgetDTO> budget = accountUtils.mergeIncomesAndOutcomesToBudgetList(accountEntity.getIncomes(), accountEntity.getOutcomes());
+        List<BudgetDTO> filteredBudget = accountUtils.filterAccordingToIndexes(budget, startIndex, endIndex);
+        return filteredBudget;
+    }
+
+    public AccountDTO findAllIncomesAndOutcomes(String username) {
+        Account accountEntity = repository.findByUsername(username);
+        AccountDTO accountDto = accountUtils.accountEntityToDto(accountEntity);
+        accountDto.getIncomes().forEach(i -> {
+            i.setFrequencyDescription(messageSource.getMessage(i.getFrequency().toString().toLowerCase(), null, LocaleContextHolder.getLocale()));
+            i.setIncomeCategoryDescription(messageSource.getMessage(i.getIncomeCategory().toString().toLowerCase(), null, LocaleContextHolder.getLocale()));
+        });
+        accountDto.getOutcomes().forEach(o -> {
+            o.setFrequencyDescription(messageSource.getMessage(o.getFrequency().toString().toLowerCase(), null, LocaleContextHolder.getLocale()));
+            o.setOutcomeCategoryDescription(messageSource.getMessage(o.getOutcomeCategory().toString().toLowerCase(), null, LocaleContextHolder.getLocale()));
+        });
+        return accountDto;
     }
 
     private <E extends Enum> Map<Integer, String> translateAllTypes(E enumSource) {

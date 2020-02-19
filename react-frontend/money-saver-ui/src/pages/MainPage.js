@@ -1,10 +1,7 @@
 import React, { Component } from 'react'
-import Button from 'react-bootstrap/Button'
-import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
-import Dropdown from "react-bootstrap/Dropdown"
-import DropdownButton from "react-bootstrap/DropdownButton"
-import Container from 'react-bootstrap/Container'
+import Nav from 'react-bootstrap/Nav'
+import NavDropdown from 'react-bootstrap/NavDropdown'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPiggyBank } from '@fortawesome/free-solid-svg-icons'
 import { faMoneyBillWave } from '@fortawesome/free-solid-svg-icons'
@@ -63,32 +60,37 @@ class MainPage extends Component {
     }
 
     render() {
-        if (!this.state.isDataLoaded) return <Loader/>
+        if (!this.state.isDataLoaded) return <Loader />
         return (
-            <Container fluid className="d-flex fill-height">
-                <Col sm={1} className="d-flex fill-height flex-column">
-                    <Row className="fill-height align-items-center">
-                        {/* <FontAwesomeIcon size="4x" icon={faPiggyBank} color="#6c757d" /> */}
-                        <Button as={NavLink} className="ml-1" variant="secondary" to="/main/income/add" >{this.props.t('income_button')}</Button>
-                    </Row>
-                    <Row className="fill-height align-items-center">
-                        {/* <FontAwesomeIcon size="4x" icon={faMoneyBillWave} color="#6c757d" /> */}
-                        <Button as={NavLink} className="ml-1" variant="secondary" to="/main/outcome/add">{this.props.t('outcome_button')}</Button>
-                    </Row>
-                    <Row className="fill-height align-items-center">
-                        {/* <FontAwesomeIcon size="4x" icon={faChartLine} color="#6c757d" /> */}
-                        {/* <Button className="ml-2" variant="secondary" to="/main/visualization/1">{this.props.t('visualisation_button')}</Button> */}
-                        <DropdownButton className="ml-1" variant="secondary" title={this.props.t('visualisation_button')}>
-                            <Dropdown.Item as={NavLink} variant="secondary" to="/main/visualization/1">Action</Dropdown.Item>
-                            {/* <Dropdown.Item as={NavLink} variant="secondary" to="/main/visualization/2">Action</Dropdown.Item>
-                            <Dropdown.Item as={NavLink} variant="secondary" to="/main/visualization/3">Action</Dropdown.Item> */}
-                        </DropdownButton>
-                    </Row>
+            <>
+                <Col className="flex-column" sm={2}>
+                    <Nav fill variant="pills" className="bg-light  text-dark h-100" >
+                        <Nav.Item className="w-100">
+                        <FontAwesomeIcon size="4x" icon={faPiggyBank} color="#6c757d" />
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link as={NavLink} exact to="/main/income/add" className="bg-secondary text-white">{this.props.t('income_button')}</Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item className="w-100">
+                        <FontAwesomeIcon size="4x" icon={faMoneyBillWave} color="#6c757d" />
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link as={NavLink} exact to="/main/outcome/add" className="bg-secondary text-white">{this.props.t('outcome_button')}</Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item className="w-100">
+                        <FontAwesomeIcon size="4x" icon={faChartLine} color="#6c757d" />
+                        </Nav.Item>
+                        <NavDropdown bsPrefix="nav-link bg-secondary text-white" title={this.props.t('visualisation_button')} >
+                            <NavDropdown.Item as={NavLink} exact to="/main/visualization/1" className="bg-secondary text-white" onClick={() => console.log('viz1 clicked')}>{this.props.t('periodic_summary')} </NavDropdown.Item>
+                            <NavDropdown.Divider />
+                            <NavDropdown.Item className="bg-secondary text-white" onClick={() => console.log('viz2 clicked')}>Viz2</NavDropdown.Item>
+                        </NavDropdown>
+                    </Nav>
                 </Col>
-                <Col sm={11}>
+                <Col sm={10}>
                     <HomePageContent {...this.state} />
                 </Col>
-            </Container>
+            </>
         )
     }
 

@@ -1,5 +1,6 @@
 {  
     "income_button":"Dodaj przychód",
     "outcome_button":"Dodaj wydatek",
-    "visualisation_button":"Wizualizacje"
+    "visualisation_button":"Wizualizacje",
+    "periodic_summary":"Zestawienie okresowe"
  }
