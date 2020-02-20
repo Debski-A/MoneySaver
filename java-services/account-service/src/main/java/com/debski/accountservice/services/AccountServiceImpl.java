@@ -66,20 +66,6 @@ public class AccountServiceImpl implements AccountService {
         return filteredBudget;
     }
 
-    public AccountDTO findAllIncomesAndOutcomes(String username) {
-        Account accountEntity = repository.findByUsername(username);
-        AccountDTO accountDto = accountUtils.accountEntityToDto(accountEntity);
-        accountDto.getIncomes().forEach(i -> {
-            i.setFrequencyDescription(messageSource.getMessage(i.getFrequency().toString().toLowerCase(), null, LocaleContextHolder.getLocale()));
-            i.setIncomeCategoryDescription(messageSource.getMessage(i.getIncomeCategory().toString().toLowerCase(), null, LocaleContextHolder.getLocale()));
-        });
-        accountDto.getOutcomes().forEach(o -> {
-            o.setFrequencyDescription(messageSource.getMessage(o.getFrequency().toString().toLowerCase(), null, LocaleContextHolder.getLocale()));
-            o.setOutcomeCategoryDescription(messageSource.getMessage(o.getOutcomeCategory().toString().toLowerCase(), null, LocaleContextHolder.getLocale()));
-        });
-        return accountDto;
-    }
-
     private <E extends Enum> Map<Integer, String> translateAllTypes(E enumSource) {
         int oridinal = 0;
         Map<Integer, String> translatedTypes = new HashMap<>();

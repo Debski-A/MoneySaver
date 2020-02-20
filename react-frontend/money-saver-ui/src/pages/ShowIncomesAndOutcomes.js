@@ -1,97 +1,30 @@
 import React, { Component } from 'react'
 import i18n from '../helpers/i18n'
 import { getAccessToken } from '../helpers/authenticationUtils'
-import Form from 'react-bootstrap/Form'
-import Col from 'react-bootstrap/Col'
-import Button from 'react-bootstrap/Button'
-import DatePicker from 'react-datepicker'
 import { withTranslation } from "react-i18next";
 import "react-datepicker/dist/react-datepicker.css"
-import Alert from 'react-bootstrap/Alert'
+import Table from 'react-bootstrap/Table'
+import Col from 'react-bootstrap/Col'
+import Row from 'react-bootstrap/Row'
+import Button from 'react-bootstrap/Button'
+import Loader from 'react-loader'
 
 class ShowIncomesAndOutcomes extends Component {
 
+    pagePlusOneRow = 19
+
     state = {
-        currencies: [],
-        frequencies: [],
-        incomeCategories: [],
-        amount: '',
-        currency: 0,
-        frequency: 0,
-        incomeCategory: 0,
-        note: '',
-        dateOfIncome: new Date(),
-        message: '',
-        errorMessage: ''
+        startIndex: 0,
+        currentLanguage: i18n.language,
+        isDataLoaded: false,
+        budget: []
     }
 
-    handleOnChange = (e) => {
-        switch (e.target.id) {
-            case "amount": {
-                this.setState({
-                    amount: e.target.value
-                })
-                break;
-            }
-            case "currency": {
-                this.setState({
-                    currency: e.target.options.selectedIndex
-                })
-                break;
-            }
-            case "frequency": {
-                this.setState({
-                    frequency: e.target.options.selectedIndex
-                })
-                break;
-            }
-            case "incomeCategory": {
-                this.setState({
-                    incomeCategory: e.target.options.selectedIndex
-                })
-                break;
-            }
-            case "note": {
-                this.setState({
-                    note: e.target.value
-                })
-                break;
-            }
-            case "dateOfIncome": {
-                this.setState({
-                    dateOfIncome: e.target.value
-                })
-                break;
-            }
-            default: break;
-        }
-    }
-
-    handleDateOnChange = (date) => {
-        this.setState({
-            dateOfIncome: date
-        })
-    }
-
-    handleOnClick = () => {
-        this.addIncome()
-    }
-
-    addIncome = () => {
-
-        let incomeUpdateURL = "http://localhost/api/accounts/current/update/income"
+    getBudgetData = async () => {
+        let incomeUpdateURL = "http://localhost/api/accounts/current/budget?startIndex=" + this.state.startIndex + "&endIndex=" + (this.state.startIndex + this.pagePlusOneRow)
         let currentLanguage = i18n.language
-        let income = {
-            "amount": this.state.amount,
-            "currency": this.state.currency,
-            "frequency": this.state.frequency,
-            "dateOfIncome": this.state.dateOfIncome,
-            "incomeCategory": this.state.incomeCategory,
-            "note": this.state.note
-        }
-        fetch(incomeUpdateURL, {
-            method: 'PUT',
-            body: JSON.stringify(income),
+        await fetch(incomeUpdateURL, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + getAccessToken(),
@@ -100,96 +33,129 @@ class ShowIncomesAndOutcomes extends Component {
         })
             .then(response => response.json())
             .then(response => {
-                if (!!response.errorMessage) {
-                    this.setState({
-                        errorMessage: response.errorMessage,
-                        message: ''
-                    })
-                    setTimeout(() => {
-                        this.setState({
-                            message: '',
-                            errorMessage: ''
-                        });
-                    }, 2000);
+                if (!!response.errorMessage || !!response.error) {
+                    console.log(response.errorMessage)
+                    console.log(response.error)
                 }
                 else if (!!response.status && response.status !== 200) {
                     throw new Error('Ststus not OK')
                 }
                 else {
                     this.setState({
-                        message: 'Zaktualizowano',
-                        errorMessage: ''
+                        budget: response,
+                        isDataLoaded: true
                     })
-                    setTimeout(() => {
-                        this.setState({
-                            message: '',
-                            errorMessage: ''
-                        });
-                    }, 2000);
                 }
             })
             .catch((err) => {
                 console.log(err)
-                this.setState({
-                    errorMessage: this.props.t('update_error'),
-                    message: ''
-                })
-                setTimeout(() => {
-                    this.setState({
-                        message: '',
-                        errorMessage: ''
-                    });
-                }, 2000);
             });
     }
 
+    constructTable = () => {
+        let id = this.state.startIndex + 1
+        let index = 0
+        return this.state.budget.map(i => {
+            if (index < 18) {
+                ++index
+                return (
+                    <tr key={id}>
+                        <td>{id++}</td>
+                        <td>{i.budgetType}</td>
+                        <td>{i.amount}</td>
+                        <td>{i.currency}</td>
+                        <td>{i.categoryDescription}</td>
+                        <td>{i.frequencyDescription}</td>
+                        <td>{i.date}</td>
+                        <td>{i.note}</td>
+                    </tr>
+                )   
+            }
+            return null
+        })
+    }
+
+    prevButtonOnCLick = () => {
+            this.setState((prevState) => ({
+                startIndex: prevState.startIndex - this.pagePlusOneRow,
+                isDataLoaded: false
+            }), this.getBudgetData)
+
+    }
+
+    nextButtonOnClick = () => {
+        this.setState((prevState) => ({
+            startIndex: prevState.startIndex + this.pagePlusOneRow,
+            isDataLoaded: false
+        }), this.getBudgetData)
+    }
+
     render() {
+        if (!this.state.isDataLoaded) return <Loader />
         return (
-            <Form>
-                <Form.Row className="pt-2">
-                    <Form.Group as={Col} sm={4}>
-                        <Form.Group as={Col} sm={10}>
-                            <Form.Control placeholder={this.props.t('amount_prompt')} id="amount" onChange={this.handleOnChange} />
-                        </Form.Group>
-                        <Form.Group as={Col} sm={10}>
-                            <Form.Control as="select" id="currency" onChange={this.handleOnChange} >
-                                {Object.keys(this.props.currencies).map((key) => <option key={key}>{this.props.currencies[key]}</option>)}
-                            </Form.Control>
-                        </Form.Group>
-                        <Form.Group as={Col} sm={10}>
-                            <Form.Control as="select" id="frequency" onChange={this.handleOnChange}>
-                                {Object.keys(this.props.frequencies).map((key) => <option key={key}>{this.props.frequencies[key]}</option>)}
-                            </Form.Control>
-                        </Form.Group>
-                        <Form.Group as={Col} sm={10}>
-                            <Form.Control as="select" id="incomeCategory" onChange={this.handleOnChange}>
-                                {Object.keys(this.props.incomeCategories).map((key) => <option key={key}>{this.props.incomeCategories[key]}</option>)}
-                            </Form.Control>
-                        </Form.Group>
-                        <Form.Group as={Col} sm={10}>
-                            <Form.Control as="textarea" rows="3" placeholder={this.props.t('note_prompt')} id="note" onChange={this.handleOnChange} />
-                        </Form.Group>
-                        <Form.Group as={Col} sm={10}>
-                            <Button onClick={this.handleOnClick} className="ml-2" variant="secondary">{this.props.t('submit_button')}</Button>
-                        </Form.Group>
-                        <Form.Group as={Col} sm={10}>
-                            <Alert show={!!this.state.message} variant="success">
-                                {this.state.message}
-                            </Alert>
-                            <Alert show={!!this.state.errorMessage} variant="danger" >
-                                {this.state.errorMessage}
-                            </Alert>
-                        </Form.Group>
-                    </Form.Group>
-                    <Form.Group as={Col} sm={6} className="d-flex flex-column">
-                        <Form.Label>{this.props.t('date_label')}</Form.Label>
-                        <DatePicker locale={this.props.i18n.language} selected={this.state.dateOfIncome} onChange={this.handleDateOnChange} inline id="dateOfIncome" />
-                    </Form.Group>
-                </Form.Row>
-            </Form >
+            <>
+                <Table striped bordered hover className="pb-0 mb-0" size="sm">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>{this.props.t('budget_type')}</th>
+                            <th>{this.props.t('amount')}</th>
+                            <th>{this.props.t('currency')}</th>
+                            <th>{this.props.t('categoryDescription')}</th>
+                            <th>{this.props.t('frequencyDescription')}</th>
+                            <th>{this.props.t('date')}</th>
+                            <th>{this.props.t('note')}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.constructTable()}
+                    </tbody>
+                </Table>
+                <Row className="m-0 p-0">
+                    {this.state.startIndex < 19 && this.state.budget.length < 19 && <></>}
+                    {this.state.startIndex < 19 && this.state.budget.length >= 19 &&
+                        <>
+                            <Col md={8}sm={8} xs={8} ></Col>
+                            <Col md={4}sm={4} xs={4} className="m-0 text-right">
+                                <Button onClick={this.nextButtonOnClick} size="sm" variant="secondary">{this.props.t('next_page')}</Button>
+                            </Col>
+                        </>
+                    }
+                    {this.state.startIndex >= 19 && this.state.budget.length < 19 && 
+                        <Col md={4} sm={4} xs={4} className="m-0 ">
+                            <Button onClick={this.prevButtonOnCLick} size="sm" variant="secondary">{this.props.t('prev_page')}</Button>
+                        </Col>
+                    }
+                    {this.state.startIndex >= 19 && this.state.budget.length >= 19 && 
+                        <>
+                            <Col md={4} sm={4} xs={4} className="m-0 ">
+                                <Button onClick={this.prevButtonOnCLick} size="sm" variant="secondary">{this.props.t('prev_page')}</Button>
+                            </Col>
+                            <Col md={4}sm={4} xs={4} ></Col>
+                            <Col md={4}sm={4} xs={4} className="m-0 text-right">
+                                <Button onClick={this.nextButtonOnClick} size="sm" variant="secondary">{this.props.t('next_page')}</Button>
+                            </Col>
+                        </>
+                    }
+                </Row>
+            </>
         )
+    }
+
+    componentDidMount() {
+        this.getBudgetData()
+    }
+
+    componentDidUpdate() {
+        if (this.state.currentLanguage !== i18n.language) {
+            this.getBudgetData()
+            this.setState({
+                currentLanguage: i18n.language,
+                isDataLoaded: false
+            })
+        }
     }
 
 }
 
-export default withTranslation('add_income_page')(ShowIncomesAndOutcomes)
+export default withTranslation('show_incomes_and_outcomes')(ShowIncomesAndOutcomes)

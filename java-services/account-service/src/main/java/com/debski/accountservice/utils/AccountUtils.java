@@ -148,26 +148,26 @@ public class AccountUtils {
         Stream<BudgetDTO> incomeBudgets = incomes.stream().map(i -> {
             return BudgetDTO.builder()
                     .amount(i.getAmount())
-                    .currency(i.getCurrency().toString())
+                    .currencyDescription(messageSource.getMessage(i.getCurrency().toString().toLowerCase(), null, LocaleContextHolder.getLocale()))
                     .categoryDescription(messageSource.getMessage(i.getIncomeCategory().toString().toLowerCase(), null, LocaleContextHolder.getLocale()))
                     .frequencyDescription(messageSource.getMessage(i.getFrequency().toString().toLowerCase(), null, LocaleContextHolder.getLocale()))
                     .date(i.getDateOfIncome())
                     .note(i.getNote())
                     .uuid(i.getUuid())
-                    .budgetType(BudgetType.INCOME)
+                    .budgetTypeDescription(messageSource.getMessage(BudgetType.INCOME.toString().toLowerCase(), null, LocaleContextHolder.getLocale()))
                     .build();
         });
 
         Stream<BudgetDTO> outcomeBudgets = outcomes.stream().map(o -> {
             return BudgetDTO.builder()
                     .amount(o.getAmount())
-                    .currency(o.getCurrency().toString())
+                    .currencyDescription(messageSource.getMessage(o.getCurrency().toString().toLowerCase(), null, LocaleContextHolder.getLocale()))
                     .categoryDescription(messageSource.getMessage(o.getOutcomeCategory().toString().toLowerCase(), null, LocaleContextHolder.getLocale()))
                     .frequencyDescription(messageSource.getMessage(o.getFrequency().toString().toLowerCase(), null, LocaleContextHolder.getLocale()))
                     .date(o.getDateOfOutcome())
                     .note(o.getNote())
                     .uuid(o.getUuid())
-                    .budgetType(BudgetType.OUTCOME)
+                    .budgetTypeDescription(messageSource.getMessage(BudgetType.OUTCOME.toString().toLowerCase(), null, LocaleContextHolder.getLocale()))
                     .build();
         });
         List<BudgetDTO> result = Stream.concat(incomeBudgets, outcomeBudgets).sorted().collect(Collectors.toList());

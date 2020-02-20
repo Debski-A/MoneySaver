@@ -3,9 +3,7 @@ import Col from "react-bootstrap/Col"
 import Nav from 'react-bootstrap/Nav'
 import NavDropdown from 'react-bootstrap/NavDropdown'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPiggyBank } from '@fortawesome/free-solid-svg-icons'
-import { faMoneyBillWave } from '@fortawesome/free-solid-svg-icons'
-import { faChartLine } from '@fortawesome/free-solid-svg-icons'
+import { faPiggyBank, faMoneyBillWave, faChartLine, faEye } from '@fortawesome/free-solid-svg-icons'
 import HomePageContent from '../layouts/HomePageContent'
 import { NavLink } from 'react-router-dom'
 import { withTranslation } from "react-i18next"
@@ -63,7 +61,7 @@ class MainPage extends Component {
         if (!this.state.isDataLoaded) return <Loader />
         return (
             <>
-                <Col className="flex-column" sm={2}>
+                <Col className="flex-column pr-0" sm={2}>
                     <Nav fill variant="pills" className="bg-light  text-dark h-100" >
                         <Nav.Item className="w-100">
                         <FontAwesomeIcon size="4x" icon={faPiggyBank} color="#6c757d" />
@@ -78,6 +76,12 @@ class MainPage extends Component {
                             <Nav.Link as={NavLink} exact to="/main/outcome/add" className="bg-secondary text-white">{this.props.t('outcome_button')}</Nav.Link>
                         </Nav.Item>
                         <Nav.Item className="w-100">
+                        <FontAwesomeIcon size="4x" icon={faEye} color="#6c757d" />
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link as={NavLink} exact to="/main/budget/view" className="bg-secondary text-white">{this.props.t('budget_button')}</Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item className="w-100">
                         <FontAwesomeIcon size="4x" icon={faChartLine} color="#6c757d" />
                         </Nav.Item>
                         <NavDropdown bsPrefix="nav-link bg-secondary text-white" title={this.props.t('visualisation_button')} >
@@ -87,7 +91,7 @@ class MainPage extends Component {
                         </NavDropdown>
                     </Nav>
                 </Col>
-                <Col sm={10}>
+                <Col className="pl-0 pr-0" sm={10}>
                     <HomePageContent {...this.state} />
                 </Col>
             </>

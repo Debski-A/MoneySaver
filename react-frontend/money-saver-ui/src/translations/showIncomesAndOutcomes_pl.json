@@ -1,0 +1,12 @@
+{
+    "budget_type":"Rodzaj",
+    "amount":"Kwota",
+    "currency":"Waluta",
+    "categoryDescription":"Kategoria",
+    "frequencyDescription":"Częstotliwość",
+    "date":"Data",
+    "note":"Notatka",
+    "prev_page":"Poprzednia strona",
+    "next_page":"Następna strona",
+    "update_error":"Nie udało się załadować danych"
+}

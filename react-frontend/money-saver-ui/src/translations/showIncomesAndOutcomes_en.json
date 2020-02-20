@@ -1,0 +1,12 @@
+{
+    "budget_type":"Type",
+    "amount":"Amount",
+    "currency":"Currency",
+    "categoryDescription":"Category",
+    "frequencyDescription":"Frequency",
+    "date":"Date",
+    "note":"Note",
+    "prev_page":"Previous page",
+    "next_page":"Next page",
+    "update_error":"Couldn't load data"
+}

@@ -17,6 +17,8 @@ import addOutcomePage_pl from '../translations/addOutcomePage_pl'
 import addOutcomePage_en from '../translations/addOutcomePage_en'
 import allIncomesAndOutcomes_pl from '../translations/allIncomesAndOutcomes_pl'
 import allIncomesAndOutcomes_en from '../translations/allIncomesAndOutcomes_en'
+import showIncomesAndOutcomes_pl from '../translations/showIncomesAndOutcomes_pl'
+import showIncomesAndOutcomes_en from '../translations/showIncomesAndOutcomes_en'
 
 i18n
   .use(LanguageDetector)
@@ -33,6 +35,7 @@ i18n
         add_outcome_page: addOutcomePage_en,
         mainpage: mainpage_en,
         all_incomes_and_outcomes: allIncomesAndOutcomes_en,
+        show_incomes_and_outcomes: showIncomesAndOutcomes_en,
         translations: {
           //default translation will go here
         }
@@ -46,6 +49,7 @@ i18n
         add_outcome_page: addOutcomePage_pl,
         mainpage: mainpage_pl,
         all_incomes_and_outcomes: allIncomesAndOutcomes_pl,
+        show_incomes_and_outcomes: showIncomesAndOutcomes_pl,
         translations: {
           //default translation will go here
         }
