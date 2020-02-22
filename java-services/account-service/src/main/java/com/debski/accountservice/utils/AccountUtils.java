@@ -155,6 +155,7 @@ public class AccountUtils {
                     .note(i.getNote())
                     .uuid(i.getUuid())
                     .budgetTypeDescription(messageSource.getMessage(BudgetType.INCOME.toString().toLowerCase(), null, LocaleContextHolder.getLocale()))
+                    .budgetType(BudgetType.INCOME)
                     .build();
         });
 
@@ -168,6 +169,7 @@ public class AccountUtils {
                     .note(o.getNote())
                     .uuid(o.getUuid())
                     .budgetTypeDescription(messageSource.getMessage(BudgetType.OUTCOME.toString().toLowerCase(), null, LocaleContextHolder.getLocale()))
+                    .budgetType(BudgetType.OUTCOME)
                     .build();
         });
         List<BudgetDTO> result = Stream.concat(incomeBudgets, outcomeBudgets).sorted().collect(Collectors.toList());

@@ -6,7 +6,6 @@ import com.debski.accountservice.entities.enums.IncomeCategory;
 import com.debski.accountservice.entities.enums.OutcomeCategory;
 import com.debski.accountservice.exceptions.AccountException;
 import com.debski.accountservice.models.AccountDTO;
-import com.debski.accountservice.models.DropdownValuesDTO;
 import com.debski.accountservice.models.IncomeDTO;
 import com.debski.accountservice.models.OutcomeDTO;
 import org.junit.Before;
@@ -22,7 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -179,46 +180,6 @@ public class AccountServiceIntegrationTest {
     }
 
     @Test
-    public void shouldReturnDropdownValuesForPolishLang() {
-        //given
-        LocaleContextHolder.setLocale(Locale.forLanguageTag("pl"));
-        var currencies = Map.of(0, "PLN", 1, "EUR", 2, "USD", 3, "GBP");
-        var frequencies = Map.of(0, "Jednorazowo", 1, "Codziennie", 2, "Raz w miesiącu", 3,"Co kwartał", 4,"Raz w roku");
-        var outcomeCategories = Map.of(0, "Opłata", 1, "Jedzenie", 2, "Alkohol", 3, "Prezent",4,  "Samochód", 5, "Inne");
-        var incomeCategories = Map.of(0, "Wpłata", 1,  "Prezent", 2, "Benefit", 3, "Inne");
-        var expectedResult = DropdownValuesDTO.builder()
-                .currencies(currencies)
-                .frequencies(frequencies)
-                .outcomeCategories(outcomeCategories)
-                .incomeCategories(incomeCategories)
-                .build();
-        //when
-        DropdownValuesDTO dropdownValuesDTO = accountService.provideValuesForDropdowns();
-        //then
-        assertThat(dropdownValuesDTO, equalTo(expectedResult));
-    }
-
-    @Test
-    public void shouldReturnDropdownValuesForEnglishLang() {
-        //given
-        LocaleContextHolder.setLocale(Locale.forLanguageTag("en"));
-        var currencies = Map.of(0, "PLN", 1, "EUR", 2, "USD", 3, "GBP");
-        var frequencies = Map.of(0,"Once", 1, "Daily", 2, "Monthly",  3,"Quarterly", 4, "Yearly");
-        var outcomeCategories = Map.of(0, "Fee", 1,  "Food", 2,  "Alcohol", 3, "Gift", 4, "Car", 5, "Other");
-        var incomeCategories = Map.of(0, "Payment", 1,  "Gift", 2, "Benefit", 3, "Other");
-        var expectedResult = DropdownValuesDTO.builder()
-                .currencies(currencies)
-                .frequencies(frequencies)
-                .outcomeCategories(outcomeCategories)
-                .incomeCategories(incomeCategories)
-                .build();
-        //when
-        DropdownValuesDTO dropdownValuesDTO = accountService.provideValuesForDropdowns();
-        //then
-        assertThat(dropdownValuesDTO, equalTo(expectedResult));
-    }
-
-    @Test
     public void shouldReturnErrorIfAmountIsNotProvided() {
         //given
         LocaleContextHolder.setLocale(Locale.forLanguageTag("pl"));
@@ -246,22 +207,6 @@ public class AccountServiceIntegrationTest {
         //assert that contains data from update
         assertThat(accountEntity.getIncomes(), hasSize(2));
     }
-
-//    @Test
-//    public void shouldGetIncomesAndOutcomesWithTranslatedEnums() {
-//        //given
-//        LocaleContextHolder.setLocale(Locale.forLanguageTag("pl"));
-//        prepareDataInDatabase();
-//        //when
-//        AccountDTO accountDto = accountService.findAllIncomesAndOutcomes("miecio");
-//        //then
-//        IncomeDTO incomeDto = accountDto.getIncomes().iterator().next();
-//        OutcomeDTO outcomeDto = accountDto.getOutcomes().iterator().next();
-//        assertThat(outcomeDto.getFrequencyDescription(), equalTo("Jednorazowo"));
-//        assertThat(outcomeDto.getOutcomeCategoryDescription(), equalTo("Alkohol"));
-//        assertThat(incomeDto.getFrequencyDescription(), equalTo("Raz w miesiącu"));
-//        assertThat(incomeDto.getIncomeCategoryDescription(), equalTo("Benefit"));
-//    }
 
     private AccountDTO prepareDataInDatabase() {
         OutcomeDTO outcome1 = OutcomeDTO.builder()

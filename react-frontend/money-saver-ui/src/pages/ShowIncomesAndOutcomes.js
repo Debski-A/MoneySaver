@@ -21,9 +21,9 @@ class ShowIncomesAndOutcomes extends Component {
     }
 
     getBudgetData = async () => {
-        let incomeUpdateURL = "http://localhost/api/accounts/current/budget?startIndex=" + this.state.startIndex + "&endIndex=" + (this.state.startIndex + this.pagePlusOneRow)
+        let currentBudgetURL = "http://localhost/api/accounts/current/budget?startIndex=" + this.state.startIndex + "&endIndex=" + (this.state.startIndex + this.pagePlusOneRow)
         let currentLanguage = i18n.language
-        await fetch(incomeUpdateURL, {
+        await fetch(currentBudgetURL, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -52,6 +52,26 @@ class ShowIncomesAndOutcomes extends Component {
             });
     }
 
+    deleteBudget = (budgetType, uuid) => {
+        console.log(budgetType)
+        console.log(uuid)
+        let incomeUpdateURL = "http://localhost/api/accounts/current/budget/delete"
+        let budget = {
+            "budgetType": budgetType,
+            "uuid": uuid
+        }
+        fetch(incomeUpdateURL, {
+            method: 'DELETE',
+            body: JSON.stringify(budget),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + getAccessToken(),
+            }
+        })
+            .then(response => response.json())
+            .then(this.getBudgetData())
+    }
+
     constructTable = () => {
         let id = this.state.startIndex + 1
         let index = 0
@@ -61,14 +81,19 @@ class ShowIncomesAndOutcomes extends Component {
                 return (
                     <tr key={id}>
                         <td>{id++}</td>
-                        <td>{i.budgetType}</td>
+                        <td>{i.budgetTypeDescription}</td>
                         <td>{i.amount}</td>
-                        <td>{i.currency}</td>
+                        <td>{i.currencyDescription}</td>
                         <td>{i.categoryDescription}</td>
                         <td>{i.frequencyDescription}</td>
                         <td>{i.date}</td>
                         <td>{i.note}</td>
+                        <td onClick={() => this.deleteBudget(i.budgetType, i.uuid)}>
+                            :-((((
+                        </td>
                     </tr>
+                    // HMMMM jak przekazac i.budgetType i i.uuid do onCLick
+
                 )   
             }
             return null
@@ -105,6 +130,7 @@ class ShowIncomesAndOutcomes extends Component {
                             <th>{this.props.t('frequencyDescription')}</th>
                             <th>{this.props.t('date')}</th>
                             <th>{this.props.t('note')}</th>
+                            <th>:-(</th>
                         </tr>
                     </thead>
                     <tbody>

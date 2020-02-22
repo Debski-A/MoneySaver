@@ -2,6 +2,7 @@ package com.debski.accountservice.controllers;
 
 import com.debski.accountservice.models.*;
 import com.debski.accountservice.services.AccountService;
+import com.debski.accountservice.services.BudgetService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,9 +14,11 @@ import java.util.List;
 public class AccountController {
 
     private AccountService accountService;
+    private BudgetService budgetService;
 
-    public AccountController(AccountService accountService) {
+    public AccountController(AccountService accountService, BudgetService budgetService) {
         this.accountService = accountService;
+        this.budgetService = budgetService;
     }
 
     @PostMapping("/create")
@@ -32,7 +35,13 @@ public class AccountController {
     @PreAuthorize("#oauth2.hasScope('ui')")
     @GetMapping("/current/budget")
     public List<BudgetDTO> getIncomesAndOutcomes(Principal principal, @RequestParam(required = false) Integer startIndex, @RequestParam(required = false) Integer endIndex) {
-        return accountService.findByAscendingDateInRange(principal.getName(), startIndex, endIndex);
+        return budgetService.findByAscendingDateInRange(principal.getName(), startIndex, endIndex);
+    }
+
+    @PreAuthorize("#oauth2.hasScope('ui')")
+    @DeleteMapping("/current/budget/delete")
+    public void deleteBudget(@RequestBody BudgetDTO budget) {
+        budgetService.deleteBudget(budget.getBudgetType(), budget.getUuid());
     }
 
 
@@ -63,6 +72,6 @@ public class AccountController {
     @PreAuthorize("#oauth2.hasScope('ui')")
     @GetMapping("/dropdown_values")
     public DropdownValuesDTO getValueForDropdowns() {
-        return accountService.provideValuesForDropdowns();
+        return budgetService.provideValuesForDropdowns();
     }
 }

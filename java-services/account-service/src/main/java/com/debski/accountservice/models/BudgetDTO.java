@@ -1,5 +1,6 @@
 package com.debski.accountservice.models;
 
+import com.debski.accountservice.entities.enums.BudgetType;
 import lombok.Builder;
 import lombok.Data;
 
@@ -13,8 +14,9 @@ public class BudgetDTO implements Comparable<BudgetDTO> {
     private String frequencyDescription;
     private String categoryDescription;
     private String currencyDescription;
-    private String budgetTypeDescription;
     private String note;
+    private String budgetTypeDescription;
+    private BudgetType budgetType;
     private BigDecimal amount;
     private UUID uuid;
     private LocalDate date;

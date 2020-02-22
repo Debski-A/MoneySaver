@@ -3,12 +3,10 @@ package com.debski.accountservice.services;
 import com.debski.accountservice.entities.Account;
 import com.debski.accountservice.entities.Income;
 import com.debski.accountservice.entities.Outcome;
-import com.debski.accountservice.entities.enums.Currency;
-import com.debski.accountservice.entities.enums.Frequency;
-import com.debski.accountservice.entities.enums.IncomeCategory;
-import com.debski.accountservice.entities.enums.OutcomeCategory;
 import com.debski.accountservice.exceptions.AccountException;
-import com.debski.accountservice.models.*;
+import com.debski.accountservice.models.AccountDTO;
+import com.debski.accountservice.models.IncomeDTO;
+import com.debski.accountservice.models.OutcomeDTO;
 import com.debski.accountservice.repositories.AccountRepository;
 import com.debski.accountservice.utils.AccountUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -27,59 +25,30 @@ import java.util.stream.Stream;
 @Transactional
 public class AccountServiceImpl implements AccountService {
 
-    private AccountRepository repository;
+    private AccountRepository accountRepository;
 
     private AccountUtils accountUtils;
 
     private MessageSource messageSource;
 
-    public AccountServiceImpl(AccountRepository repository, AccountUtils accountUtils, MessageSource messageSource) {
-        this.repository = repository;
+    public AccountServiceImpl(AccountRepository accountRepository, AccountUtils accountUtils, MessageSource messageSource) {
+        this.accountRepository = accountRepository;
         this.accountUtils = accountUtils;
         this.messageSource = messageSource;
     }
 
     @Override
     public AccountDTO findByUsername(String username) {
-        Account accountEntity = repository.findByUsername(username);
+        Account accountEntity = accountRepository.findByUsername(username);
         AccountDTO accountDto = accountUtils.accountEntityToDto(accountEntity);
         log.debug("Account retrieved from DB by username = {}: {}", username, accountDto);
         return accountDto;
     }
 
     @Override
-    public DropdownValuesDTO provideValuesForDropdowns() {
-        DropdownValuesDTO result = DropdownValuesDTO.builder()
-                .currencies(translateAllTypes(Currency.EUR))
-                .frequencies(translateAllTypes(Frequency.DAILY))
-                .incomeCategories(translateAllTypes(IncomeCategory.BENEFIT))
-                .outcomeCategories(translateAllTypes(OutcomeCategory.ALCOHOL))
-                .build();
-        return result;
-    }
-
-    @Override
-    public List<BudgetDTO> findByAscendingDateInRange(String username, Integer startIndex, Integer endIndex) {
-        Account accountEntity = repository.findByUsername(username);
-        List<BudgetDTO> budget = accountUtils.mergeIncomesAndOutcomesToBudgetList(accountEntity.getIncomes(), accountEntity.getOutcomes());
-        List<BudgetDTO> filteredBudget = accountUtils.filterAccordingToIndexes(budget, startIndex, endIndex);
-        return filteredBudget;
-    }
-
-    private <E extends Enum> Map<Integer, String> translateAllTypes(E enumSource) {
-        int oridinal = 0;
-        Map<Integer, String> translatedTypes = new HashMap<>();
-        List<Object> listOfTypes = Arrays.asList(enumSource.getDeclaringClass().getEnumConstants());
-        for (Object e : listOfTypes) {
-            translatedTypes.put(oridinal++, messageSource.getMessage(e.toString().toLowerCase(), null, LocaleContextHolder.getLocale()));
-        }
-        return translatedTypes;
-    }
-
-    @Override
     public AccountDTO update(AccountDTO accountDto) {
         // TODO for now update only for incomes and outcomes
-        Account accountEntity = repository.findByUsername(accountDto.getUsername());
+        Account accountEntity = accountRepository.findByUsername(accountDto.getUsername());
         if (accountEntity == null) {
             throw new AccountException(messageSource.getMessage("user.not.found", null, LocaleContextHolder.getLocale()));
         }
@@ -145,7 +114,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     private void validateIsUsernameAlreadyTaken(String username) throws AccountException {
-        if (repository.existsByUsername(username))
+        if (accountRepository.existsByUsername(username))
             throw new AccountException(messageSource.getMessage("taken.username", null, LocaleContextHolder.getLocale()));
 
     }
@@ -153,7 +122,7 @@ public class AccountServiceImpl implements AccountService {
     private Account validateConstraintsAndSave(Account accountEntity) throws AccountException {
         Account savedAccountEntity;
         try {
-            savedAccountEntity = repository.save(accountEntity);
+            savedAccountEntity = accountRepository.save(accountEntity);
         } catch (ConstraintViolationException ex) {
             final String[] propertyWhichCauseException = {null};
             ex.getConstraintViolations().forEach(e -> propertyWhichCauseException[0] = e.getPropertyPath().toString());
