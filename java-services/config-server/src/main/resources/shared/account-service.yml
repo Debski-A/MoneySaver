@@ -19,7 +19,7 @@ spring:
       secret: h1
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://account-and-token-mysqldb:3306/accountDB?serverTimezone=UTC
+    url: jdbc:mysql://account-and-token-mysqldb:3306/accountDB?serverTimezone=UTC&useUnicode=yes&characterEncoding=UTF-8
     username: root
     password: ${MYSQLDB_ROOT_PASSWORD}
     jpa:

@@ -6,7 +6,7 @@ server:
 spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    jdbc-url: jdbc:mysql://account-and-token-mysqldb:3306/accountDB?serverTimezone=UTC
+    jdbc-url: jdbc:mysql://account-and-token-mysqldb:3306/accountDB?serverTimezone=UTC&useUnicode=yes&characterEncoding=UTF-8
     username: root
     password: ${MYSQLDB_ROOT_PASSWORD}
     jpa:

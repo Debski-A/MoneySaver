@@ -55,21 +55,20 @@ class ShowIncomesAndOutcomes extends Component {
     deleteBudget = (budgetType, uuid) => {
         console.log(budgetType)
         console.log(uuid)
-        let incomeUpdateURL = "http://localhost/api/accounts/current/budget/delete"
+        let deleteBudgetURL = "http://localhost/api/accounts/current/budget/delete"
         let budget = {
             "budgetType": budgetType,
             "uuid": uuid
         }
-        fetch(incomeUpdateURL, {
+        fetch(deleteBudgetURL, {
             method: 'DELETE',
             body: JSON.stringify(budget),
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + getAccessToken(),
+                'Authorization': 'Bearer ' + getAccessToken()
             }
         })
-            .then(response => response.json())
-            .then(this.getBudgetData())
+            .then(this.getBudgetData)
     }
 
     constructTable = () => {
@@ -102,7 +101,7 @@ class ShowIncomesAndOutcomes extends Component {
 
     prevButtonOnCLick = () => {
             this.setState((prevState) => ({
-                startIndex: prevState.startIndex - this.pagePlusOneRow,
+                startIndex: prevState.startIndex - 18,
                 isDataLoaded: false
             }), this.getBudgetData)
 
@@ -110,7 +109,7 @@ class ShowIncomesAndOutcomes extends Component {
 
     nextButtonOnClick = () => {
         this.setState((prevState) => ({
-            startIndex: prevState.startIndex + this.pagePlusOneRow,
+            startIndex: prevState.startIndex + 18,
             isDataLoaded: false
         }), this.getBudgetData)
     }
@@ -138,8 +137,8 @@ class ShowIncomesAndOutcomes extends Component {
                     </tbody>
                 </Table>
                 <Row className="m-0 p-0">
-                    {this.state.startIndex < 19 && this.state.budget.length < 19 && <></>}
-                    {this.state.startIndex < 19 && this.state.budget.length >= 19 &&
+                    {this.state.startIndex < 18 && this.state.budget.length < 19 && <></>}
+                    {this.state.startIndex < 18 && this.state.budget.length >= 19 &&
                         <>
                             <Col md={8}sm={8} xs={8} ></Col>
                             <Col md={4}sm={4} xs={4} className="m-0 text-right">
@@ -147,12 +146,12 @@ class ShowIncomesAndOutcomes extends Component {
                             </Col>
                         </>
                     }
-                    {this.state.startIndex >= 19 && this.state.budget.length < 19 && 
+                    {this.state.startIndex >= 18 && this.state.budget.length < 19 && 
                         <Col md={4} sm={4} xs={4} className="m-0 ">
                             <Button onClick={this.prevButtonOnCLick} size="sm" variant="secondary">{this.props.t('prev_page')}</Button>
                         </Col>
                     }
-                    {this.state.startIndex >= 19 && this.state.budget.length >= 19 && 
+                    {this.state.startIndex >= 18 && this.state.budget.length >= 19 && 
                         <>
                             <Col md={4} sm={4} xs={4} className="m-0 ">
                                 <Button onClick={this.prevButtonOnCLick} size="sm" variant="secondary">{this.props.t('prev_page')}</Button>
