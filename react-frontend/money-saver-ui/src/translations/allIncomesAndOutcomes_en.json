@@ -1,4 +1,5 @@
 {
     "from":"From",
-    "to":"To"
+    "to":"To",
+    "currency":"Currency"
 }

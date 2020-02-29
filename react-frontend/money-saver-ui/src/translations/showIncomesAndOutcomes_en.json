@@ -8,5 +8,6 @@
     "note":"Note",
     "prev_page":"Previous page",
     "next_page":"Next page",
+    "delete_budget":"Delete",
     "update_error":"Couldn't load data"
 }

@@ -14,7 +14,7 @@ security:
       scope: server
 
 rates:
-  url: https://api.exchangeratesapi.io
+  url: https://api.exchangeratesapi.ioo
 
 feign:
   hystrix:

@@ -8,6 +8,7 @@ import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import Button from 'react-bootstrap/Button'
 import Loader from 'react-loader'
+import Nav from 'react-bootstrap/Nav'
 
 class ShowIncomesAndOutcomes extends Component {
 
@@ -88,7 +89,7 @@ class ShowIncomesAndOutcomes extends Component {
                         <td>{i.date}</td>
                         <td>{i.note}</td>
                         <td onClick={() => this.deleteBudget(i.budgetType, i.uuid)}>
-                            :-((((
+                        <Nav.Link className="m-0 p-0">{this.props.t('delete_budget')}</Nav.Link>
                         </td>
                     </tr>
                     // HMMMM jak przekazac i.budgetType i i.uuid do onCLick
@@ -129,7 +130,7 @@ class ShowIncomesAndOutcomes extends Component {
                             <th>{this.props.t('frequencyDescription')}</th>
                             <th>{this.props.t('date')}</th>
                             <th>{this.props.t('note')}</th>
-                            <th>:-(</th>
+                            <th>X</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -8,5 +8,6 @@
     "note":"Notatka",
     "prev_page":"Poprzednia strona",
     "next_page":"Następna strona",
+    "delete_budget":"Usuń",
     "update_error":"Nie udało się załadować danych"
 }
