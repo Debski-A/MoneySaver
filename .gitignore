@@ -4,6 +4,7 @@
 *.settings/
 *.checkstyle
 *.springBeans
+*.jar
 .idea/
 /bin/
 services-dispatcher-jar/.factorypath

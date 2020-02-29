@@ -15,7 +15,7 @@ public class ExchangeRatesClientFallback implements ExchangeRatesClient {
     @Override
     public ExchangeRatesContainer getRates(Currency base) {
         log.warn("Couldn't connect with api.exchangeratesapi.io. Using hardcoded rates as a fallback");
-        ExchangeRatesContainer rates = null;
+        ExchangeRatesContainer rates = new ExchangeRatesContainer();
         switch (base) {
             // Actual rates at day 5.02.2020
             case PLN: {
