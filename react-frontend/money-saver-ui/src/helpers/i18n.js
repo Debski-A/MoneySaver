@@ -19,6 +19,8 @@ import allIncomesAndOutcomes_pl from '../translations/allIncomesAndOutcomes_pl'
 import allIncomesAndOutcomes_en from '../translations/allIncomesAndOutcomes_en'
 import showIncomesAndOutcomes_pl from '../translations/showIncomesAndOutcomes_pl'
 import showIncomesAndOutcomes_en from '../translations/showIncomesAndOutcomes_en'
+import byCategory_en from '../translations/byCategory_en'
+import byCategory_pl from '../translations/byCategory_pl'
 
 i18n
   .use(LanguageDetector)
@@ -36,6 +38,7 @@ i18n
         mainpage: mainpage_en,
         all_incomes_and_outcomes: allIncomesAndOutcomes_en,
         show_incomes_and_outcomes: showIncomesAndOutcomes_en,
+        by_category: byCategory_en,
         translations: {
           //default translation will go here
         }
@@ -50,6 +53,7 @@ i18n
         mainpage: mainpage_pl,
         all_incomes_and_outcomes: allIncomesAndOutcomes_pl,
         show_incomes_and_outcomes: showIncomesAndOutcomes_pl,
+        by_category: byCategory_pl,
         translations: {
           //default translation will go here
         }

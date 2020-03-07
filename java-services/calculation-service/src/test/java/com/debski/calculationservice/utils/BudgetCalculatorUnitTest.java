@@ -2,6 +2,7 @@ package com.debski.calculationservice.utils;
 
 import com.debski.calculationservice.clients.ExchangeRatesClient;
 import com.debski.calculationservice.enums.*;
+import com.debski.calculationservice.enums.Currency;
 import com.debski.calculationservice.exceptions.CalculationException;
 import com.debski.calculationservice.models.*;
 import org.junit.Test;
@@ -14,10 +15,7 @@ import org.springframework.context.MessageSource;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -370,4 +368,103 @@ public class BudgetCalculatorUnitTest {
         assertThat(vpsIterator.next(), comparesEqualTo(new VisualisationPoint(BigDecimal.valueOf(970), LocalDate.of(2019,3,3))));
         assertThat(vpsIterator.next(), comparesEqualTo(new VisualisationPoint(BigDecimal.valueOf(-2560), LocalDate.of(2019,4,4))));
     }
+
+    @Test
+    public void shouldReturn01_03_2020() {
+        //given
+        LocalDate someDate = LocalDate.of(2020,03, 14);
+        //when
+        LocalDate result = budgetCalculator.specifyBeginningOfMonth(someDate);
+        //then
+        assertThat(result, equalTo(LocalDate.of(2020, 03,01)));
+    }
+
+    @Test
+    public void shouldReturn28_02_2019() {
+        //given
+        LocalDate someDate = LocalDate.of(2019,02, 14);
+        //when
+        LocalDate result = budgetCalculator.specifyEndOfMonth(someDate);
+        //then
+        assertThat(result, equalTo(LocalDate.of(2019, 02,28)));
+    }
+
+    @Test
+    public void shouldReturn29_02_2020() {
+        //given
+        LocalDate someDate = LocalDate.of(2020,02, 14);
+        //when
+        LocalDate result = budgetCalculator.specifyEndOfMonth(someDate);
+        //then
+        assertThat(result, equalTo(LocalDate.of(2020, 02,29)));
+    }
+
+    @Test
+    public void shouldReturnFilteredPaymentIncomes() {
+        //given
+        IncomeDTO i1 = IncomeDTO.builder()
+                .incomeCategory(IncomeCategory.PAYMENT)
+                .build();
+        IncomeDTO i2 = IncomeDTO.builder()
+                .incomeCategory(IncomeCategory.OTHER)
+                .build();
+        IncomeDTO i3 = IncomeDTO.builder()
+                .incomeCategory(IncomeCategory.PAYMENT)
+                .build();
+        IncomeDTO i4 = IncomeDTO.builder()
+                .incomeCategory(IncomeCategory.GIFT)
+                .build();
+        //when
+        Set<IncomeDTO> result = budgetCalculator.filterIncomesByCategory(Set.of(i1, i2, i3, i4), IncomeCategory.PAYMENT);
+        //then
+        assertThat(result, hasSize(2));
+    }
+
+    @Test
+    public void shouldCalculateIncomesOutput() {
+        //given
+        IncomeDTO i1 = IncomeDTO.builder()
+                .amount(BigDecimal.valueOf(100))
+                .dateOfIncome(LocalDate.of(2019, 2, 2))
+                .build();
+        IncomeDTO i2 = IncomeDTO.builder()
+                .amount(BigDecimal.valueOf(200))
+                .dateOfIncome(LocalDate.of(2019, 2, 2))
+                .build();
+        IncomeDTO i3 = IncomeDTO.builder()
+                .amount(BigDecimal.valueOf(300))
+                .dateOfIncome(LocalDate.of(2019, 3, 3))
+                .build();
+        IncomeDTO i4 = IncomeDTO.builder()
+                .amount(BigDecimal.valueOf(400))
+                .dateOfIncome(LocalDate.of(2019, 3, 3))
+                .build();
+        IncomeDTO i5 = IncomeDTO.builder()
+                .amount(BigDecimal.valueOf(500))
+                .dateOfIncome(LocalDate.of(2019, 4, 4))
+                .build();
+        //when
+        Set<VisualisationPoint> visualisationPoints = budgetCalculator.calculateVisualizationPoints(Set.of(i1, i2, i3, i4, i5));
+        //then
+        Iterator<VisualisationPoint> vpsIterator = visualisationPoints.iterator();
+        assertThat(vpsIterator.next(), comparesEqualTo(new VisualisationPoint(BigDecimal.valueOf(300), LocalDate.of(2019,2,2))));
+        assertThat(vpsIterator.next(), comparesEqualTo(new VisualisationPoint(BigDecimal.valueOf(700), LocalDate.of(2019,3,3))));
+        assertThat(vpsIterator.next(), comparesEqualTo(new VisualisationPoint(BigDecimal.valueOf(500), LocalDate.of(2019,4,4))));
+    }
+
+    @Test
+    public void shouldFill0AmountValueVisualizationPointsForEmptyDaysOfMonths() {
+        //given
+        Set<VisualisationPoint> vps = new TreeSet<>();
+        vps.add(new VisualisationPoint(BigDecimal.valueOf(400), LocalDate.of(2020,3,13)));
+        vps.add(new VisualisationPoint(BigDecimal.valueOf(100), LocalDate.of(2020, 3, 24)));
+        LocalDate beginningOfMonth = LocalDate.of(2020, 3,1);
+        LocalDate endOfMonth = LocalDate.of(2020, 3,31);
+        //when
+        Set<VisualisationPoint> result = budgetCalculator.fillRestOfDaysOfMonthWithZeroAmountValue(vps, beginningOfMonth, endOfMonth);
+        //then
+        assertThat(result, hasSize(31));
+    }
+
+
 }

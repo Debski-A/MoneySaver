@@ -1,0 +1,10 @@
+{
+    "type":"Rodzaj",
+    "empty_type":"Wybierz rodzaj",
+    "category":"Kategoria",
+    "empty_category":"Wybierz kategorię",
+    "month":"Miesiąc",
+    "empty_month":"Wybierz miesiąc",
+    "income":"Przychód",
+    "outcome":"Wydatek"
+}

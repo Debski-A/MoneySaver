@@ -1,5 +1,6 @@
 {
     "from":"From",
     "to":"To",
-    "currency":"Currency"
+    "currency":"Currency",
+    "chosen_currency":"Chosen currency"
 }

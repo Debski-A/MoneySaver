@@ -33,15 +33,45 @@ public class CalculationServiceImpl implements CalculationService {
         validateAccount(accountData, input.getCalculationType());
         CalculationOutput result = null;
         switch (input.getCalculationType()) {
-            case INCOME: result = calculateIncomes(accountData.getIncomes(), input);
-            case OUTCOME: result = calculateOutcomes(accountData.getOutcomes(), input);
-            case BOTH: result =  calculateBoth(accountData.getIncomes(), accountData.getOutcomes(), input);
+            case INCOME: {
+                result = calculateIncomes(accountData.getIncomes(), input);
+                break;
+            }
+            case OUTCOME: {
+                result = calculateOutcomes(accountData.getOutcomes(), input);
+                break;
+            }
+            case BOTH: {
+                result =  calculateBoth(accountData.getIncomes(), accountData.getOutcomes(), input);
+                break;
+            }
         }
         return result;
     }
-
+    //TODO adjustIncome/OutcomeCurrencies strzela do zew. API, moze warto najpierw przefiltrowac Sety po zakresie dat, a pozniej dopiero
+    //robic exchange walut. Ewentualnie zrobic scheduler na exchange walut, zeby nie strzelac do zew API dla kazdego requestu
     private CalculationOutput calculateIncomes(Set<IncomeDTO> incomes, CalculationInput input) {
-        return null;
+        budgetCalculator.adjustIncomesCurrencies(incomes, input.getCurrency());
+        incomes = budgetCalculator.filterIncomesByCategory(incomes, input.getIncomeCategory());
+        validateAfterCategoryFilteringThatSetIsNotEmpty(incomes);
+
+        LocalDate endOfMonth = budgetCalculator.specifyEndOfMonth(input.getStartDate());
+        LocalDate beginningOfMonth = budgetCalculator.specifyBeginningOfMonth(input.getStartDate());
+        incomes = budgetCalculator.convertIncomesFrequencies(incomes, endOfMonth);
+
+        incomes = budgetCalculator.filterIncomesByDateTimePeriod(incomes, beginningOfMonth, endOfMonth);
+        validateAfterPeriodFilteringThatSetIsNotEmpty(incomes);
+
+        Set<VisualisationPoint> visualisationPoints = budgetCalculator.calculateVisualizationPoints(incomes);
+        visualisationPoints = budgetCalculator.fillRestOfDaysOfMonthWithZeroAmountValue(visualisationPoints, beginningOfMonth, endOfMonth);
+
+        CalculationOutput result = CalculationOutput.builder()
+                .calculationType(CalculationType.INCOME)
+                .incomeCategory(input.getIncomeCategory())
+                .currency(input.getCurrency())
+                .visualisationPoints(visualisationPoints)
+                .build();
+        return result;
     }
 
     private CalculationOutput calculateOutcomes(Set<OutcomeDTO> outcomes, CalculationInput input) {
@@ -49,14 +79,14 @@ public class CalculationServiceImpl implements CalculationService {
     }
 
     private CalculationOutput calculateBoth(Set<IncomeDTO> incomes, Set<OutcomeDTO> outcomes, CalculationInput input) {
-        LocalDate startDate = input.getStartDate();
-        LocalDate endDate = input.getEndDate();
         budgetCalculator.adjustIncomesCurrencies(incomes, input.getCurrency());
         budgetCalculator.adjustOutcomesCurrencies(outcomes, input.getCurrency());
 
+        LocalDate startDate = input.getStartDate();
+        LocalDate endDate = input.getEndDate();
         incomes = budgetCalculator.filterIncomesByDateTimePeriod(incomes, startDate, endDate);
         outcomes = budgetCalculator.filterOutcomesByDateTimePeriod(outcomes, startDate, endDate);
-        validateAfterFilteringThatBothSetsAreNotEmpty(incomes, outcomes);
+        validateAfterPeriodFilteringThatBothSetsAreNotEmpty(incomes, outcomes);
 
         incomes = budgetCalculator.convertIncomesFrequencies(incomes, endDate);
         outcomes = budgetCalculator.convertOutcomesFrequencies(outcomes, endDate);
@@ -65,7 +95,19 @@ public class CalculationServiceImpl implements CalculationService {
         return result;
     }
 
-    private void validateAfterFilteringThatBothSetsAreNotEmpty(Set<IncomeDTO> incomes, Set<OutcomeDTO> outcomes) {
+    private <T> void validateAfterCategoryFilteringThatSetIsNotEmpty(Set<T> incomesOrOutcomes) {
+        if (incomesOrOutcomes.isEmpty()) {
+            throw new CalculationException(messageSource.getMessage("no.data.for.provided.category", null, LocaleContextHolder.getLocale()));
+        }
+    }
+
+    private <T> void validateAfterPeriodFilteringThatSetIsNotEmpty(Set<T> incomesOrOutcomes) {
+        if (incomesOrOutcomes.isEmpty()) {
+            throw new CalculationException(messageSource.getMessage("no.data.for.provided.period", null, LocaleContextHolder.getLocale()));
+        }
+    }
+
+    private void validateAfterPeriodFilteringThatBothSetsAreNotEmpty(Set<IncomeDTO> incomes, Set<OutcomeDTO> outcomes) {
         if (incomes.isEmpty() && outcomes.isEmpty()) {
             throw new CalculationException(messageSource.getMessage("no.data.for.provided.period", null, LocaleContextHolder.getLocale()));
         }

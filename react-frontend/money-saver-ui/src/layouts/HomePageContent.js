@@ -4,8 +4,9 @@ import AddOutcomePage from '../pages/AddOutcomePage'
 import AddIncomePage from '../pages/AddIncomePage'
 import ShowIncomesAndOutcomes from '../pages/ShowIncomesAndOutcomes'
 import AllIncomesAndOutcomes from '../pages/visualisations/AllIncomesAndOutcomes'
+import ByCategory from '../pages/visualisations/ByCategory';
 
-const HomePageContent = ({ currencies, frequencies, incomeCategories, outcomeCategories }) => {
+const HomePageContent = ({ currencies, frequencies, incomeCategories, outcomeCategories, isDataLoaded }) => {
   return (
     <>
       <Switch>
@@ -13,6 +14,7 @@ const HomePageContent = ({ currencies, frequencies, incomeCategories, outcomeCat
         <Route path="/main/outcome/add" render={(routeProps) => <AddOutcomePage {...routeProps} currencies={currencies} frequencies={frequencies} outcomeCategories={outcomeCategories} />} />
         <Route path="/main/budget/view" render={(routeProps) => <ShowIncomesAndOutcomes />} />
         <Route path="/main/visualization/1" render={(routeProps) => <AllIncomesAndOutcomes {...routeProps} currencies={currencies} />} />
+        <Route path="/main/visualization/2" render={(routeProps) => <ByCategory {...routeProps} currencies={currencies} isDataLoaded={isDataLoaded} incomeCategories={incomeCategories} outcomeCategories={outcomeCategories} />} />
       </Switch>
     </>
   );

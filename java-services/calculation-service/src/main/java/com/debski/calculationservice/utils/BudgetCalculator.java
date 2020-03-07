@@ -3,6 +3,7 @@ package com.debski.calculationservice.utils;
 import com.debski.calculationservice.clients.ExchangeRatesClient;
 import com.debski.calculationservice.enums.CalculationType;
 import com.debski.calculationservice.enums.Currency;
+import com.debski.calculationservice.enums.IncomeCategory;
 import com.debski.calculationservice.exceptions.CalculationException;
 import com.debski.calculationservice.models.*;
 import one.util.streamex.StreamEx;
@@ -177,120 +178,6 @@ public class BudgetCalculator {
         return result;
     }
 
-    // First implementation of merge function.
-//    public CalculationOutput mergeIncomesAndOutcomes(Set<IncomeDTO> incomes, Set<OutcomeDTO> outcomes) {
-//        Currency currency = incomes.iterator().next().getCurrency();
-//        List<VisualisationPoint> growingVisualisationPoints = incomes.stream()
-//                .map(i -> new VisualisationPoint(i.getAmount(), i.getDateOfIncome()))
-//                .sorted(Comparator.comparing(VisualisationPoint::getDate))
-//                .collect(Collectors.toCollection(ArrayList::new));
-//        List<VisualisationPoint> decreasingVisualisationPoints = outcomes.stream()
-//                .map(o -> new VisualisationPoint(o.getAmount().negate(), o.getDateOfOutcome()))
-//                .sorted(Comparator.comparing(VisualisationPoint::getDate))
-//                .collect(Collectors.toCollection(ArrayList::new));
-//        List<VisualisationPoint> mergedVPs = merge(growingVisualisationPoints, decreasingVisualisationPoints);
-//        CalculationOutput result = CalculationOutput.builder()
-//                .calculationType(CalculationType.BOTH)
-//                .currency(currency)
-////                .visualisationPoints(mergedVPs)
-//                .build();
-//        return result;
-//    }
-//
-//    private List<VisualisationPoint> merge(List<VisualisationPoint> growingVPs, List<VisualisationPoint> decreasingVPs) {
-//        List<VisualisationPoint> result = new ArrayList<>();
-//        int gVPsSize = growingVPs.size();
-//        int dVPsSize = decreasingVPs.size();
-//        int gVPsIdx = 0;
-//        int dVPsIdx = 0;
-//        int resultIdx = 0;
-//
-//        while (isAbleToIterateThroughBothLists(growingVPs, gVPsIdx, decreasingVPs, dVPsIdx)) {
-//            LocalDate currentGVPDate = growingVPs.get(gVPsIdx).getDate();
-//            LocalDate currentDVPDate = decreasingVPs.get(dVPsIdx).getDate();
-//            BigDecimal currentGVPAmount = growingVPs.get(gVPsIdx).getValue();
-//            BigDecimal currentDVPAmount = decreasingVPs.get(dVPsIdx).getValue();
-//            // if currentGVP Date is earlier
-//            if (currentGVPDate.compareTo(currentDVPDate) < 0) {
-//                // if there is any item in result
-//                if (!result.isEmpty()) {
-//                    // sum up with amount of last item added to result
-//                    BigDecimal amountOfLastResultItem = result.get(resultIdx).getValue();
-//                    result.add(new VisualisationPoint(currentGVPAmount.add(amountOfLastResultItem), currentGVPDate));
-//                    ++resultIdx;
-//                } else {
-//                    result.add(growingVPs.get(gVPsIdx));
-//                }
-//                ++gVPsIdx;
-//
-//                // if Dates are equal
-//            } else if (currentGVPDate.compareTo(currentDVPDate) == 0) {
-//                // calculate total amount of currentGVP and currentDVP
-//                BigDecimal totalAmount = currentGVPAmount.add(currentDVPAmount);
-//                // if there is any item in result
-//                if (!result.isEmpty()) {
-//                    // sum up with amount of last item added to result
-//                    BigDecimal amountOfLastResultItem = result.get(resultIdx).getValue();
-//                    result.add(new VisualisationPoint(totalAmount.add(amountOfLastResultItem), currentGVPDate));
-//                    ++resultIdx;
-//                } else {
-//                    result.add(new VisualisationPoint(totalAmount, currentGVPDate));
-//                }
-//                ++gVPsIdx;
-//                ++dVPsIdx;
-//
-//                // if currentDVP Date is earlier
-//            } else {
-//                // if there is any item in result
-//                if (!result.isEmpty()) {
-//                    // sum up with amount of last item added to result
-//                    BigDecimal amountOfLastResultItem = result.get(resultIdx).getValue();
-//                    result.add(new VisualisationPoint(currentDVPAmount.add(amountOfLastResultItem), currentDVPDate));
-//                    ++resultIdx;
-//                } else {
-//                    result.add(decreasingVPs.get(dVPsIdx));
-//                }
-//                ++dVPsIdx;
-//            }
-//        }
-//        // check if one of the list wasn't iterated to the end, and if not - add leftovers to result
-//        if (gVPsIdx < gVPsSize) {
-//            BigDecimal currentGVPAmount = growingVPs.get(gVPsIdx).getValue();
-//            LocalDate currentGVPDate = growingVPs.get(gVPsIdx).getDate();
-//            // if there is any item in result
-//            if (!result.isEmpty()) {
-//                // sum up with amount of last item added to result
-//                BigDecimal amountOfLastResultItem = result.get(resultIdx).getValue();
-//                result.add(new VisualisationPoint(currentGVPAmount.add(amountOfLastResultItem), currentGVPDate));
-//                ++resultIdx;
-//            } else {
-//                result.add(growingVPs.get(gVPsIdx));
-//            }
-//            ++gVPsIdx;
-//        } else if (dVPsIdx < dVPsSize) {
-//            BigDecimal currentDVPAmount = decreasingVPs.get(dVPsIdx).getValue();
-//            LocalDate currentDVPDate = decreasingVPs.get(dVPsIdx).getDate();
-//            // if there is any item in result
-//            if (!result.isEmpty()) {
-//                // sum up with amount of last item added to result
-//                BigDecimal amountOfLastResultItem = result.get(resultIdx).getValue();
-//                result.add(new VisualisationPoint(currentDVPAmount.add(amountOfLastResultItem), currentDVPDate));
-//                ++resultIdx;
-//            } else {
-//                result.add(decreasingVPs.get(dVPsIdx));
-//            }
-//            ++dVPsIdx;
-//        }
-//
-//        return result;
-//    }
-//
-//
-//    private boolean isAbleToIterateThroughBothLists (List < VisualisationPoint > growingVPs,int gVPsIdx, List<
-//            VisualisationPoint > decreasingVPs,int dVPsIdx){
-//        return (gVPsIdx < growingVPs.size() && dVPsIdx < decreasingVPs.size());
-//    }
-
     public CalculationOutput mergeIncomesAndOutcomes(Set<IncomeDTO> incomes, Set<OutcomeDTO> outcomes, Currency currency) {
         // currency is same for every item after exchangeCurrencies method
         Stream<VisualisationPoint> growingVPsStream = incomes.stream()
@@ -313,6 +200,34 @@ public class BudgetCalculator {
         return result;
     }
 
+    public LocalDate specifyBeginningOfMonth(LocalDate date) {
+        return date.withDayOfMonth(1);
+    }
+
+    public LocalDate specifyEndOfMonth(LocalDate date) {
+        return date.withDayOfMonth(date.getMonth().length(date.isLeapYear()));
+    }
+
+    public Set<VisualisationPoint> calculateVisualizationPoints(Set<IncomeDTO> incomes) {
+        Stream<VisualisationPoint> growingVPsStream = incomes.stream()
+                .map(i -> new VisualisationPoint(i.getAmount(), i.getDateOfIncome()))
+                .sorted();
+        NavigableSet<VisualisationPoint> mergedVPs = StreamEx.of(growingVPsStream)
+                .collapse((vp1, vp2) -> vp1.compareTo(vp2) == 0,
+                        (vp1, vp2) -> new VisualisationPoint(vp1.getValue().add(vp2.getValue()), vp1.getDate()))
+                .collect(Collectors.toCollection(TreeSet::new));
+
+        return mergedVPs;
+    }
+
+    public Set<IncomeDTO> filterIncomesByCategory(Set<IncomeDTO> incomes, IncomeCategory incomeCategory) {
+        Set<IncomeDTO> filteredIncomes = incomes
+                .stream()
+                .filter(i -> i.getIncomeCategory().equals(incomeCategory))
+                .collect(Collectors.toSet());
+        return filteredIncomes;
+    }
+
     private void calculateAmounts(NavigableSet<VisualisationPoint> mergedVPs) {
         VisualisationPoint iterVp = mergedVPs.first();
         while (mergedVPs.higher(iterVp) != null) {
@@ -320,5 +235,15 @@ public class BudgetCalculator {
             laterVp.setValue(laterVp.getValue().add(iterVp.getValue()));
             iterVp = laterVp;
         }
+    }
+
+    public Set<VisualisationPoint> fillRestOfDaysOfMonthWithZeroAmountValue(Set<VisualisationPoint> vps, LocalDate beginningOfMonth, LocalDate endOfMonth) {
+        for (LocalDate index = beginningOfMonth; index.isBefore(endOfMonth.plusDays(1)); index = index.plusDays(1)) {
+            final LocalDate currentIndexValue = index;
+            if (vps.stream().noneMatch(i -> i.equals(currentIndexValue))) {
+                vps.add(new VisualisationPoint(BigDecimal.ZERO, currentIndexValue));
+            }
+        }
+        return vps;
     }
 }

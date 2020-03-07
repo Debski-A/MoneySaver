@@ -1,0 +1,10 @@
+{
+    "type":"Type",
+    "empty_type":"Choose type",
+    "category":"Category",
+    "empty_category":"Choose category",
+    "month":"Month",
+    "empty_month":"Choose month",
+    "income":"Income",
+    "outcome":"Outcome"
+}

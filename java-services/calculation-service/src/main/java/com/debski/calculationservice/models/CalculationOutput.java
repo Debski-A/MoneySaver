@@ -9,7 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.NavigableSet;
+import java.util.Set;
 
 @Data
 @Builder
@@ -17,7 +17,7 @@ import java.util.NavigableSet;
 @NoArgsConstructor
 public class CalculationOutput {
 
-    private NavigableSet<VisualisationPoint> visualisationPoints;
+    private Set<VisualisationPoint> visualisationPoints;
 
     private CalculationType calculationType;
 

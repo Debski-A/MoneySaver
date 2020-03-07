@@ -85,9 +85,9 @@ class MainPage extends Component {
                         <FontAwesomeIcon size="4x" icon={faChartLine} color="#6c757d" />
                         </Nav.Item>
                         <NavDropdown bsPrefix="nav-link bg-secondary text-white" title={this.props.t('visualisation_button')} >
-                            <NavDropdown.Item as={NavLink} exact to="/main/visualization/1" className="bg-secondary text-white" onClick={() => console.log('viz1 clicked')}>{this.props.t('periodic_summary')} </NavDropdown.Item>
+                            <NavDropdown.Item as={NavLink} exact to="/main/visualization/1" className="bg-secondary text-white" >{this.props.t('periodic_summary')} </NavDropdown.Item>
                             <NavDropdown.Divider />
-                            <NavDropdown.Item className="bg-secondary text-white" onClick={() => console.log('viz2 clicked')}>Viz2</NavDropdown.Item>
+                            <NavDropdown.Item as={NavLink} exact to="/main/visualization/2" className="bg-secondary text-white" >{this.props.t('by_category')} </NavDropdown.Item>
                         </NavDropdown>
                     </Nav>
                 </Col>

@@ -3,5 +3,6 @@
     "outcome_button":"Add outcome",
     "visualisation_button":"Visualisations",
     "periodic_summary":"Periodic summary",
-    "budget_button":"Show incomes and outomes"
+    "budget_button":"Show incomes and outomes",
+    "by_category":"By category"
 }
