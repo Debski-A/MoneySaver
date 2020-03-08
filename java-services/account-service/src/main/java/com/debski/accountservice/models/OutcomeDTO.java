@@ -1,9 +1,9 @@
 package com.debski.accountservice.models;
 
 import com.debski.accountservice.entities.Account;
-import com.debski.accountservice.entities.enums.Currency;
-import com.debski.accountservice.entities.enums.Frequency;
-import com.debski.accountservice.entities.enums.OutcomeCategory;
+import com.debski.accountservice.enums.Currency;
+import com.debski.accountservice.enums.Frequency;
+import com.debski.accountservice.enums.OutcomeCategory;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 

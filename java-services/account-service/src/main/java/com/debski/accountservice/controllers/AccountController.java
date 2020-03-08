@@ -2,76 +2,65 @@ package com.debski.accountservice.controllers;
 
 import com.debski.accountservice.models.*;
 import com.debski.accountservice.services.AccountService;
-import com.debski.accountservice.services.BudgetService;
+import com.debski.accountservice.services.FinanceService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.HashSet;
 import java.util.List;
 
 @RestController
 public class AccountController {
 
     private AccountService accountService;
-    private BudgetService budgetService;
+    private FinanceService financeService;
 
-    public AccountController(AccountService accountService, BudgetService budgetService) {
+    public AccountController(AccountService accountService, FinanceService financeService) {
         this.accountService = accountService;
-        this.budgetService = budgetService;
+        this.financeService = financeService;
     }
 
     @PostMapping("/create")
-    public AccountDTO createAccount(@RequestBody AccountDTO accountDto) {
-        return accountService.save(accountDto);
+    public void createAccount(@RequestBody AccountDTO accountDto) {
+        accountService.save(accountDto);
     }
 
     @PreAuthorize("#oauth2.hasScope('server')")
     @GetMapping("/get/{username}")
-    public AccountDTO getAccountByName(@PathVariable String username) {
+    public AccountDTO getAccountByUsername(@PathVariable String username) {
         return accountService.findByUsername(username);
     }
 
     @PreAuthorize("#oauth2.hasScope('ui')")
-    @GetMapping("/current/budget")
-    public List<BudgetDTO> getIncomesAndOutcomes(Principal principal, @RequestParam(required = false) Integer startIndex, @RequestParam(required = false) Integer endIndex) {
-        return budgetService.findByAscendingDateInRange(principal.getName(), startIndex, endIndex);
+    @GetMapping("/current/finances")
+    public List<FinanceDescriptionDTO> getFinances(Principal principal, @RequestParam(required = false) Integer startIndex, @RequestParam(required = false) Integer endIndex) {
+        return financeService.findByAscendingDateInRange(principal.getName(), startIndex, endIndex);
     }
 
     @PreAuthorize("#oauth2.hasScope('ui')")
-    @DeleteMapping("/current/budget/delete")
-    public void deleteBudget(@RequestBody BudgetDTO budget) {
-        budgetService.deleteBudget(budget.getBudgetType(), budget.getUuid());
+    @DeleteMapping("/current/finance/delete")
+    public void deleteFinance(@RequestBody FinanceDescriptionDTO finance) {
+        financeService.deleteFinance(finance.getFinanceType(), finance.getUuid());
     }
 
 
     @PreAuthorize("#oauth2.hasScope('ui')")
-    @PutMapping("/current/update/income")
-    public AccountDTO updateAccountIncome(Principal principal, @RequestBody IncomeDTO incomeDTO) {
-        AccountDTO accountDto = AccountDTO.builder()
-                .username(principal.getName())
-                .incomes(new HashSet<>() {{
-                    add(incomeDTO);
-                }})
-                .build();
-        return accountService.update(accountDto);
+    @PutMapping("/current/add/income")
+    public void addIncome(Principal principal, @RequestBody IncomeDTO incomeDTO) {
+        incomeDTO.setOwner(principal.getName());
+        accountService.addIncome(incomeDTO);
     }
 
     @PreAuthorize("#oauth2.hasScope('ui')")
-    @PutMapping("/current/update/outcome")
-    public AccountDTO updateAccountOutcome(Principal principal, @RequestBody OutcomeDTO outcomeDTO) {
-        AccountDTO accountDto = AccountDTO.builder()
-                .username(principal.getName())
-                .outcomes(new HashSet<>() {{
-                    add(outcomeDTO);
-                }})
-                .build();
-        return accountService.update(accountDto);
+    @PutMapping("/current/add/outcome")
+    public void addOutcome(Principal principal, @RequestBody OutcomeDTO outcomeDTO) {
+        outcomeDTO.setOwner(principal.getName());
+        accountService.addOutcome(outcomeDTO);
     }
 
     @PreAuthorize("#oauth2.hasScope('ui')")
     @GetMapping("/dropdown_values")
-    public DropdownValuesDTO getValueForDropdowns() {
-        return budgetService.provideValuesForDropdowns();
+    public FinanceDropdownValuesDTO getDropdownValues() {
+        return financeService.getDropdownValues();
     }
 }

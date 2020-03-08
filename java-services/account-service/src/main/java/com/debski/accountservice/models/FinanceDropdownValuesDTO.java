@@ -11,7 +11,7 @@ import java.util.Map;
 @Builder
 @ToString
 @EqualsAndHashCode
-public class DropdownValuesDTO {
+public class FinanceDropdownValuesDTO {
 
     private Map<Integer, String> incomeCategories;
     private Map<Integer, String> outcomeCategories;

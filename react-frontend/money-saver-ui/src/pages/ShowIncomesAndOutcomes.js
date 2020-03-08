@@ -18,13 +18,13 @@ class ShowIncomesAndOutcomes extends Component {
         startIndex: 0,
         currentLanguage: i18n.language,
         isDataLoaded: false,
-        budget: []
+        finances: []
     }
 
-    getBudgetData = async () => {
-        let currentBudgetURL = "http://localhost/api/accounts/current/budget?startIndex=" + this.state.startIndex + "&endIndex=" + (this.state.startIndex + this.pagePlusOneRow)
+    getFinancesData = async () => {
+        let currentFinancesURL = "http://localhost/api/accounts/current/finances?startIndex=" + this.state.startIndex + "&endIndex=" + (this.state.startIndex + this.pagePlusOneRow)
         let currentLanguage = i18n.language
-        await fetch(currentBudgetURL, {
+        await fetch(currentFinancesURL, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ class ShowIncomesAndOutcomes extends Component {
                 }
                 else {
                     this.setState({
-                        budget: response,
+                        finances: response,
                         isDataLoaded: true
                     })
                 }
@@ -53,47 +53,45 @@ class ShowIncomesAndOutcomes extends Component {
             });
     }
 
-    deleteBudget = (budgetType, uuid) => {
-        console.log(budgetType)
+    deleteFinance = (financeType, uuid) => {
+        console.log(financeType)
         console.log(uuid)
-        let deleteBudgetURL = "http://localhost/api/accounts/current/budget/delete"
-        let budget = {
-            "budgetType": budgetType,
+        let deleteFinanceURL = "http://localhost/api/accounts/current/finance/delete"
+        let finance = {
+            "financeType": financeType,
             "uuid": uuid
         }
-        fetch(deleteBudgetURL, {
+        fetch(deleteFinanceURL, {
             method: 'DELETE',
-            body: JSON.stringify(budget),
+            body: JSON.stringify(finance),
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + getAccessToken()
             }
         })
-            .then(this.getBudgetData)
+            .then(this.getFinancesData)
     }
 
     constructTable = () => {
         let id = this.state.startIndex + 1
         let index = 0
-        return this.state.budget.map(i => {
+        return this.state.finances.map(i => {
             if (index < 18) {
                 ++index
                 return (
                     <tr key={id}>
                         <td>{id++}</td>
-                        <td>{i.budgetTypeDescription}</td>
+                        <td>{i.financeTypeDescription}</td>
                         <td>{i.amount}</td>
                         <td>{i.currencyDescription}</td>
                         <td>{i.categoryDescription}</td>
                         <td>{i.frequencyDescription}</td>
                         <td>{i.date}</td>
                         <td>{i.note}</td>
-                        <td onClick={() => this.deleteBudget(i.budgetType, i.uuid)}>
-                        <Nav.Link className="m-0 p-0">{this.props.t('delete_budget')}</Nav.Link>
+                        <td onClick={() => this.deleteFinance(i.financeType, i.uuid)}>
+                        <Nav.Link className="m-0 p-0">{this.props.t('delete_finance')}</Nav.Link>
                         </td>
                     </tr>
-                    // HMMMM jak przekazac i.budgetType i i.uuid do onCLick
-
                 )   
             }
             return null
@@ -104,7 +102,7 @@ class ShowIncomesAndOutcomes extends Component {
             this.setState((prevState) => ({
                 startIndex: prevState.startIndex - 18,
                 isDataLoaded: false
-            }), this.getBudgetData)
+            }), this.getFinanceData)
 
     }
 
@@ -112,7 +110,7 @@ class ShowIncomesAndOutcomes extends Component {
         this.setState((prevState) => ({
             startIndex: prevState.startIndex + 18,
             isDataLoaded: false
-        }), this.getBudgetData)
+        }), this.getFinanceData)
     }
 
     render() {
@@ -123,7 +121,7 @@ class ShowIncomesAndOutcomes extends Component {
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>{this.props.t('budget_type')}</th>
+                            <th>{this.props.t('finance_type')}</th>
                             <th>{this.props.t('amount')}</th>
                             <th>{this.props.t('currency')}</th>
                             <th>{this.props.t('categoryDescription')}</th>
@@ -138,8 +136,8 @@ class ShowIncomesAndOutcomes extends Component {
                     </tbody>
                 </Table>
                 <Row className="m-0 p-0">
-                    {this.state.startIndex < 18 && this.state.budget.length < 19 && <></>}
-                    {this.state.startIndex < 18 && this.state.budget.length >= 19 &&
+                    {this.state.startIndex < 18 && this.state.finances.length < 19 && <></>}
+                    {this.state.startIndex < 18 && this.state.finances.length >= 19 &&
                         <>
                             <Col md={8}sm={8} xs={8} ></Col>
                             <Col md={4}sm={4} xs={4} className="m-0 text-right">
@@ -147,12 +145,12 @@ class ShowIncomesAndOutcomes extends Component {
                             </Col>
                         </>
                     }
-                    {this.state.startIndex >= 18 && this.state.budget.length < 19 && 
+                    {this.state.startIndex >= 18 && this.state.finances.length < 19 && 
                         <Col md={4} sm={4} xs={4} className="m-0 ">
                             <Button onClick={this.prevButtonOnCLick} size="sm" variant="secondary">{this.props.t('prev_page')}</Button>
                         </Col>
                     }
-                    {this.state.startIndex >= 18 && this.state.budget.length >= 19 && 
+                    {this.state.startIndex >= 18 && this.state.finances.length >= 19 && 
                         <>
                             <Col md={4} sm={4} xs={4} className="m-0 ">
                                 <Button onClick={this.prevButtonOnCLick} size="sm" variant="secondary">{this.props.t('prev_page')}</Button>
@@ -169,12 +167,12 @@ class ShowIncomesAndOutcomes extends Component {
     }
 
     componentDidMount() {
-        this.getBudgetData()
+        this.getFinancesData()
     }
 
     componentDidUpdate() {
         if (this.state.currentLanguage !== i18n.language) {
-            this.getBudgetData()
+            this.getFinancesData()
             this.setState({
                 currentLanguage: i18n.language,
                 isDataLoaded: false

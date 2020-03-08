@@ -1,5 +1,5 @@
 {
-    "budget_type":"Type",
+    "finance_type":"Type",
     "amount":"Amount",
     "currency":"Currency",
     "categoryDescription":"Category",
@@ -8,6 +8,6 @@
     "note":"Note",
     "prev_page":"Previous page",
     "next_page":"Next page",
-    "delete_budget":"Delete",
+    "delete_finance":"Delete",
     "update_error":"Couldn't load data"
 }

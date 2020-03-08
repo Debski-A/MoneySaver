@@ -79,7 +79,7 @@ class MainPage extends Component {
                         <FontAwesomeIcon size="4x" icon={faEye} color="#6c757d" />
                         </Nav.Item>
                         <Nav.Item>
-                            <Nav.Link as={NavLink} exact to="/main/budget/view" className="bg-secondary text-white">{this.props.t('budget_button')}</Nav.Link>
+                            <Nav.Link as={NavLink} exact to="/main/finance/view" className="bg-secondary text-white">{this.props.t('finance_button')}</Nav.Link>
                         </Nav.Item>
                         <Nav.Item className="w-100">
                         <FontAwesomeIcon size="4x" icon={faChartLine} color="#6c757d" />

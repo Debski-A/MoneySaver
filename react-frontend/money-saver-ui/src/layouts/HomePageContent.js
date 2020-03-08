@@ -12,7 +12,7 @@ const HomePageContent = ({ currencies, frequencies, incomeCategories, outcomeCat
       <Switch>
         <Route path="/main/income/add" render={(routeProps) => <AddIncomePage {...routeProps} currencies={currencies} frequencies={frequencies} incomeCategories={incomeCategories} />} />
         <Route path="/main/outcome/add" render={(routeProps) => <AddOutcomePage {...routeProps} currencies={currencies} frequencies={frequencies} outcomeCategories={outcomeCategories} />} />
-        <Route path="/main/budget/view" render={(routeProps) => <ShowIncomesAndOutcomes />} />
+        <Route path="/main/finance/view" render={(routeProps) => <ShowIncomesAndOutcomes />} />
         <Route path="/main/visualization/1" render={(routeProps) => <AllIncomesAndOutcomes {...routeProps} currencies={currencies} />} />
         <Route path="/main/visualization/2" render={(routeProps) => <ByCategory {...routeProps} currencies={currencies} isDataLoaded={isDataLoaded} incomeCategories={incomeCategories} outcomeCategories={outcomeCategories} />} />
       </Switch>

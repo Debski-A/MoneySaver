@@ -1,6 +1,6 @@
 package com.debski.accountservice.entities;
 
-import com.debski.accountservice.entities.enums.Role;
+import com.debski.accountservice.enums.Role;
 import lombok.*;
 
 import javax.persistence.*;

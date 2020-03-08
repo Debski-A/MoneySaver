@@ -2,7 +2,7 @@ package com.debski.accountservice.controllers;
 
 import com.debski.accountservice.configurations.WithMockOAuth2Scope;
 import com.debski.accountservice.entities.Account;
-import com.debski.accountservice.entities.enums.Role;
+import com.debski.accountservice.enums.Role;
 import com.debski.accountservice.repositories.AccountRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,11 +57,7 @@ public class AccountControllerIntegrationTest {
         //when
         mockMvc.perform(post("/create").contentType(MediaType.APPLICATION_JSON).content(ACCOUNT_JSON))
                 //then
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.username").value("user"))
-                .andExpect(jsonPath("$.password").doesNotExist())
-                .andExpect(jsonPath("$.email").value("xyz@gmail.com"));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -77,7 +73,7 @@ public class AccountControllerIntegrationTest {
     @Test
     public void shouldReturnErrorWhenUpdatedUserIsNotFoundInDatabase() throws Exception {
         //when
-        mockMvc.perform(put("/current/update/outcome")
+        mockMvc.perform(put("/current/add/outcome")
                 .principal(userPrincipal)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(INCOME_JSON))
@@ -101,15 +97,11 @@ public class AccountControllerIntegrationTest {
                             .build();
         accountRepository.save(user);
         //when
-        mockMvc.perform(put("/current/update/income")
+        mockMvc.perform(put("/current/add/income")
                 .principal(userPrincipal)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(INCOME_JSON))
                 //then
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.incomes").isNotEmpty())
-                .andExpect(jsonPath("$.outcomes").isEmpty());
-
+                .andExpect(status().isOk());
     }
 }

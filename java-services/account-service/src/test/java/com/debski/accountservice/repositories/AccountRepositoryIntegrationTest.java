@@ -2,10 +2,10 @@ package com.debski.accountservice.repositories;
 
 import com.debski.accountservice.entities.Account;
 import com.debski.accountservice.entities.Income;
-import com.debski.accountservice.entities.enums.Currency;
-import com.debski.accountservice.entities.enums.Frequency;
-import com.debski.accountservice.entities.enums.IncomeCategory;
-import com.debski.accountservice.entities.enums.Role;
+import com.debski.accountservice.enums.Currency;
+import com.debski.accountservice.enums.Frequency;
+import com.debski.accountservice.enums.IncomeCategory;
+import com.debski.accountservice.enums.Role;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,8 +1,8 @@
 package com.debski.accountservice.entities;
 
-import com.debski.accountservice.entities.enums.Currency;
-import com.debski.accountservice.entities.enums.Frequency;
-import com.debski.accountservice.entities.enums.OutcomeCategory;
+import com.debski.accountservice.enums.Currency;
+import com.debski.accountservice.enums.Frequency;
+import com.debski.accountservice.enums.OutcomeCategory;
 import lombok.*;
 
 import javax.persistence.*;
@@ -42,7 +42,7 @@ public class Outcome extends BaseEntity {
     private String note;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "id_account")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

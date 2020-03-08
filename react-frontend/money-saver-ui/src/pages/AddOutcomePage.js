@@ -80,7 +80,7 @@ class AddOutcomePage extends Component {
 
     addOutcome = () => {
 
-        let outcomeUpdateURL = "http://localhost/api/accounts/current/update/outcome"
+        let outcomeUpdateURL = "http://localhost/api/accounts/current/add/outcome"
         let currentLanguage = i18n.language
         let outcome = {
             "amount": this.state.amount,

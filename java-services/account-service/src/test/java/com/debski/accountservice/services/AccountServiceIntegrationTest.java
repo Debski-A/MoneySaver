@@ -1,9 +1,9 @@
 package com.debski.accountservice.services;
 
-import com.debski.accountservice.entities.enums.Currency;
-import com.debski.accountservice.entities.enums.Frequency;
-import com.debski.accountservice.entities.enums.IncomeCategory;
-import com.debski.accountservice.entities.enums.OutcomeCategory;
+import com.debski.accountservice.enums.Currency;
+import com.debski.accountservice.enums.Frequency;
+import com.debski.accountservice.enums.IncomeCategory;
+import com.debski.accountservice.enums.OutcomeCategory;
 import com.debski.accountservice.exceptions.AccountException;
 import com.debski.accountservice.models.AccountDTO;
 import com.debski.accountservice.models.IncomeDTO;
@@ -31,7 +31,6 @@ import static org.hamcrest.Matchers.*;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
-@Transactional
 public class AccountServiceIntegrationTest {
 
     @Autowired
@@ -47,16 +46,18 @@ public class AccountServiceIntegrationTest {
     }
 
     @Test
+    @Transactional
     public void shouldPersistAccount() {
         //given
         AccountDTO accountBeforeSave = AccountDTO.builder().username("user").rawPassword("Password1").email("xyz@gmail.com").build();
         //when
-        AccountDTO accountAfterSave = accountService.save(accountBeforeSave);
+        accountService.save(accountBeforeSave);
         //then
-        assertThat(accountAfterSave.getUsername(), equalTo("user"));
+        assertThat(accountService.findByUsername("user").getUsername(), equalTo("user"));
     }
 
     @Test
+    @Transactional
     public void shouldReturnNullWhenAccountNotFound() {
         //when
         AccountDTO accountFromDB = accountService.findByUsername("user");
@@ -66,6 +67,7 @@ public class AccountServiceIntegrationTest {
 
 
     @Test
+    @Transactional
     public void shouldThrowAccountExceptionBecauseMandatoryParamsAreMissing() {
         //given
         AccountDTO dtoWithoutMandatoryParams = AccountDTO.builder().build();
@@ -76,6 +78,7 @@ public class AccountServiceIntegrationTest {
     }
 
     @Test
+    @Transactional
     public void shouldThrowAccountExceptionInPolishBecauseMandatoryParamsAreMissing() {
         //given
         LocaleContextHolder.setLocale(Locale.forLanguageTag("pl"));
@@ -87,6 +90,7 @@ public class AccountServiceIntegrationTest {
     }
 
     @Test
+    @Transactional
     public void shouldThrowAccountExceptionBecauseUsernameIsMissing() {
         //given
         AccountDTO dtoWithoutMandatoryParams = AccountDTO.builder().rawPassword("Password1").email("xyz@gmail.com").build();
@@ -97,6 +101,7 @@ public class AccountServiceIntegrationTest {
     }
 
     @Test
+    @Transactional
     public void shouldThrowAccountExceptionBecauseUsernameIsTaken() {
         //given
         AccountDTO dto1 = AccountDTO.builder().username("user").rawPassword("Password1").email("xyz@gmail.com").build();
@@ -109,6 +114,7 @@ public class AccountServiceIntegrationTest {
     }
 
     @Test
+    @Transactional
     public void shouldThrowAccountExceptionBecausePasswordIsToWeak() {
         //given
         exception.expect(AccountException.class);
@@ -118,6 +124,7 @@ public class AccountServiceIntegrationTest {
     }
 
     @Test
+    @Transactional
     public void shouldThrowAccountExceptionInPolishBecausePasswordIsToWeak() {
         //given
         LocaleContextHolder.setLocale(Locale.forLanguageTag("pl"));
@@ -128,6 +135,7 @@ public class AccountServiceIntegrationTest {
     }
 
     @Test
+    @Transactional
     public void shouldThrowAccountExceptionBecauseInvalidEmail() {
         //given
         LocaleContextHolder.setLocale(Locale.forLanguageTag("pl"));
@@ -139,6 +147,7 @@ public class AccountServiceIntegrationTest {
 
 
     @Test
+    @Transactional
     public void shouldThrowExceptionIfUsernameIsEmpty() {
         //given
         LocaleContextHolder.setLocale(Locale.forLanguageTag("pl"));
@@ -146,7 +155,7 @@ public class AccountServiceIntegrationTest {
         exception.expectMessage("Wprowadź poprawną nazwę użytkownika, hasło lub email");
         AccountDTO accountBeforeSave = AccountDTO.builder().username("").rawPassword("Password1").email("xyz@gmail.com").build();
         //when
-        AccountDTO accountAfterSave = accountService.save(accountBeforeSave);
+        accountService.save(accountBeforeSave);
     }
 
     @Test
@@ -154,11 +163,11 @@ public class AccountServiceIntegrationTest {
         //given
         IncomeDTO incomeDTO1 = IncomeDTO.builder().amount(BigDecimal.valueOf(3000)).currency(Currency.GBP).dateOfIncome(LocalDate.of(2019, 3, 4)).incomeCategory(IncomeCategory.PAYMENT).frequency(Frequency.MONTHLY).build();
         IncomeDTO incomeDTO2 = IncomeDTO.builder().amount(BigDecimal.valueOf(100)).currency(Currency.GBP).dateOfIncome(LocalDate.of(2019, 11, 11)).incomeCategory(IncomeCategory.GIFT).frequency(Frequency.ONCE).build();
-        AccountDTO accountBeforeSave1 = AccountDTO.builder().username("user").rawPassword("Password1").email("xyz@gmail.com").incomes(Set.of(incomeDTO1, incomeDTO2)).build();
+        AccountDTO accountBeforeSave1 = AccountDTO.builder().username("userXX").rawPassword("Password1").email("xyz@gmail.com").incomes(Set.of(incomeDTO1, incomeDTO2)).build();
         //when
-        AccountDTO accountAfterSave1 = accountService.save(accountBeforeSave1);
+        accountService.save(accountBeforeSave1);
         //then
-        assertThat(accountAfterSave1.getIncomes(), hasSize(2));
+        assertThat(accountService.findByUsername("userXX").getIncomes(), hasSize(2));
     }
 
     @Test
@@ -171,44 +180,45 @@ public class AccountServiceIntegrationTest {
                 .frequency(Frequency.ONCE)
                 .outcomeCategory(OutcomeCategory.ALCOHOL)
                 .build();
-        AccountDTO accountBeforeSave = AccountDTO.builder().username("user").rawPassword("Password1").email("xyz@gmail.com").outcomes(Set.of(outcomeDTO)).build();
+        AccountDTO accountBeforeSave = AccountDTO.builder().username("userXY").rawPassword("Password1").email("xyz@gmail.com").outcomes(Set.of(outcomeDTO)).build();
         //when
-        AccountDTO accountAfterSave = accountService.save(accountBeforeSave);
+        accountService.save(accountBeforeSave);
         //then
+        AccountDTO accountAfterSave = accountService.findByUsername("userXY");
         assertThat(accountAfterSave.getOutcomes(), hasSize(1));
         assertThat(accountAfterSave.getOutcomes().iterator().next().getOutcomeCategory(), equalTo(OutcomeCategory.ALCOHOL));
     }
 
     @Test
+    @Transactional
     public void shouldReturnErrorIfAmountIsNotProvided() {
         //given
         LocaleContextHolder.setLocale(Locale.forLanguageTag("pl"));
-        AccountDTO dataInDatabase = prepareDataInDatabase();
-        AccountDTO dataForUpdate = singleIncomeInAccountDto();
-        IncomeDTO incomeForUpdate = dataForUpdate.getIncomes().iterator().next();
-        incomeForUpdate.setAmount(null);
+        prepareDataInDatabase();
+        IncomeDTO newIncome = singleIncome();
+        newIncome.setAmount(null);
         exception.expect(AccountException.class);
         exception.expectMessage("Podaj kwotę");
         //when
-        accountService.update(dataForUpdate);
+        accountService.addIncome(newIncome);
         //then expect Exception
     }
 
     @Test
+    @Transactional
     public void shouldUpdateAccountWithNewProvidedValues() {
         //given
-        AccountDTO dataInDatabase = prepareDataInDatabase();
-        AccountDTO dataForUpdate = singleIncomeInAccountDto();
-        IncomeDTO incomeForUpdate = dataForUpdate.getIncomes().iterator().next();
+        prepareDataInDatabase();
+        IncomeDTO newIncome = singleIncome();
         //when
-        accountService.update(dataForUpdate);
+        accountService.addIncome(newIncome);
         //then
         AccountDTO accountEntity = accountService.findByUsername("miecio");
         //assert that contains data from update
         assertThat(accountEntity.getIncomes(), hasSize(2));
     }
 
-    private AccountDTO prepareDataInDatabase() {
+    private void prepareDataInDatabase() {
         OutcomeDTO outcome1 = OutcomeDTO.builder()
                 .currency(Currency.PLN)
                 .outcomeCategory(OutcomeCategory.ALCOHOL)
@@ -233,11 +243,10 @@ public class AccountServiceIntegrationTest {
                 .incomes(new HashSet<>() {{add(income1);}})
                 .build();
         accountService.save(dto);
-        return dto;
     }
 
-    private AccountDTO singleIncomeInAccountDto() {
-        IncomeDTO income2 = IncomeDTO.builder()
+    private IncomeDTO singleIncome() {
+        IncomeDTO income = IncomeDTO.builder()
                 .currency(Currency.GBP)
                 .incomeCategory(IncomeCategory.BENEFIT)
                 .dateOfIncome(LocalDate.of(2020, 01, 02))
@@ -246,10 +255,6 @@ public class AccountServiceIntegrationTest {
                 .note("Coroczne pieniążki z okazju urodzinek od wujcia Andrzejka")
                 .owner("miecio")
                 .build();
-        AccountDTO incomeFromFrontend = AccountDTO.builder()
-                .incomes(new HashSet<>() {{add(income2);}})
-                .username("miecio")
-                .build();
-        return incomeFromFrontend;
+        return income;
     }
 }

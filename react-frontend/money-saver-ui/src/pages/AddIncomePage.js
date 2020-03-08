@@ -79,7 +79,7 @@ class AddIncomePage extends Component {
 
     addIncome = () => {
 
-        let incomeUpdateURL = "http://localhost/api/accounts/current/update/income"
+        let incomeUpdateURL = "http://localhost/api/accounts/current/add/income"
         let currentLanguage = i18n.language
         let income = {
             "amount": this.state.amount,
