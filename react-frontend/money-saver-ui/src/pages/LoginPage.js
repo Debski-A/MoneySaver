@@ -32,41 +32,41 @@ class LoginPage extends Component {
                 'Accept-Language': currentLanguage
             }
         })
-            .then(response => response.json())
             .then(response => {
-                if (!!response.errorMessage) {
-                    this.setState({
-                        message: response.errorMessage
+                if (!!response.ok) {
+                    response.json()
+                    .then(result => {
+                        console.log('Success')
+                        let { access_token, refresh_token } = result
+                        Cookies.set("access_token", access_token)
+                        Cookies.set("refresh_token", refresh_token)
+                        this.props.handleIsLoggedIn()
+                        this.props.history.push({
+                            pathname: "/main"
+                        })
                     })
-                    setTimeout(() => {
-                        this.setState({
-                            message: ''
-                        });
-                    }, 2000);
-                }
-                else if (!!response.error) {
-                    this.setState({
-                        message: this.props.t('login_error')
-                    })
-                    setTimeout(() => {
-                        this.setState({
-                            message: ''
-                        });
-                    }, 2000);
-                }
+                } 
                 else {
-                    let { access_token, refresh_token } = response
-                    Cookies.set("access_token", access_token)
-                    Cookies.set("refresh_token", refresh_token)
-                    this.props.handleIsLoggedIn()
-                    this.props.history.push({
-                        pathname: "/main"
-                    })
+                    response.json()
+                    .then((result) => {
+                        console.log('Fail')
+                        let message = result.errorMessage
+                        this.setState({
+                            message: message
+                        })
+                        setTimeout(() => {
+                            this.setState({
+                                message: ''
+                            });
+                        }, 2000);
+                    });
                 }
             })
             .catch((err) => {
+                console.log(err)
+                let message = this.props.t('login_error')
                 this.setState({
-                    message: this.props.t('login_error')
+                    message: message
                 })
                 setTimeout(() => {
                     this.setState({

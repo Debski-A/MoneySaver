@@ -91,7 +91,7 @@ class MainPage extends Component {
                         </NavDropdown>
                     </Nav>
                 </Col>
-                <Col className="pl-0 pr-0" sm={10}>
+                <Col className="pl-0 pr-0 h-100" sm={10}>
                     <HomePageContent {...this.state} />
                 </Col>
             </>

@@ -20,18 +20,18 @@ class App extends Component {
   }
 
   componentDidMount() {
-    isAuthenticated().then(resp => {
+    isAuthenticated().then(response => {
       this.setState({
-        isLoggedIn: resp
+        isLoggedIn: response
       })
     })
   }
 
   handleIsLoggedIn = () => {
     console.log('handleIsLoggedIn invoked after successful login...')
-    isAuthenticated().then(resp => {
+    isAuthenticated().then(response => {
       this.setState({
-        isLoggedIn: resp
+        isLoggedIn: response
       })
     })
   }

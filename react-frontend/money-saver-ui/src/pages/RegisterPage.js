@@ -12,7 +12,8 @@ class RegisterPage extends Component {
     username: '',
     password: '',
     email: '',
-    message: ''
+    errorMessage: '',
+    successMessage: ''
   }
 
   handleOnChange = (e) => {
@@ -55,41 +56,46 @@ class RegisterPage extends Component {
         'Accept-Language': currentLanguage
       }
     })
-      .then(response => response.json())
-      .then(response => {
-        if (!!response.errorMessage) {
-          this.setState({
-            message: response.errorMessage
-          })
-          setTimeout(() => {
-            this.setState({
-              message: ''
-            });
-          }, 2000);
-        } else if (!!response.error) {
-          this.setState({
-            message: this.props.t('register_error')
-          })
-          setTimeout(() => {
-            this.setState({
-              message: ''
-            });
-          }, 2000);
-        }
-        else {
-          this.props.history.push("/login")
-        }
-      })
-      .catch((err) => {
+    .then(response => {
+      if (!!response.ok) {
+        console.log('Success!')
+        let successMessage = this.props.t('register_success')
         this.setState({
-          message: this.props.t('register_error')
+          successMessage: successMessage
         })
         setTimeout(() => {
           this.setState({
-            message: ''
+            successMessage: ''
           });
-        }, 2000);
-      });
+        }, 2000)
+      }
+      else { 
+        response.json()
+        .then(result => {
+          console.log(result.errorMessage)
+          this.setState({
+            errorMessage: result.errorMessage
+          })
+          setTimeout(() => {
+            this.setState({
+              errorMessage: ''
+            });
+          }, 2000);
+        })
+      }
+    })
+    .catch(err => {
+      console.log(err)
+      let errorMessage = this.props.t('register_error')
+      this.setState({
+        errorMessage: errorMessage
+      })
+      setTimeout(() => {
+        this.setState({
+          errorMessage: ''
+        });
+      }, 2000);
+    })
   }
 
   render() {
@@ -113,8 +119,11 @@ class RegisterPage extends Component {
         <SubmitButton onClick={this.handleOnClick} value={this.props.t('submit_button')} />
         <Row className="pt-2">
           <Col sm={4}>
-            <Alert show={!!this.state.message} variant="danger">
-              {this.state.message}
+            <Alert show={!!this.state.errorMessage} variant="danger">
+              {this.state.errorMessage}
+            </Alert>
+            <Alert show={!!this.state.successMessage} variant="success">
+              {this.state.successMessage}
             </Alert>
           </Col>
         </Row>

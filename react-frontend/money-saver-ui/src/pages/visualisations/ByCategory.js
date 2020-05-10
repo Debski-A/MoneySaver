@@ -123,7 +123,7 @@ class ByCategory extends Component {
     render() {
         return (
             <Container fluid style={{ flexWrap: "wrap" }} className="d-flex fill-height">
-                <Row>
+                <Row className="d-flex fill-height">
                     <VictoryChart 
                         width={1500} height={600}
                         theme={VictoryTheme.material}

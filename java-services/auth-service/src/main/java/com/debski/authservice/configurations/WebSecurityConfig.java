@@ -33,7 +33,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(passwordEncoder());
     }
 
-    // Tworzy bean UserDetailsService, ktory bazuje na AuthenticationManager zbudowanym (powyżej) w 'configure(AuthenticationManagerBuilder auth)'
+    // Tworzy bean UserDetailsService, ktory bazuje na AuthenticationManager zbudowanym
+    // (powyżej) w 'configure(AuthenticationManagerBuilder auth)' (czytaj javadoc)
     @Bean
     public UserDetailsService defaultUserDetailsServiceBean() throws Exception {
         return super.userDetailsServiceBean();

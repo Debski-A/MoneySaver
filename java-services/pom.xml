@@ -41,6 +41,7 @@
         <module>auth-service</module>
         <module>calculation-service</module>
         <module>gateway</module>
+        <module>C4-model</module>
     </modules>
 
 

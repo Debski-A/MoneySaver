@@ -3,5 +3,6 @@
     "password_prompt":"Podaj hasło",
     "email_prompt":"Podaj email",
     "submit_button":"Zarejestruj",
-    "register_error":"Rejestracja nie powiodła się"
+    "register_error":"Rejestracja nie powiodła się",
+    "register_success":"Rejestracja powiodła się"
 }

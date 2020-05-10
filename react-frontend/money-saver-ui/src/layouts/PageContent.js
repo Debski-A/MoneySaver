@@ -13,7 +13,7 @@ const PageConent = (props) => {
     <>
       <Switch>
         <Route exact path="/" component={HomePage} />
-        <Route path="/register" component={RegisterPage} />
+        <Route path="/register" render={(routeProps) => <RegisterPage {...routeProps} isLoggedIn={props.isLoggedIn} /> }/>
         <Route path="/login" render={(routeProps) => {
           return (
             props.isLoggedIn ? (

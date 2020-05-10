@@ -39,7 +39,7 @@ class ShowIncomesAndOutcomes extends Component {
                     console.log(response.error)
                 }
                 else if (!!response.status && response.status !== 200) {
-                    throw new Error('Ststus not OK')
+                    throw new Error('Status not OK')
                 }
                 else {
                     this.setState({
