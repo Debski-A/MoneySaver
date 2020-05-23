@@ -1,24 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="77c8baa6-5beb-4a5c-861f-715d18e8d90c" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose-debug.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose-debug.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/java-services/account-service/src/main/java/com/debski/accountservice/configurations/Oauth2ResourceServerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/java-services/account-service/src/main/java/com/debski/accountservice/configurations/Oauth2ResourceServerConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/java-services/account-service/src/main/java/com/debski/accountservice/controllers/AccountController.java" beforeDir="false" afterPath="$PROJECT_DIR$/java-services/account-service/src/main/java/com/debski/accountservice/controllers/AccountController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/java-services/account-service/src/test/java/com/debski/accountservice/services/AccountUtilsTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/java-services/account-service/src/test/java/com/debski/accountservice/services/AccountUtilsUnitTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/java-services/account-service/src/test/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/java-services/account-service/src/test/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/java-services/auth-service/src/main/java/com/debski/authservice/configurations/OAuth2AuthorizationConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/java-services/auth-service/src/main/java/com/debski/authservice/configurations/OAuth2AuthorizationConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/java-services/auth-service/src/main/java/com/debski/authservice/configurations/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/java-services/auth-service/src/main/java/com/debski/authservice/configurations/WebSecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/java-services/config-server/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/java-services/config-server/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/java-services/config-server/src/main/resources/shared/account-service.yml" beforeDir="false" afterPath="$PROJECT_DIR$/java-services/config-server/src/main/resources/shared/account-service.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/java-services/config-server/src/main/resources/shared/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/java-services/config-server/src/main/resources/shared/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-frontend/money-saver-ui/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/react-frontend/money-saver-ui/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-frontend/money-saver-ui/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/react-frontend/money-saver-ui/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-frontend/money-saver-ui/src/components/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-frontend/money-saver-ui/src/components/App.js" afterDir="false" />
-    </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <list default="true" id="77c8baa6-5beb-4a5c-861f-715d18e8d90c" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -38,15 +21,11 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="1920" />
-    <option name="y" value="-2" />
-    <option name="width" value="1680" />
-    <option name="height" value="1052" />
-  </component>
   <component name="ProjectId" id="1RHZ97qYiWkOgXJXSsUibZ1QROU" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/account-service/src/main/java/com/debski/accountservice" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/eureka-server/pom.xml" />
@@ -59,18 +38,6 @@
     <key name="CreateClassDialog.RecentsKey">
       <recent name="com.debski.accountservice.entities" />
     </key>
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -99,13 +66,12 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="masterDetails">
     <states>

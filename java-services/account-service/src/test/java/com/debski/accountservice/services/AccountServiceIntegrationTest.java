@@ -42,6 +42,7 @@ public class AccountServiceIntegrationTest {
     @Before
     public void setUp() {
         //default locale for every test:
+        LocaleContextHolder.resetLocaleContext();
         LocaleContextHolder.setLocale(Locale.forLanguageTag("en"));
     }
 

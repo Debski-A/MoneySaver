@@ -1,7 +1,8 @@
 {
-    "amount_prompt":"Amount",
-    "note_prompt":"Note",
-    "date_label":"Date of income",
-    "submit_button":"Save",
-    "update_error":"Could't save income details"
+  "amount_prompt": "Amount",
+  "note_prompt": "Note",
+  "date_label": "Date of income",
+  "submit_button": "Save",
+  "update_error": "Could't save income details",
+  "update_success": "Income saved"
 }

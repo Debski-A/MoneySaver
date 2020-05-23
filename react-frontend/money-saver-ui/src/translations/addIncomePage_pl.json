@@ -1,7 +1,8 @@
 {
-    "amount_prompt":"Kwota",
-    "note_prompt":"Notatka",
-    "date_label":"Data przychodu",
-    "submit_button":"Zapisz",
-    "update_error":"Nie udało się zapisać danych przychodu"
+  "amount_prompt": "Kwota",
+  "note_prompt": "Notatka",
+  "date_label": "Data przychodu",
+  "submit_button": "Zapisz",
+  "update_error": "Nie udało się zapisać danych przychodu",
+  "update_success": "Przychód zapisano"
 }
