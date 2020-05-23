@@ -34,24 +34,55 @@ public class BudgetCalculatorUnitTest {
 
     @Test
     public void shouldReturnIncomesWithinSpecifiedDateTimePeriod() {
-        //should return one income
+        //should return two incomes
         //given
-        Set<IncomeDTO> incomes = Set.of(IncomeDTO.builder().dateOfIncome(LocalDate.of(2019, 2, 2)).build());
+        Set<IncomeDTO> incomes =
+                Set.of(IncomeDTO.builder().dateOfIncome(LocalDate.of(2019, 2, 2)).frequency(Frequency.ONCE).build(),
+                IncomeDTO.builder().dateOfIncome(LocalDate.of(2019, 2, 2)).frequency(Frequency.ONCE).build());
         //when
         Set<IncomeDTO> filteredIncomes = budgetCalculator.filterIncomesByDateTimePeriod(incomes, LocalDate.of(2019, 2, 1), LocalDate.of(2019, 2, 3));
         //then
-        assertThat(filteredIncomes, hasSize(1));
+        assertThat(filteredIncomes, hasSize(2));
     }
 
     @Test
     public void shouldReturnIncomesWithinSpecifiedDateTimePeriod_2() {
         //should NOT return any income
         //given
-        Set<IncomeDTO> incomes = Set.of(IncomeDTO.builder().dateOfIncome(LocalDate.of(2019, 2, 4)).build());
+        Set<IncomeDTO> incomes =
+                Set.of(IncomeDTO.builder().dateOfIncome(LocalDate.of(2019, 2, 4)).frequency(Frequency.ONCE).build());
         //when
         Set<IncomeDTO> filteredIncomes = budgetCalculator.filterIncomesByDateTimePeriod(incomes, LocalDate.of(2019, 2, 1), LocalDate.of(2019, 2, 3));
         //then
         assertThat(filteredIncomes, hasSize(0));
+    }
+
+    @Test
+    public void shouldReturnIncomesWithinSpecifiedDateTimePeriod_andIncludeEarlierCyclicalIncomes() {
+        //given
+        Set<IncomeDTO> incomes =
+                Set.of(IncomeDTO.builder().dateOfIncome(LocalDate.of(2019, 2, 2)).frequency(Frequency.ONCE).build(), // +1
+                                        IncomeDTO.builder().dateOfIncome(LocalDate.of(2018, 2, 1)).frequency(Frequency.DAILY).build()); // +28
+        //when
+        Set<IncomeDTO> filteredIncomes = budgetCalculator.
+                filterIncomesByDateTimePeriod(incomes, LocalDate.of(2019, 2, 1),
+                        LocalDate.of(2019, 2, 28));
+        //then
+        assertThat(filteredIncomes, hasSize(29)); // = 29
+    }
+
+    @Test
+    public void shouldReturnOutcomesWithinSpecifiedDateTimePeriod_andIncludeEarlierCyclicalOutcomes() {
+        //given
+        Set<OutcomeDTO> outcomes =
+                Set.of(OutcomeDTO.builder().dateOfOutcome(LocalDate.of(2019, 2, 2)).frequency(Frequency.ONCE).build(), // +1
+                OutcomeDTO.builder().dateOfOutcome(LocalDate.of(2018, 2, 1)).frequency(Frequency.DAILY).build()); // +28
+        //when
+        Set<OutcomeDTO> filteredOutcomes = budgetCalculator.
+                filterOutcomesByDateTimePeriod(outcomes, LocalDate.of(2019, 2, 1),
+                        LocalDate.of(2019, 2, 28));
+        //then
+        assertThat(filteredOutcomes, hasSize(29)); // = 29
     }
 
     @Test

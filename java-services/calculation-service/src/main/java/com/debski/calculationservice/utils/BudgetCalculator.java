@@ -14,7 +14,10 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashSet;
+import java.util.NavigableSet;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -31,7 +34,8 @@ public class BudgetCalculator {
     }
 
     public Set<IncomeDTO> filterIncomesByDateTimePeriod(Set<IncomeDTO> incomes, LocalDate startDate, LocalDate endDate) {
-        Set<IncomeDTO> filteredIncomes = incomes
+        Set<IncomeDTO> convertedIncomes = convertIncomesFrequencies(incomes, endDate);
+        Set<IncomeDTO> filteredIncomes = convertedIncomes
                 .stream()
                 .filter(i -> isWithinStartAndEndDate(i.getDateOfIncome(), startDate, endDate))
                 .collect(Collectors.toSet());
@@ -39,7 +43,8 @@ public class BudgetCalculator {
     }
 
     public Set<OutcomeDTO> filterOutcomesByDateTimePeriod(Set<OutcomeDTO> outcomes, LocalDate startDate, LocalDate endDate) {
-        Set<OutcomeDTO> filteredOutcomes = outcomes
+        Set<OutcomeDTO> convertedOutcomes = convertOutcomesFrequencies(outcomes, endDate);
+        Set<OutcomeDTO> filteredOutcomes = convertedOutcomes
                 .stream()
                 .filter(o -> isWithinStartAndEndDate(o.getDateOfOutcome(), startDate, endDate))
                 .collect(Collectors.toSet());
