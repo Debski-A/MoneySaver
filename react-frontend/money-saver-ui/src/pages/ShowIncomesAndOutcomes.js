@@ -102,7 +102,7 @@ class ShowIncomesAndOutcomes extends Component {
             this.setState((prevState) => ({
                 startIndex: prevState.startIndex - 18,
                 isDataLoaded: false
-            }), this.getFinanceData)
+            }), this.getFinancesData)
 
     }
 
@@ -110,7 +110,7 @@ class ShowIncomesAndOutcomes extends Component {
         this.setState((prevState) => ({
             startIndex: prevState.startIndex + 18,
             isDataLoaded: false
-        }), this.getFinanceData)
+        }), this.getFinancesData)
     }
 
     render() {

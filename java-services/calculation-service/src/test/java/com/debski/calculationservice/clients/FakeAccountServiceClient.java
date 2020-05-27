@@ -47,7 +47,7 @@ public class FakeAccountServiceClient implements AccountServiceClient {
                 .note("Na urodziny od cioci z Anglii")
                 .owner("miecio")
                 .build();
-        // + 36523,34 przeliczone z GBP
+        // + 36400 przeliczone z GBP
         IncomeDTO income3 = IncomeDTO.builder()
                 .amount(BigDecimal.valueOf(500))
                 .currency(Currency.PLN)
@@ -57,7 +57,7 @@ public class FakeAccountServiceClient implements AccountServiceClient {
                 .note("Procent składany")
                 .owner("miecio")
                 .build();
-        // + 36523,34 nic bo z 2018
+        // + 36400 czyli nic bo z 2018
         IncomeDTO income4 = IncomeDTO.builder()
                 .amount(BigDecimal.valueOf(200))
                 .currency(Currency.USD)
@@ -67,7 +67,7 @@ public class FakeAccountServiceClient implements AccountServiceClient {
                 .note("zlecenie z USA")
                 .owner("miecio")
                 .build();
-        // + 37370,02 bo przeliczone z USD
+        // + 37300 bo przeliczone z USD
         return new HashSet<>() {{add(income1); add(income2); add(income3); add(income4);}};
     }
 

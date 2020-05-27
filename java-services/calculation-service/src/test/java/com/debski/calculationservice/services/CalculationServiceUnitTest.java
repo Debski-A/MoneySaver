@@ -67,17 +67,17 @@ public class CalculationServiceUnitTest {
         //given
         ExchangeRatesContainer containerGBP = new ExchangeRatesContainer();
         containerGBP.setBase(Currency.GBP);
-        containerGBP.setRates(Map.of(Currency.PLN.name(), BigDecimal.valueOf(5.23343533457)));
+        containerGBP.setRates(Map.of(Currency.PLN.name(), BigDecimal.valueOf(5)));
         when(fakeExchangeRatesClient.getRates(Currency.GBP)).thenReturn(containerGBP);
 
         ExchangeRatesContainer containerEUR = new ExchangeRatesContainer();
         containerEUR.setBase(Currency.EUR);
-        containerEUR.setRates(Map.of(Currency.PLN.name(), BigDecimal.valueOf(4.33432434390)));
+        containerEUR.setRates(Map.of(Currency.PLN.name(), BigDecimal.valueOf(4.5)));
         when(fakeExchangeRatesClient.getRates(Currency.EUR)).thenReturn(containerEUR);
 
         ExchangeRatesContainer containerUSD = new ExchangeRatesContainer();
         containerUSD.setBase(Currency.USD);
-        containerUSD.setRates(Map.of(Currency.PLN.name(), BigDecimal.valueOf(4.233423324234)));
+        containerUSD.setRates(Map.of(Currency.PLN.name(), BigDecimal.valueOf(4)));
         when(fakeExchangeRatesClient.getRates(Currency.USD)).thenReturn(containerUSD);
 
         CalculationInput input = CalculationInput.builder()
@@ -89,11 +89,58 @@ public class CalculationServiceUnitTest {
         //when
         CalculationOutput calculationOutput = calculationService.makeCalculations(input, "miecio");
         //then
+//        assertThat(calculationOutput.getVisualisationPoints(), hasSize(31));
+        //after corrections : ###
+        assertThat(calculationOutput.getVisualisationPoints(), hasSize(35));
+        assertAllVisualisationPoints(calculationOutput.getVisualisationPoints());
+        // ######################
         assertThat(calculationOutput.getCalculationType(), equalTo(CalculationType.BOTH));
         assertThat(calculationOutput.getCurrency(), equalTo(Currency.PLN));
         assertThat(calculationOutput.getIncomeCategory(), nullValue());
         assertThat(calculationOutput.getOutcomeCategory(), nullValue());
     }
+
+    private void assertAllVisualisationPoints(Set<VisualisationPoint> visualisationPoints) {
+        Iterator<VisualisationPoint> iter = visualisationPoints.iterator();
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("500.00"))); //extra 1
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("0.00")));
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("-700.00")));
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("2300.00")));
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("1600.00")));
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("4600.00")));
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("3475.00")));
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("2775.00")));
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("5775.00")));
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("6275.00"))); //extra 2
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("6775.00")));
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("6075.00")));
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("9075.00")));
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("8375.00")));
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("11375.00")));
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("10250.00")));
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("9550.00")));
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("12550.00")));
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("13050.00"))); //extra 3 miedzy 2019-06-28 a 2019
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("12350.00")));
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("15350.00")));
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("14650.00")));
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("17650.00")));
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("16525.00")));
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("15825.00")));
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("18825.00")));
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("19325.00"))); // extra 4 ostatnie miedzie
+        // 2019-09-28 a 2019-10-27
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("18625.00"))); // 2019-10-27
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("21625.00"))); //10-28
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("22425.00"))); //11-11
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("21725.00"))); //11-27
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("24725.00"))); //11-28
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("23600.00"))); //12-21
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("22900.00")));//12-27
+        assertThat(iter.next().getValue(), equalTo(new BigDecimal("25900.00")));//12 -28
+        assertThat(iter.hasNext(), equalTo(false));
+    }
+
 
     @Test
     public void shouldThrowExceptionBecauseIncomesAndOutcomesAfterFilteringAreEmpty() {

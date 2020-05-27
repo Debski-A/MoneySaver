@@ -132,7 +132,7 @@ class ByCategory extends Component {
             <VictoryAxis
               tickCount={20}
               crossAxis={false}
-              domain={[0, 10000]}
+              domain={[0, 1000]}
               dependentAxis
             />
             <VictoryAxis tickCount={31} />

@@ -99,50 +99,36 @@ class AddOutcomePage extends Component {
                 'Accept-Language': currentLanguage
             }
         })
-            .then(response => response.json())
-            .then(response => {
-                if (!!response.errorMessage) {
-                    this.setState({
-                        errorMessage: response.errorMessage,
-                        message: ''
-                    })
-                    setTimeout(() => {
-                        this.setState({
-                            message: '',
-                            errorMessage: ''
-                        });
-                    }, 2000);
-                }
-                else if (!!response.status && response.status !== 200) {
-                    throw new Error('Ststus not OK')
-                }
-                else {
-                    this.setState({
-                        message: 'Zaktualizowano',
-                        errorMessage: ''
-                    })
-                    setTimeout(() => {
-                        this.setState({
-                            message: '',
-                            errorMessage: ''
-                        });
-                    }, 2000);
-                }
-            })
-            .catch((err) => {
-                console.log(err)
-                this.setState({
-                    errorMessage: this.props.t('update_error'),
-                    message: ''
-                })
-                setTimeout(() => {
-                    this.setState({
-                        message: '',
-                        errorMessage: ''
-                    });
-                }, 2000);
+        .then((response) => {
+          if (!!response.ok) {
+            this.setState({
+              message: this.props.t("update_success"),
+              errorMessage: "",
             });
-    }
+            setTimeout(() => {
+              this.setState({
+                message: "",
+                errorMessage: "",
+              });
+            }, 2000);
+          } else {
+            throw Error();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          this.setState({
+            errorMessage: this.props.t("update_error"),
+            message: "",
+          });
+          setTimeout(() => {
+            this.setState({
+              message: "",
+              errorMessage: "",
+            });
+          }, 2000);
+        });
+    };
 
 
     render() {

@@ -57,12 +57,11 @@ public class CalculationServiceImpl implements CalculationService {
 
         LocalDate endOfMonth = budgetCalculator.specifyEndOfMonth(input.getStartDate());
         LocalDate beginningOfMonth = budgetCalculator.specifyBeginningOfMonth(input.getStartDate());
-        incomes = budgetCalculator.convertIncomesFrequencies(incomes, endOfMonth);
 
         incomes = budgetCalculator.filterIncomesByDateTimePeriod(incomes, beginningOfMonth, endOfMonth);
         validateAfterPeriodFilteringThatSetIsNotEmpty(incomes);
 
-        Set<VisualisationPoint> visualisationPoints = budgetCalculator.calculateVisualizationPoints(incomes);
+        Set<VisualisationPoint> visualisationPoints = budgetCalculator.calculateIncomesVisualizationPoints(incomes);
         visualisationPoints = budgetCalculator.fillRestOfDaysOfMonthWithZeroAmountValue(visualisationPoints, beginningOfMonth, endOfMonth);
 
         CalculationOutput result = CalculationOutput.builder()
@@ -75,7 +74,26 @@ public class CalculationServiceImpl implements CalculationService {
     }
 
     private CalculationOutput calculateOutcomes(Set<OutcomeDTO> outcomes, CalculationInput input) {
-        return null;
+        budgetCalculator.adjustOutcomesCurrencies(outcomes, input.getCurrency());
+        outcomes = budgetCalculator.filterOutcomesByCategory(outcomes, input.getOutcomeCategory());
+        validateAfterCategoryFilteringThatSetIsNotEmpty(outcomes);
+
+        LocalDate endOfMonth = budgetCalculator.specifyEndOfMonth(input.getStartDate());
+        LocalDate beginningOfMonth = budgetCalculator.specifyBeginningOfMonth(input.getStartDate());
+
+        outcomes = budgetCalculator.filterOutcomesByDateTimePeriod(outcomes, beginningOfMonth, endOfMonth);
+        validateAfterPeriodFilteringThatSetIsNotEmpty(outcomes);
+
+        Set<VisualisationPoint> visualisationPoints = budgetCalculator.calculateOutcomesVisualizationPoints(outcomes);
+        visualisationPoints = budgetCalculator.fillRestOfDaysOfMonthWithZeroAmountValue(visualisationPoints, beginningOfMonth, endOfMonth);
+
+        CalculationOutput result = CalculationOutput.builder()
+                .calculationType(CalculationType.OUTCOME)
+                .outcomeCategory(input.getOutcomeCategory())
+                .currency(input.getCurrency())
+                .visualisationPoints(visualisationPoints)
+                .build();
+        return result;
     }
 
     private CalculationOutput calculateBoth(Set<IncomeDTO> incomes, Set<OutcomeDTO> outcomes, CalculationInput input) {
@@ -88,8 +106,8 @@ public class CalculationServiceImpl implements CalculationService {
         outcomes = budgetCalculator.filterOutcomesByDateTimePeriod(outcomes, startDate, endDate);
         validateAfterPeriodFilteringThatBothSetsAreNotEmpty(incomes, outcomes);
 
-        incomes = budgetCalculator.convertIncomesFrequencies(incomes, endDate);
-        outcomes = budgetCalculator.convertOutcomesFrequencies(outcomes, endDate);
+//        incomes = budgetCalculator.convertIncomesFrequencies(incomes, endDate);
+//        outcomes = budgetCalculator.convertOutcomesFrequencies(outcomes, endDate);
 
         CalculationOutput result = budgetCalculator.mergeIncomesAndOutcomes(incomes, outcomes, input.getCurrency());
         return result;

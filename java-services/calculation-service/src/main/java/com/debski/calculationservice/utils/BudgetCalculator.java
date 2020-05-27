@@ -4,6 +4,7 @@ import com.debski.calculationservice.clients.ExchangeRatesClient;
 import com.debski.calculationservice.enums.CalculationType;
 import com.debski.calculationservice.enums.Currency;
 import com.debski.calculationservice.enums.IncomeCategory;
+import com.debski.calculationservice.enums.OutcomeCategory;
 import com.debski.calculationservice.exceptions.CalculationException;
 import com.debski.calculationservice.models.*;
 import one.util.streamex.StreamEx;
@@ -213,9 +214,21 @@ public class BudgetCalculator {
         return date.withDayOfMonth(date.getMonth().length(date.isLeapYear()));
     }
 
-    public Set<VisualisationPoint> calculateVisualizationPoints(Set<IncomeDTO> incomes) {
+    public Set<VisualisationPoint> calculateIncomesVisualizationPoints(Set<IncomeDTO> incomes) {
         Stream<VisualisationPoint> growingVPsStream = incomes.stream()
                 .map(i -> new VisualisationPoint(i.getAmount(), i.getDateOfIncome()))
+                .sorted();
+        NavigableSet<VisualisationPoint> mergedVPs = StreamEx.of(growingVPsStream)
+                .collapse((vp1, vp2) -> vp1.compareTo(vp2) == 0,
+                        (vp1, vp2) -> new VisualisationPoint(vp1.getValue().add(vp2.getValue()), vp1.getDate()))
+                .collect(Collectors.toCollection(TreeSet::new));
+
+        return mergedVPs;
+    }
+
+    public Set<VisualisationPoint> calculateOutcomesVisualizationPoints(Set<OutcomeDTO> outcomes) {
+        Stream<VisualisationPoint> growingVPsStream = outcomes.stream()
+                .map(o -> new VisualisationPoint(o.getAmount(), o.getDateOfOutcome()))
                 .sorted();
         NavigableSet<VisualisationPoint> mergedVPs = StreamEx.of(growingVPsStream)
                 .collapse((vp1, vp2) -> vp1.compareTo(vp2) == 0,
@@ -231,6 +244,14 @@ public class BudgetCalculator {
                 .filter(i -> i.getIncomeCategory().equals(incomeCategory))
                 .collect(Collectors.toSet());
         return filteredIncomes;
+    }
+
+    public Set<OutcomeDTO> filterOutcomesByCategory(Set<OutcomeDTO> outcomes, OutcomeCategory outcomeCategory) {
+        Set<OutcomeDTO> filteredOutcomes = outcomes
+                .stream()
+                .filter(o -> o.getOutcomeCategory().equals(outcomeCategory))
+                .collect(Collectors.toSet());
+        return filteredOutcomes;
     }
 
     private void calculateAmounts(NavigableSet<VisualisationPoint> mergedVPs) {

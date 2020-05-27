@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { VictoryChart, VictoryLine, VictoryTheme, VictoryAxis } from 'victory'
+import { VictoryChart, VictoryLine, VictoryTheme, VictoryAxis, VictoryTooltip, VictoryVoronoiContainer } from 'victory'
 import { withTranslation } from "react-i18next";
 import DatePicker from 'react-datepicker'
 import { addDays, subDays } from 'date-fns';
@@ -111,7 +111,15 @@ class AllIncomesAndOutcomes extends Component {
     render() {
         return (
             <Container fluid className="d-flex fill-height">
-                <VictoryChart width={1250} height={700} theme={VictoryTheme.grayscale}>
+                <VictoryChart width={1250} height={700} theme={VictoryTheme.grayscale} 
+                    containerComponent={
+                        <VictoryVoronoiContainer
+                          labels={({ datum }) => datum.x + ": " + datum.y}
+                          labelComponent={
+                            <VictoryTooltip  dy={-7} constrainToVisibleArea />
+                          }
+                        />
+                      }>
                     <VictoryAxis tickCount={15} crossAxis={false} domain={[0, 1000]}
                         style={{
                             axis: { stroke: '#000' },

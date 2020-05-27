@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="77c8baa6-5beb-4a5c-861f-715d18e8d90c" name="Default Changelist" comment="" />
+    <list default="true" id="77c8baa6-5beb-4a5c-861f-715d18e8d90c" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/java-services/calculation-service/src/main/java/com/debski/calculationservice/utils/BudgetCalculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/java-services/calculation-service/src/main/java/com/debski/calculationservice/utils/BudgetCalculator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java-services/calculation-service/src/test/java/com/debski/calculationservice/utils/BudgetCalculatorUnitTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/java-services/calculation-service/src/test/java/com/debski/calculationservice/utils/BudgetCalculatorUnitTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-frontend/money-saver-ui/src/pages/AddOutcomePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-frontend/money-saver-ui/src/pages/AddOutcomePage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-frontend/money-saver-ui/src/pages/ShowIncomesAndOutcomes.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-frontend/money-saver-ui/src/pages/ShowIncomesAndOutcomes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-frontend/money-saver-ui/src/pages/visualisations/ByCategory.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-frontend/money-saver-ui/src/pages/visualisations/ByCategory.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-frontend/money-saver-ui/src/translations/addOutcomePage_en.json" beforeDir="false" afterPath="$PROJECT_DIR$/react-frontend/money-saver-ui/src/translations/addOutcomePage_en.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-frontend/money-saver-ui/src/translations/addOutcomePage_pl.json" beforeDir="false" afterPath="$PROJECT_DIR$/react-frontend/money-saver-ui/src/translations/addOutcomePage_pl.json" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -21,8 +29,15 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="1" />
+  </component>
   <component name="ProjectId" id="1RHZ97qYiWkOgXJXSsUibZ1QROU" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
