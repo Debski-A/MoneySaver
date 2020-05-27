@@ -137,7 +137,7 @@ class ByCategory extends Component {
             />
             <VictoryAxis tickCount={31} />
             <VictoryBar
-              domain={[1, 31]}
+              // domain={[1, 31]}
               labels={({ datum }) => datum.y}
               style={{
                 data: {

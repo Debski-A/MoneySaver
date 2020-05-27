@@ -120,7 +120,7 @@ class AllIncomesAndOutcomes extends Component {
                           }
                         />
                       }>
-                    <VictoryAxis tickCount={15} crossAxis={false} domain={[0, 1000]}
+                    <VictoryAxis tickCount={15} crossAxis={false} domain={[0, 1000]} animate={{ duration: 500 }}
                         style={{
                             axis: { stroke: '#000' },
                             ticks: { stroke: 'red', size: 5 },
@@ -137,7 +137,7 @@ class AllIncomesAndOutcomes extends Component {
                         }}
                     />
                     {/* MIESIĄCE SA OZNACZONE CYFRAMI 0-11 */}
-                    <VictoryLine animate={{ duration: 1000 }} data={this.state.data} />
+                    <VictoryLine animate={{ duration: 500 }} data={this.state.data} />
                 </VictoryChart>
 
 
