@@ -1,0 +1,88 @@
+version: '3.1'
+services:
+  
+  config-server:
+    image: adamdebski/config-server
+    ports:
+      - 8888:8888
+      - 8005:8005
+    restart: always
+    command: java -agentlib:jdwp=transport=dt_socket,address=0.0.0.0:8005,server=y,suspend=n -jar /app/config-server.jar
+
+  eureka-server:
+    image: adamdebski/eureka-server
+    depends_on:
+      - config-server
+    ports:
+      - 9999:9999
+    restart: always
+    
+  gateway:
+    image: adamdebski/gateway
+    restart: always
+    depends_on:
+      - config-server
+    ports:
+      - 80:4000
+      - 8003:8003
+    command: java -agentlib:jdwp=transport=dt_socket,address=0.0.0.0:8003,server=y,suspend=n -jar /app/gateway.jar
+
+  account-service:
+    environment:
+      MYSQLDB_ROOT_PASSWORD: $MYSQLDB_ROOT_PASSWORD
+      ACCOUNT_SERVICE_PASSWORD: $ACCOUNT_SERVICE_PASSWORD
+    image: adamdebski/account-service
+    depends_on:
+      - config-server
+      - gateway
+    ports:
+      - 6000:6000
+      - 8001:8001
+    restart: always
+    command: java -agentlib:jdwp=transport=dt_socket,address=0.0.0.0:8001,server=y,suspend=n -jar /app/account-service.jar
+    
+  account-and-token-mysqldb:
+    image: adamdebski/account-and-token-mysqldb 
+    volumes:
+      - account-and-token-mysqldb-volume:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: $MYSQLDB_ROOT_PASSWORD
+      MYSQL_DATABASE: accountDB
+    ports:
+      - 3600:3306
+      
+  auth-service:
+    environment:
+      MYSQLDB_ROOT_PASSWORD: $MYSQLDB_ROOT_PASSWORD
+      ACCOUNT_SERVICE_PASSWORD: $ACCOUNT_SERVICE_PASSWORD
+      CALCULATION_SERVICE_PASSWORD: $CALCULATION_SERVICE_PASSWORD
+    image: adamdebski/auth-service
+    depends_on:
+      - config-server
+      - gateway
+    ports:
+      - 6666:6666
+      - 8002:8002
+    restart: always
+    command: java -agentlib:jdwp=transport=dt_socket,address=0.0.0.0:8002,server=y,suspend=n -jar /app/auth-service.jar
+    
+  calculation-service:
+    environment:
+      CALCULATION_SERVICE_PASSWORD: $CALCULATION_SERVICE_PASSWORD
+    image: adamdebski/calculation-service
+    restart: always
+    depends_on:
+      - config-server
+    ports:
+      - 6001:6001
+      - 8004:8004
+    command: java -agentlib:jdwp=transport=dt_socket,address=0.0.0.0:8004,server=y,suspend=n -jar /app/calculation-service.jar
+    
+  money-saver-ui:
+    image: adamdebski/money-saver-ui
+    ports:
+      - 1337:80
+      
+volumes:
+  account-and-token-mysqldb-volume:

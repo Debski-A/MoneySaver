@@ -56,12 +56,12 @@ public class OAuth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
                 .and()
                 .withClient("account-service")
                 .secret(encoder.encode(env.getProperty("ACCOUNT_SERVICE_PASSWORD")))
-                .authorizedGrantTypes("client_credentials", "refresh_token")
+                .authorizedGrantTypes("client_credentials")
                 .scopes("server")
                 .and()
                 .withClient("calculation-service")
                 .secret(encoder.encode(env.getProperty("CALCULATION_SERVICE_PASSWORD")))
-                .authorizedGrantTypes("client_credentials", "refresh_token")
+                .authorizedGrantTypes("client_credentials")
                 .scopes("server");
     }
 
